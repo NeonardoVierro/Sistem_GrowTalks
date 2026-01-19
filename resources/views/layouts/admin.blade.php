@@ -55,16 +55,6 @@
                 <i class="fas fa-users mr-3"></i>
                 Manajemen User
             </a>
-            <a href="{{ route('admin.podcasts') }}" 
-               class="block py-3 px-4 rounded-lg {{ request()->is('admin/podcasts*') ? 'active' : '' }}">
-                <i class="fas fa-podcast mr-3"></i>
-                Podcast
-            </a>
-            <a href="{{ route('admin.coachings') }}" 
-               class="block py-3 px-4 rounded-lg {{ request()->is('admin/coachings*') ? 'active' : '' }}">
-                <i class="fas fa-chalkboard-teacher mr-3"></i>
-                Coaching Clinic
-            </a>
             <a href="{{ route('admin.reports.podcast') }}" 
                class="block py-3 px-4 rounded-lg {{ request()->is('admin/reports/podcast') ? 'active' : '' }}">
                 <i class="fas fa-file-alt mr-3"></i>

@@ -10,88 +10,129 @@
         <p class="text-gray-600">Jadwal coaching clinic hanya tersedia setiap hari Rabu dan Jumat</p>
     </div>
 
+    @php
+    use Carbon\Carbon;
+
+    $currentMonth = 1;
+    $currentYear = 2026;
+    $today = Carbon::now();
+
+    // Dummy booking data
+    $bookings = [
+        (object)[
+            'id' => 1,
+            'tanggal' => '2026-01-07',
+            'layanan' => 'Oranya Cawana',
+            'keterangan' => 'Konsultasi Branding',
+            'pic' => 'Andi',
+            'no_telp' => '081234567890',
+            'status_verifikasi' => 'Disetujui',
+            'id_coaching' => 1,
+        ],
+        (object)[
+            'id' => 2,
+            'tanggal' => '2026-01-23',
+            'layanan' => 'Website & Aplikasi',
+            'keterangan' => 'Konsultasi Website',
+            'pic' => 'Budi',
+            'no_telp' => '081987654321',
+            'status_verifikasi' => 'Disetujui',
+            'id_coaching' => 2,
+        ],
+    ];
+
+    // Ambil hari dari tanggal booking
+    $bookedDays = collect($bookings)->map(fn($b) => (int) Carbon::parse($b->tanggal)->day)->toArray();
+
+    // Kalender sederhana
+    $calendar = [
+        [29,30,31,1,2,3,4],
+        [5,6,7,8,9,10,11],
+        [12,13,14,15,16,17,18],
+        [19,20,21,22,23,24,25],
+        [26,27,28,29,30,31,1],
+    ];
+    @endphp
+
     <!-- Calendar Section -->
     <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
         <div class="p-4 border-b border-gray-200">
             <h2 class="text-xl font-bold text-gray-800">January 2026</h2>
         </div>
-        
+
         <!-- Days Header -->
         <div class="p-4 border-b border-gray-200 grid grid-cols-7 gap-1">
-            @foreach(['Senin', 'Selasa', 'Rabu', 'Kamis', 'Jumat', 'Sabtu', 'Minggu'] as $day)
-            <div class="text-center font-medium text-gray-700 py-2">
-                {{ $day }}
-            </div>
+            @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $day)
+                <div class="text-center font-medium text-gray-700 py-2">{{ $day }}</div>
             @endforeach
         </div>
-        
+
         <!-- Calendar Grid -->
         <div class="p-4">
-            <div class="grid grid-cols-7 gap-1">
-                @php
-                    $days = [
-                        [29, 30, 1, 2, 3, 4, null],
-                        [5, 6, 7, 8, 9, 10, 11],
-                        [12, 13, 14, 15, 16, 17, 18],
-                        [19, 20, 21, 22, 23, 24, 25],
-                        [26, 27, 28, 29, 30, 31, 1]
-                    ];
-                    
-                    $availableWednesdays = [7, 14, 21, 28]; // Rabu
-                    $availableFridays = [9, 16, 23, 30]; // Jumat
-                    $bookedDays = [7, 23]; // Contoh hari yang sudah dibooking
-                @endphp
-                
-                @foreach($days as $week)
+            <div class="grid grid-cols-7 gap-2">
+                @foreach($calendar as $weekIndex => $week)
                     @foreach($week as $day)
-                        @if($day === null)
-                            <div class="p-3 text-center border rounded-lg bg-gray-50"></div>
-                        @else
-                            @php
-                                $isWednesday = in_array($day, [7, 14, 21, 28]);
-                                $isFriday = in_array($day, [2, 9, 16, 23, 30]);
-                                $isAvailable = $isWednesday || $isFriday;
-                                $isBooked = in_array($day, $bookedDays);
-                                $isPast = $day < 15; // Contoh: hari ini 15 Januari
-                            @endphp
-                            
-                            <div class="calendar-day p-3 text-center border rounded-lg 
-                                {{ !$isAvailable ? 'disabled bg-gray-50 text-gray-400' : '' }}
-                                {{ $isAvailable && !$isBooked && !$isPast ? 'coaching-day cursor-pointer hover:bg-orange-50' : '' }}
-                                {{ $isBooked ? 'booked bg-green-50 border-green-300 cursor-pointer' : '' }}
-                                {{ $isPast && $isAvailable ? 'bg-gray-100 text-gray-400' : '' }}"
-                                @if($isAvailable && !$isPast)
-                                    onclick="{{ $isBooked ? 'showCoachingDetail('.$day.')' : 'openCoachingBooking('.$day.')' }}"
-                                @endif>
-                                {{ $day }}
-                                @if($isBooked)
-                                    <div class="text-xs mt-1 text-green-600 font-medium">
-                                        Coaching<br>{{ Auth::user()->nama_opd }}
-                                    </div>
-                                @elseif($isAvailable && !$isPast)
-                                    <div class="text-xs mt-1 {{ $isWednesday ? 'text-purple-600' : 'text-orange-600' }}">
-                                        {{ $isWednesday ? 'Rabu' : 'Jumat' }}<br>Available
-                                    </div>
-                                @endif
-                            </div>
-                        @endif
+                        @php
+                            $isPrevMonth = ($day > 20 && $weekIndex == 0);
+                            $isNextMonth = ($day < 10 && $weekIndex == count($calendar)-1);
+                            $isCurrentMonth = !$isPrevMonth && !$isNextMonth;
+
+                            $date = $isCurrentMonth ? Carbon::create($currentYear, $currentMonth, $day) : null;
+                            $isWednesday = $date?->isWednesday() ?? false;
+                            $isFriday = $date?->isFriday() ?? false;
+                            $isAvailable = $isWednesday || $isFriday;
+                            $isPast = $date?->lt($today) ?? true;
+                            $isBooked = $isCurrentMonth && in_array($day, $bookedDays);
+                            $canClick = $isCurrentMonth && $isAvailable && !$isPast && !$isBooked;
+
+                            // background class
+                            if ($isBooked) {
+                                $bgClass = 'bg-green-100 border-green-300 cursor-pointer';
+                            } elseif ($canClick) {
+                                $bgClass = 'cursor-pointer hover:bg-blue-50';
+                            } else {
+                                $bgClass = 'bg-gray-100 text-gray-400 cursor-not-allowed';
+                            }
+                        @endphp
+
+                        <div
+                            class="h-24 p-2 text-center border rounded-lg flex flex-col justify-between {{ $bgClass }}"
+                            @if($canClick)
+                                onclick="openCoachingBooking({{ $day }})"
+                            @elseif($isBooked)
+                                onclick="showCoachingDetail({{ $day }})"
+                            @endif
+                        >
+                            <div class="font-semibold">{{ $day }}</div>
+
+                            @if($isBooked)
+                                @php
+                                    $bookingInfo = collect($bookings)->firstWhere(fn($b) => (int) Carbon::parse($b->tanggal)->day === $day);
+                                @endphp
+                                <div class="text-xs text-green-700 font-medium mt-1">
+                                    {{ $bookingInfo->layanan ?? 'Coaching' }}<br>{{ $bookingInfo->pic ?? '-' }}
+                                </div>
+                            @elseif($canClick)
+                                <div class="text-xs text-blue-600 mt-1">Available</div>
+                            @endif
+                        </div>
                     @endforeach
                 @endforeach
             </div>
-            
+
             <!-- Legend -->
             <div class="mt-4 flex flex-wrap gap-4 text-sm">
                 <div class="flex items-center">
-                    <div class="w-4 h-4 border-2 border-purple-500 mr-2"></div>
-                    <span>Rabu (Tersedia)</span>
-                </div>
-                <div class="flex items-center">
-                    <div class="w-4 h-4 border-2 border-orange-500 mr-2"></div>
-                    <span>Jumat (Tersedia)</span>
+                    <div class="w-4 h-4 border-2 border-gray-300 mr-2"></div>
+                    <span>Tersedia</span>
                 </div>
                 <div class="flex items-center">
                     <div class="w-4 h-4 bg-green-100 border border-green-300 mr-2"></div>
                     <span>Sudah Dibooking</span>
+                </div>
+                <div class="flex items-center">
+                    <div class="w-4 h-4 bg-gray-100 border border-gray-300 mr-2"></div>
+                    <span>Tidak Tersedia / Lewat</span>
                 </div>
             </div>
         </div>
@@ -121,26 +162,36 @@
                     @forelse($bookings as $booking)
                     <tr class="hover:bg-gray-50">
                         <td class="py-3 px-4 border-b">
-                            <form action="{{ route('coaching.destroy', $booking->id) }}" method="POST">
+                            <form action="#" method="POST">
                                 @csrf
                                 @method('DELETE')
-                                <button type="submit" 
-                                        class="text-red-600 hover:text-red-800"
-                                        onclick="return confirm('Hapus pengajuan ini?')">
+                                <button type="submit" class="text-red-600 hover:text-red-800" onclick="return confirm('Hapus pengajuan ini?')">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
                         </td>
                         <td class="py-3 px-4 border-b">
-                            <span class="status-badge status-{{ $booking->status_verifikasi }}">
-                                {{ ucfirst($booking->status_verifikasi) }}
+                            @php
+                                $status = $booking->status_verifikasi;
+                                switch(strtolower($status)) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
+                                {{ $status }}
                             </span>
                         </td>
-                        <td class="py-3 px-4 border-b">
-                            <button class="text-gray-600 hover:text-gray-800">
-                                ...
-                            </button>
-                        </td>
+                        <td class="py-3 px-4 border-b">{{ $booking->keterangan }}</td>
                         <td class="py-3 px-4 border-b font-mono">
                             CCA{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id_coaching }}
                         </td>
@@ -165,36 +216,30 @@
     </div>
 </div>
 
-<!-- Coaching Booking Modal -->
+<!-- Booking Modal -->
 <div id="coachingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg w-full max-w-md">
+    <div class="bg-white rounded-lg w-full max-w-md relative">
         <div class="p-4 border-b border-gray-200">
             <h3 class="text-lg font-bold text-gray-800">Form Pengajuan Coaching Clinic</h3>
             <button onclick="closeCoachingModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
             </button>
         </div>
-        
-        <form id="coachingForm" action="{{ route('coaching.submit') }}" method="POST" class="p-4">
+        <form id="coachingForm" action="#" method="POST" class="p-4">
             @csrf
             <input type="hidden" id="coachingSelectedDate" name="tanggal">
-            
+
             <div class="space-y-4">
-                <!-- Table-like layout like in screenshot -->
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <label class="text-sm font-medium text-gray-700">Tanggal*</label>
                     <div class="col-span-2">
-                        <input type="text" id="coachingDisplayDate" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded" readonly>
+                        <input type="text" id="coachingDisplayDate" class="w-full px-3 py-2 border border-gray-300 rounded" readonly>
                     </div>
                 </div>
-                
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <label class="text-sm font-medium text-gray-700">Layanan*</label>
                     <div class="col-span-2">
-                        <select name="layanan" 
-                                class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                required>
+                        <select name="layanan" class="w-full px-3 py-2 border border-gray-300 rounded" required>
                             <option value="">Pilih Layanan</option>
                             <option value="Oranya Cawana">Oranya Cawana</option>
                             <option value="TTL Design">TTL Design</option>
@@ -202,55 +247,35 @@
                         </select>
                     </div>
                 </div>
-                
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <label class="text-sm font-medium text-gray-700">Agenda*</label>
                     <div class="col-span-2">
-                        <input type="text" name="keterangan" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               placeholder="Masukkan Agenda"
-                               required>
+                        <input type="text" name="keterangan" class="w-full px-3 py-2 border border-gray-300 rounded" required>
                     </div>
                 </div>
-                
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <label class="text-sm font-medium text-gray-700">PIC*</label>
                     <div class="col-span-2">
-                        <input type="text" name="pic" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               placeholder="Masukkan PIC"
-                               required>
+                        <input type="text" name="pic" class="w-full px-3 py-2 border border-gray-300 rounded" required>
                     </div>
                 </div>
-                
                 <div class="grid grid-cols-3 gap-2 items-center">
                     <label class="text-sm font-medium text-gray-700">No. Telp*</label>
                     <div class="col-span-2">
-                        <input type="tel" name="no_telp" 
-                               class="w-full px-3 py-2 border border-gray-300 rounded focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                               placeholder="Masukkan No. Telp"
-                               required>
+                        <input type="tel" name="no_telp" class="w-full px-3 py-2 border border-gray-300 rounded" required>
                     </div>
                 </div>
-                
                 <div class="flex items-start">
-                    <input type="checkbox" id="coachingPersetujuan" name="persetujuan" 
-                           class="mt-1 mr-2" required>
+                    <input type="checkbox" id="coachingPersetujuan" name="persetujuan" class="mt-1 mr-2" required>
                     <label for="coachingPersetujuan" class="text-sm text-gray-700">
-                        Mempunyai dan menyetujui apabila ada perubahan jadwal coaching clinic oleh pengelola layanan
+                        Menyetujui apabila ada perubahan jadwal coaching clinic oleh pengelola layanan
                     </label>
                 </div>
             </div>
-            
+
             <div class="mt-6 flex justify-end space-x-3">
-                <button type="button" onclick="closeCoachingModal()" 
-                        class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">
-                    Batal
-                </button>
-                <button type="submit" 
-                        class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">
-                    Ajukan
-                </button>
+                <button type="button" onclick="closeCoachingModal()" class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50">Batal</button>
+                <button type="submit" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Ajukan</button>
             </div>
         </form>
     </div>

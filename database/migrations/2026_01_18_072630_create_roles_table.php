@@ -11,6 +11,8 @@ return new class extends Migration
         Schema::create('roles', function (Blueprint $table) {
             $table->id();
             $table->string('nama_role', 50);
+            $table->string('kode_role', 20)->unique(); // user, admin, verifikator_podcast, verifikator_coaching
+            $table->text('hak_akses')->nullable();
             $table->timestamps();
         });
     }

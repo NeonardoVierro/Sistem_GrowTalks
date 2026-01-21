@@ -12,9 +12,13 @@ return [
             'provider' => 'users',
         ],
         
-        'admin' => [
+        'internal' => [
             'driver' => 'session',
             'provider' => 'internal_users',
+        ],
+        'admin' => [
+            'driver' => 'session',
+            'provider' => 'admins',
         ],
     ],
 
@@ -25,6 +29,11 @@ return [
         ],
         
         'internal_users' => [
+            'driver' => 'eloquent',
+            'model' => App\Models\InternalUser::class,
+        ],
+
+        'admins' => [ // ✅ HARUS ADA
             'driver' => 'eloquent',
             'model' => App\Models\InternalUser::class,
         ],

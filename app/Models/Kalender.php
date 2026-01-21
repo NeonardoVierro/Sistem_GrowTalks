@@ -3,6 +3,7 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kalender extends Model
 {
@@ -21,4 +22,9 @@ class Kalender extends Model
         'tanggal_kalender' => 'date',
         'sudah_dibooking' => 'boolean',
     ];
+    
+    public function podcastBookings(): HasMany
+    {
+        return $this->hasMany(PodcastBooking::class, 'id_kalender');
+    }
 }

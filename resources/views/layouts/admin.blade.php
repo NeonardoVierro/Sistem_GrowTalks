@@ -71,11 +71,11 @@
         <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
             <div class="flex items-center mb-4">
                 <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span class="font-bold">{{ strtoupper(substr(auth()->guard('admin')->user()->nama_user, 0, 1)) }}</span>
+                    <span class="font-bold">{{ strtoupper(substr(optional(auth()->guard('admin')->user())->nama_user ?? 'U', 0, 1)) }}</span>
                 </div>
                 <div class="ml-3">
-                    <p class="font-medium">{{ auth()->guard('admin')->user()->nama_user }}</p>
-                    <p class="text-xs text-gray-400">{{ auth()->guard('admin')->user()->jabatan }}</p>
+                    <p class="font-medium">{{ optional(auth()->guard('admin')->user())->nama_user ?? 'Admin' }}</p>
+                    <p class="text-xs text-gray-400">{{ optional(auth()->guard('admin')->user())->jabatan ?? '' }}</p>
                 </div>
             </div>
             <form action="{{ route('logout') }}" method="POST">

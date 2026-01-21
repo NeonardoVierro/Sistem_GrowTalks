@@ -18,14 +18,17 @@ return new class extends Migration
             $table->string('keterangan', 100);
             $table->string('narasumber', 100);
             $table->string('verifikasi', 100)->nullable();
-            $table->enum('status_verifikasi', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->enum('status_verifikasi', ['pending', 'disetujui', 'ditolak', 'penjadwalan ulang'])->default('pending');
             $table->string('host', 100)->nullable();
+            $table->string('waktu', 50)->nullable();
+            $table->string('cover_path', 255)->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }
 
     public function down(): void
     {
-        Schema::dropIfExists('agenda_podcasts');
+        Schema::dropIfExists('podcasts');
     }
 };

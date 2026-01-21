@@ -6,6 +6,8 @@ use App\Http\Controllers\UserController;
 use App\Http\Controllers\PodcastController;
 use App\Http\Controllers\CoachingController;
 use App\Http\Controllers\AdminController;
+use App\Http\Controllers\VerifikatorPodcastController;
+use App\Http\Controllers\VerifikatorCoachingController;
 
 // Public Routes
 Route::get('/', function () {
@@ -19,7 +21,10 @@ Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 // User Routes
 Route::middleware(['auth'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    
+    Route::get('/profile', function () {
+        return view('user.profil');
+    })->name('user.profile')->middleware('auth');
+
     // Podcast Routes
     Route::prefix('podcast')->group(function () {
         Route::get('/', [PodcastController::class, 'index'])->name('podcast.index');
@@ -37,7 +42,7 @@ Route::middleware(['auth'])->group(function () {
 
 // Admin Routes
 Route::prefix('admin')->name('admin.')->group(function () {
-    Route::middleware(['auth:admin'])->group(function () {
+    Route::middleware(['auth:internal'])->group(function () {
         Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
         Route::get('/users', [AdminController::class, 'users'])->name('users');
         Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
@@ -47,5 +52,27 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])->name('podcasts.status');
         Route::put('/coachings/{id}/status', [AdminController::class, 'updateCoachingStatus'])->name('coachings.status');
+    });
+});
+
+// Verifikator Podcast Routes
+Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->group(function () {
+    Route::middleware(['auth:internal'])->group(function () {
+        Route::get('/dashboard', [VerifikatorPodcastController::class, 'dashboard'])->name('dashboard');
+        Route::get('/approval', [VerifikatorPodcastController::class, 'approval'])->name('approval');
+        Route::get('/approval/{id}/form', [VerifikatorPodcastController::class, 'showApprovalForm'])->name('approval-form');
+        Route::put('/approval/{id}/update', [VerifikatorPodcastController::class, 'updateApproval'])->name('update-approval');
+        Route::get('/report', [VerifikatorPodcastController::class, 'report'])->name('report');
+    });
+});
+
+// Verifikator Coaching Routes
+Route::prefix('verifikator-coaching')->name('verifikator-coaching.')->group(function () {
+    Route::middleware(['auth:internal'])->group(function () {
+        Route::get('/dashboard', [VerifikatorCoachingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/approval', [VerifikatorCoachingController::class, 'approval'])->name('approval');
+        Route::get('/approval/{id}/form', [VerifikatorCoachingController::class, 'showApprovalForm'])->name('approval-form');
+        Route::put('/approval/{id}/update', [VerifikatorCoachingController::class, 'updateApproval'])->name('update-approval');
+        Route::get('/report', [VerifikatorCoachingController::class, 'report'])->name('report');
     });
 });

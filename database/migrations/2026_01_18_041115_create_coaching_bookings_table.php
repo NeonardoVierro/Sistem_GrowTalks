@@ -18,7 +18,11 @@ return new class extends Migration
             $table->string('pic', 100);
             $table->string('no_telp', 20);
             $table->string('verifikasi', 100)->nullable();
-            $table->enum('status_verifikasi', ['pending', 'disetujui', 'ditolak'])->default('pending');
+            $table->enum('status_verifikasi', ['pending', 'disetujui', 'ditolak', 'penjadwalan ulang'])->default('pending');
+            $table->string('coach', 100)->nullable();
+            $table->string('waktu', 50)->nullable();
+            $table->string('dokumentasi_path', 255)->nullable();
+            $table->text('catatan')->nullable();
             $table->timestamps();
         });
     }

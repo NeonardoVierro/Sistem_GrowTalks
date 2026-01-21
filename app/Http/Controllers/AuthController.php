@@ -8,6 +8,7 @@ use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Log;
 use App\Models\User;
 use App\Models\InternalUser;
+use App\Models\Role;
 
 class AuthController extends Controller
 {
@@ -32,29 +33,20 @@ class AuthController extends Controller
             'host' => $request->getHost(),
         ]);
 
-        // Try to login as InternalUser (Admin) first by email or nama_user
-        $admin = InternalUser::where('email', $identifier)
-            ->orWhere('nama_user', $identifier)
-            ->first();
 
-        if ($admin) {
-            Log::info('Admin found for login', ['admin_id' => $admin->{$admin->getAuthIdentifierName()}]);
-            if (Hash::check($password, $admin->password)) {
-                Log::info('Admin password matched, logging in');
-                Auth::guard('admin')->login($admin, $request->has('remember'));
-                $request->session()->regenerate();
-                return redirect()->route('admin.dashboard');
-            } else {
-                Log::info('Admin password mismatch');
-            }
-        } else {
-            Log::info('No admin record found for identifier');
+        // Coba untuk login as InternalUser (Admin, Verifikator)
+        if (Auth::guard('internal')->attempt($credentials, $request->remember)) {
+            $request->session()->regenerate();
+            
+            $user = Auth::guard('internal')->user();
+            // dd ($user);
+            $roleCode = Role::where('id', $user->id_role)->first()->kode_role;
+            // dd( $roleCode);
+            return $this->redirectBasedOnRole($roleCode);
         }
-
-        // Try to login as regular User (by email)
-        $userAttempt = Auth::attempt(['email' => $identifier, 'password' => $password], $request->has('remember'));
-        Log::info('User attempt result', ['result' => $userAttempt]);
-        if ($userAttempt) {
+        
+        // Coba untuk login as regular User 
+        if (Auth::guard('web')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
             return redirect()->intended('/dashboard');
         }
@@ -64,11 +56,25 @@ class AuthController extends Controller
         ])->onlyInput('email');
     }
 
+    private function redirectBasedOnRole($roleCode)
+    {
+        switch ($roleCode) {
+            case 'admin':
+                return redirect()->intended('/admin/dashboard');
+            case 'verifikator_podcast':
+                return redirect()->intended('/verifikator-podcast/dashboard');
+            case 'verifikator_coaching':
+                return redirect()->intended('/verifikator-coaching/dashboard');
+            default:
+                return redirect('/');
+        }
+    }
+
     public function logout(Request $request)
     {
-        if (Auth::guard('admin')->check()) {
-            Auth::guard('admin')->logout();
-        } else {
+        if (Auth::guard('internal')->check()) {
+            Auth::guard('internal')->logout();
+         } elseif (Auth::guard('web')->check()) {
             Auth::logout();
         }
         

@@ -6,11 +6,12 @@ use Illuminate\Database\Eloquent\Model;
 
 class CoachingBooking extends Model
 {
-    protected $primaryKey = 'id_coaching';
+    protected $primaryKey = 'id';
     protected $table = 'agenda_ccs';
 
     protected $fillable = [
         'id_user',
+        'id_verifikator',
         'id_kalender',
         'tanggal',
         'layanan',
@@ -19,6 +20,10 @@ class CoachingBooking extends Model
         'no_telp',
         'verifikasi',
         'status_verifikasi',
+        'coach',
+        'waktu',
+        'dokumentasi_path',
+        'catatan',
     ];
 
     protected $casts = [
@@ -28,6 +33,11 @@ class CoachingBooking extends Model
     public function user()
     {
         return $this->belongsTo(User::class, 'id_user');
+    }
+
+    public function verifikator()
+    {
+        return $this->belongsTo(InternalUser::class, 'id_verifikator');
     }
 
     public function kalender()

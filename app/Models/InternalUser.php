@@ -31,4 +31,29 @@ class InternalUser extends Authenticatable
     {
         return $this->belongsTo(Role::class, 'id_role');
     }
+
+    public function isAdmin()
+    {
+        return $this->role->kode_role === 'admin';
+    }
+
+    public function isVerifikatorPodcast()
+    {
+        return $this->role->kode_role === 'verifikator_podcast';
+    }
+
+    public function isVerifikatorCoaching()
+    {
+        return $this->role->kode_role === 'verifikator_coaching';
+    }
+
+    public function podcastVerifications()
+    {
+        return $this->hasMany(AgendaPodcast::class, 'id_verifikator');
+    }
+
+    public function coachingVerifications()
+    {
+        return $this->hasMany(AgendaCC::class, 'id_verifikator');
+    }
 }

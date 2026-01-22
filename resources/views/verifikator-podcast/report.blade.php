@@ -11,7 +11,7 @@
     </div>
 
     <!-- Report Container -->
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+     <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-800">Laporan Podcast</h2>
         </div>
@@ -50,15 +50,15 @@
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-50">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode Booking</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Judul</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Narasumber</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Host</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Cover</th>
+                   <thead class="bg-blue-900 text-white">
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Host</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Cover</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">

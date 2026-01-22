@@ -4,94 +4,140 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@yield('title') - Admin Podcast & Coaching Clinic</title>
+
     <script src="https://cdn.tailwindcss.com"></script>
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+
     <style>
-        .admin-sidebar {
-            background: linear-gradient(180deg, #1e293b 0%, #0f172a 100%);
+        body {
+            font-family: 'Poppins', sans-serif;
+        }
+
+        /* SIDEBAR SAMA DENGAN USER */
+        .sidebar {
+            background-image:
+                linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+                url("{{ asset('images/background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
             color: white;
         }
-        .admin-sidebar a:hover {
-            background: rgba(255,255,255,0.1);
+
+        .sidebar a {
+            background: rgba(0,0,0,0.25);
         }
-        .admin-sidebar a.active {
-            background: #334155;
-            border-left: 4px solid #3b82f6;
+
+        .sidebar a:hover {
+            background: rgba(255,255,255,0.15);
         }
-        .stat-card {
-            border-radius: 10px;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
-            transition: transform 0.3s;
-        }
-        .stat-card:hover {
-            transform: translateY(-5px);
-        }
-        .table-container {
-            border-radius: 10px;
-            overflow: hidden;
-            box-shadow: 0 2px 10px rgba(0,0,0,0.1);
+
+        .sidebar a.active {
+            background: #4a5568;
+            border-left: 4px solid #E8CA00;
+            color: #E8CA00;
+            font-weight: 600;
         }
     </style>
+
     @stack('styles')
 </head>
+
 <body class="bg-gray-50 min-h-screen">
-    <!-- Admin Sidebar -->
-    <div class="admin-sidebar fixed left-0 top-0 h-screen w-64 shadow-xl">
-        <!-- Logo -->
-        <div class="p-6 border-b border-gray-700">
-            <h1 class="text-xl font-bold">Podcast & Coaching Clinic</h1>
-            <p class="text-sm text-gray-400 mt-1">Admin Dashboard</p>
+
+    <!-- SIDEBAR -->
+    <div class="sidebar fixed left-0 top-16 bottom-0 w-64 shadow-lg z-40">
+
+        <!-- LOGO -->
+        <div class="p-6 border-b border-gray-700 text-center">
+            <img src="{{ asset('images/logos.png') }}" class="mx-auto h-12">
+            <h2 class="mt-3 inline-block px-4 py-1 text-lg font-bold text-white">
+                GrowTalks
+            </h2>
         </div>
-        
-        <!-- Navigation -->
-        <nav class="p-4 space-y-2">
-            <a href="{{ route('admin.dashboard') }}" 
+
+        <!-- NAVIGATION -->
+        <nav class="p-6 pt-10 space-y-2">
+
+            <a href="{{ route('admin.dashboard') }}"
                class="block py-3 px-4 rounded-lg {{ request()->is('admin/dashboard') ? 'active' : '' }}">
-                <i class="fas fa-chart-bar mr-3"></i>
+                <i class="fas fa-home mr-3"></i>
                 Dashboard
             </a>
-            <a href="{{ route('admin.users') }}" 
+
+            <a href="{{ route('admin.users') }}"
                class="block py-3 px-4 rounded-lg {{ request()->is('admin/users*') ? 'active' : '' }}">
                 <i class="fas fa-users mr-3"></i>
                 Manajemen User
             </a>
-            <a href="{{ route('admin.reports.podcast') }}" 
-               class="block py-3 px-4 rounded-lg {{ request()->is('admin/reports/podcast') ? 'active' : '' }}">
-                <i class="fas fa-file-alt mr-3"></i>
-                Laporan Podcast
+
+            <a href="{{ route('admin.podcasts') }}"
+               class="block py-3 px-4 rounded-lg {{ request()->is('admin/podcast*') ? 'active' : '' }}">
+                <i class="fas fa-podcast mr-3"></i>
+                Podcast
             </a>
-            <a href="{{ route('admin.reports.coaching') }}" 
-               class="block py-3 px-4 rounded-lg {{ request()->is('admin/reports/coaching') ? 'active' : '' }}">
-                <i class="fas fa-file-contract mr-3"></i>
-                Laporan Coaching
+
+            <a href="{{ route('admin.coachings') }}"
+               class="block py-3 px-4 rounded-lg {{ request()->is('admin/coaching*') ? 'active' : '' }}">
+                <i class="fas fa-chalkboard-teacher mr-3"></i>
+                Coaching Clinic
             </a>
+
         </nav>
-        
-        <!-- User Info & Logout -->
-        <div class="absolute bottom-0 left-0 right-0 p-4 border-t border-gray-700">
-            <div class="flex items-center mb-4">
-                <div class="w-10 h-10 bg-blue-600 rounded-full flex items-center justify-center">
-                    <span class="font-bold">{{ strtoupper(substr(optional(auth()->guard('admin')->user())->nama_user ?? 'U', 0, 1)) }}</span>
-                </div>
-                <div class="ml-3">
-                    <p class="font-medium">{{ optional(auth()->guard('admin')->user())->nama_user ?? 'Admin' }}</p>
-                    <p class="text-xs text-gray-400">{{ optional(auth()->guard('admin')->user())->jabatan ?? '' }}</p>
-                </div>
-            </div>
-            <form action="{{ route('logout') }}" method="POST">
-                @csrf
-                <button type="submit" class="w-full text-left py-3 px-4 rounded-lg hover:bg-red-900 text-red-300">
-                    <i class="fas fa-sign-out-alt mr-3"></i>
-                    Logout
-                </button>
-            </form>
-        </div>
     </div>
-    
-    <!-- Main Content -->
-    <main class="ml-64 min-h-screen p-6">
+
+    <!-- TOP NAVBAR -->
+    <header
+        class="fixed top-0 left-0 right-0 h-16
+               bg-gradient-to-r from-gray-400 via-gray-100 to-white
+               shadow border-b-4 border-gray-600 z-50
+               flex items-center justify-between px-6">
+
+        <span class="font-bold text-lg text-gray-800">
+            Podcast & Coaching Clinic
+        </span>
+
+        <!-- ADMIN MENU -->
+        <div class="relative">
+            <button onclick="toggleAdminMenu()"
+                class="flex items-center gap-2 text-gray-700 font-medium">
+
+                {{ auth()->guard('admin')->user()->nama_user ?? 'Admin' }}
+                <i class="fas fa-chevron-down text-xs"></i>
+            </button>
+
+            <div id="adminDropdown"
+                class="hidden absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-lg border overflow-hidden">
+
+                <form action="{{ route('logout') }}" method="POST">
+                    @csrf
+                    <button type="submit"
+                        class="w-full text-left px-4 py-3 text-sm text-red-600 hover:bg-red-50">
+                        <i class="fas fa-sign-out-alt mr-2"></i> Logout
+                    </button>
+                </form>
+
+            </div>
+        </div>
+    </header>
+
+    <!-- CONTENT -->
+   <main class="ml-64 pt-24 min-h-screen px-8">
         @yield('content')
     </main>
+
+    <script>
+        function toggleAdminMenu() {
+            document.getElementById('adminDropdown').classList.toggle('hidden');
+        }
+
+        document.addEventListener('click', function(e) {
+            if (!e.target.closest('.relative')) {
+                document.getElementById('adminDropdown')?.classList.add('hidden');
+            }
+        });
+    </script>
 
     @stack('scripts')
 </body>

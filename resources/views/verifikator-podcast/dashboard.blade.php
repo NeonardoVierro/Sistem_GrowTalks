@@ -19,7 +19,7 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Podcast -->
-        <div class="card-stat bg-white p-6">
+          <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-blue-100 rounded-lg mr-4">
                     <i class="fas fa-podcast text-blue-600 text-xl"></i>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Menunggu Persetujuan -->
-        <div class="card-stat bg-white p-6">
+          <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-yellow-100 rounded-lg mr-4">
                     <i class="fas fa-clock text-yellow-600 text-xl"></i>
@@ -47,7 +47,7 @@
         </div>
 
         <!-- Disetujui -->
-        <div class="card-stat bg-white p-6">
+        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-green-100 rounded-lg mr-4">
                     <i class="fas fa-check-circle text-green-600 text-xl"></i>
@@ -61,7 +61,7 @@
         </div>
 
         <!-- Ditolak -->
-        <div class="card-stat bg-white p-6">
+         <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-red-100 rounded-lg mr-4">
                     <i class="fas fa-times-circle text-red-600 text-xl"></i>
@@ -76,20 +76,20 @@
     </div>
 
     <!-- Recent Podcasts -->
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+       <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-800">Podcast Terbaru</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-50">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Judul</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Narasumber</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                    <thead class="bg-blue-900 text-white">
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -125,9 +125,9 @@
     </div>
 
     <!-- Quick Stats -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mt-8">
         <!-- Approval Statistics -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
+           <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Statistik Approval</h3>
             <div class="space-y-4">
                 <div class="flex justify-between items-center">
@@ -148,7 +148,7 @@
         </div>
 
         <!-- Quick Actions -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
+           <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Aksi Cepat</h3>
             <div class="space-y-3">
                 <a href="{{ route('verifikator-podcast.approval') }}" 

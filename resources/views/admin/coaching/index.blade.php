@@ -14,8 +14,7 @@
     </div>
 
     <!-- COACHINGS TABLE -->
-    <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 overflow-hidden">
-
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
             <h2 class="text-lg font-bold text-gray-800">Daftar Pengajuan Coaching Clinic</h2>
         </div>
@@ -25,14 +24,14 @@
             <div class="shadow-md rounded-lg overflow-hidden">
                 <table class="w-full">
                     <thead>
-                        <tr class="bg-blue-50">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Tanggal</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">OPD</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Layanan</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Agenda</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Aksi</th>
+                         <thead class="bg-blue-900 text-white">
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">OPD</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Layanan</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Agenda</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Aksi</th>
                         </tr>
                     </thead>
 

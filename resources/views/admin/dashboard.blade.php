@@ -56,7 +56,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Statistik Podcast -->
-        <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl transition duration-300 p-6">
+       <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <h2 class="text-lg font-bold mb-4">Statistik Podcast</h2>
 
             <div class="space-y-3">
@@ -80,7 +80,7 @@
         </div>
 
         <!-- Statistik Coaching -->
-        <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl transition duration-300 p-6">
+        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <h2 class="text-lg font-bold mb-4">Statistik Coaching Clinic</h2>
 
             <div class="space-y-3">
@@ -109,7 +109,7 @@
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Podcast Terbaru -->
-        <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl transition duration-300 p-6">
+        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex justify-between mb-4">
                 <h2 class="text-lg font-bold">Podcast Terbaru</h2>
                 <a href="{{ route('admin.podcasts') }}" class="text-blue-600">Lihat Semua</a>
@@ -117,7 +117,7 @@
 
             <div class="shadow-md rounded-lg overflow-hidden">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50">
+                     <thead class="bg-blue-900 text-white">
                         <tr>
                             <th class="p-3 text-left">Tanggal</th>
                             <th class="p-3 text-left">Judul</th>
@@ -159,7 +159,7 @@
         </div>
 
         <!-- Coaching Terbaru -->
-        <div class="bg-white rounded-xl shadow-xl hover:shadow-2xl transition duration-300 p-6">
+       <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex justify-between mb-4">
                 <h2 class="text-lg font-bold">Coaching Terbaru</h2>
                 <a href="{{ route('admin.coachings') }}" class="text-blue-600">Lihat Semua</a>
@@ -167,7 +167,7 @@
 
             <div class="shadow-md rounded-lg overflow-hidden">
                 <table class="w-full text-sm">
-                    <thead class="bg-gray-50">
+                     <thead class="bg-blue-900 text-white">
                         <tr>
                             <th class="p-3 text-left">Tanggal</th>
                             <th class="p-3 text-left">Layanan</th>

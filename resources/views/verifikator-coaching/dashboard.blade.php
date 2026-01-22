@@ -19,7 +19,7 @@
     <!-- Statistics Cards -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
         <!-- Total Coaching -->
-        <div class="card-stat bg-white p-6">
+     <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-green-100 rounded-lg mr-4">
                     <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
@@ -33,7 +33,7 @@
         </div>
 
         <!-- Coaching Menunggu -->
-        <div class="card-stat bg-white p-6">
+       <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-yellow-100 rounded-lg mr-4">
                     <i class="fas fa-clock text-yellow-600 text-xl"></i>
@@ -48,20 +48,20 @@
     </div>
 
     <!-- Recent Coachings -->
-    <div class="bg-white rounded-xl shadow-sm overflow-hidden mb-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-800">Coaching Terbaru</h2>
         </div>
         <div class="overflow-x-auto">
             <table class="w-full">
                 <thead>
-                    <tr class="bg-gray-50">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kode</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Kategori</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Agenda</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-gray-700">Status</th>
+                     <thead class="bg-blue-900 text-white">
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kategori</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Agenda</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
@@ -99,7 +99,7 @@
     <!-- Quick Stats -->
     <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
         <!-- Statistics -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
+        <div class="bg-white rounded-xl shadow-md hover:shadow-lg transition p-6">
             <h3 class="text-lg font-bold text-gray-800 mb-4">Statistik</h3>
             <div class="space-y-4">
                 <div class="flex justify-between items-center">
@@ -118,11 +118,11 @@
         </div>
 
         <!-- Quick Actions -->
-        <div class="bg-white rounded-xl shadow-sm p-6">
-            <h3 class="text-lg font-bold text-gray-800 mb-4">Aksi Cepat</h3>
-            <div class="space-y-3">
+         <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+            <h3 class="text-lg font-bold text-gray-800 mb-3">Aksi Cepat</h3>
+            <div class="space-y-4">
                 <a href="{{ route('verifikator-coaching.approval') }}" 
-                   class="block w-full text-center py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                   class="block w-full text-center py-3 px-4 bg-green-600 text-white rounded-lg hover:bg-green-600">
                     <i class="fas fa-check-circle mr-2"></i>Verifikasi Coaching
                 </a>
                 <a href="{{ route('verifikator-coaching.report') }}" 

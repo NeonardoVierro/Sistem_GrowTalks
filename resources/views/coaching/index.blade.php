@@ -7,7 +7,8 @@
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Coaching Clinic</h1>
-        <p class="text-gray-600">Jadwal coaching clinic hanya tersedia setiap hari Rabu dan Jumat</p>
+        <p class="text-gray-600">Layanan pendampingan dan konsultasi untuk pengembangan kompetensi dan solusi teknis,
+    tersedia setiap hari Rabu dan Jumat.</p>
     </div>
 
     @php
@@ -139,23 +140,27 @@
     </div>
 
     <!-- Booking Table -->
-    <div class="bg-white rounded-lg shadow-sm border border-gray-200">
-        <div class="p-4 border-b border-gray-200">
-            <h2 class="text-xl font-bold text-gray-800">Antrian Pengajuan Coaching Clinic</h2>
-        </div>
+    <!-- Judul -->
+    <div class="flex items-center gap-3 py-5">
+        <h2 class="text-lg font-bold tracking-wide text-black-700">
+            ANTRIAN PENGAJUAN PODCAST
+        </h2>
+    </div>
+    
+    <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
         <div class="overflow-x-auto">
-            <table class="w-full">
+            <table class="w-full border border-gray-300 border-collapse">
                 <thead>
-                    <tr class="bg-gray-50">
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Aksi</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Status</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Keterangan</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Kode Booking</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Tanggal</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Layanan</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">Agenda</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">PIC</th>
-                        <th class="py-3 px-4 text-left font-medium text-gray-700 border-b">No. Telp</th>
+                    <tr class="bg-blue-900 text-white">
+                        <th class="py-3 px-4 text-left">Aksi</th>
+                        <th class="py-3 px-4 text-left">Status</th>
+                        <th class="py-3 px-4 text-left">Keterangan</th>
+                        <th class="py-3 px-4 text-left">Kode Booking</th>
+                        <th class="py-3 px-4 text-left">Tanggal</th>
+                        <th class="py-3 px-4 text-left">Layanan</th>
+                        <th class="py-3 px-4 text-left">Agenda</th>
+                        <th class="py-3 px-4 text-left">PIC</th>
+                        <th class="py-3 px-4 text-left">No. Telp</th>
                     </tr>
                 </thead>
                 <tbody>

@@ -3,11 +3,14 @@
 @section('title', 'Podcast')
 
 @section('content')
-<div class="min-h-screen relative">
+<div class="min-h-screen relative p-8">
+    <!-- Header -->
+    <div class="mb-6">
+        <h1 class="text-2xl font-bold text-gray-800">Podcast</h1>
+        <p class="text-gray-600">Ruang berbagi gagasan dan inspirasi bersama narasumber pilihan. Jadwal podcast tersedia khusus setiap hari Jumat.</p>
+    </div>
     
     <!-- CONTENT -->
-    <div class="relative z-10 p-8">
-
         <!-- Calendar Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <!-- Calendar Header with Navigation -->
@@ -113,7 +116,7 @@
                                 }
                                 
                                 if ($isToday) {
-                                    $bgClass .= ' border-2 border-red-300';
+                                    $bgClass .= ' border-2 border-gray-600';
                                 }
                             @endphp
 
@@ -123,7 +126,7 @@
                                     onclick="handleDateClick('{{ $dateString }}', '{{ $type }}', {{ $dayData['day'] }}, '{{ \Carbon\Carbon::parse($date)->locale('id')->isoFormat('D MMMM YYYY') }}')"
                                 @endif
                             >
-                                <div class="font-semibold {{ $isToday ? 'text-red-600' : '' }}">
+                                <div class="font-semibold {{ $isToday ? 'text-gray-600' : '' }}">
                                     {{ $dayData['day'] }}
                                     @if($isToday)
                                         <span class="text-xs">(Hari ini)</span>
@@ -170,7 +173,7 @@
                 <div class="mt-4 flex flex-wrap gap-4 text-sm">
                     <div class="flex items-center">
                         <div class="w-4 h-4 border-2 border-blue-500 mr-2"></div>
-                        <span>Jumat (Kosong)</span>
+                        <span>Tersedia</span>
                     </div>
                     <div class="flex items-center">
                         <div class="w-4 h-4 bg-green-100 border border-green-300 mr-2"></div>
@@ -196,23 +199,22 @@
             </div>
         </div>
 
+        <!-- Judul -->
+        <div class="flex items-center gap-3 py-5">
+            <h2 class="text-lg font-bold tracking-wide text-black-700">
+                ANTRIAN PENGAJUAN PODCAST
+            </h2>
+            <span class="ml-auto bg-gray-100 text-black-700 px-3 py-1 rounded-full text-sm font-semibold">
+                Total: {{ $bookings->total() }} Pengajuan
+            </span>
+        </div>
+
         <!-- Tabel Antrian Verifikasi Podcast -->
         <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
-            <!-- Judul -->
-            <div class="flex items-center gap-3 px-6 py-5 border-b bg-gradient-to-r from-red-50 to-pink-50">
-                <span class="w-2 h-8 bg-red-500 rounded"></span>
-                <h2 class="text-lg font-bold tracking-wide text-blue-700">
-                    ANTRIAN PENGAJUAN PODCAST
-                </h2>
-                <span class="ml-auto bg-blue-100 text-blue-700 px-3 py-1 rounded-full text-sm font-semibold">
-                    Total: {{ $bookings->total() }} Pengajuan
-                </span>
-            </div>
-
             <!-- Tabel dengan Scroll -->
             <div class="overflow-x-auto max-h-96 overflow-y-auto">
                 <table class="w-full text-sm table-striped-cols">
-                    <thead class="bg-gradient-to-r from-red-600 to-red-700 text-white">
+                    <thead class="bg-blue-900 text-white">
                         <tr class="text-left">
                             <th class="px-4 py-3 text-center">Aksi</th>
                             <th class="px-4 py-3">Status</th>

@@ -15,10 +15,12 @@ class User extends Authenticatable
     protected $fillable = [
         'id_role',
         'email',
-        'nama_opd',
+        'kategori_instansi',
+        'instansi',
         'nama_pic',
         'kontak_pic',
         'password',
+        'status',
     ];
 
     protected $hidden = [

@@ -24,39 +24,39 @@ class PodcastController extends Controller
             $year = date('Y');
         }
 
-        // Get bookings for current user
+        // Paginated bookings for the user's queue table
         $bookings = PodcastBooking::where('id_user', Auth::id())
             ->orderBy('tanggal', 'desc')
             ->with('kalender')
             ->orderBy('created_at', 'desc')
             ->with('kalender')
             ->paginate(8);
-            
-        // Get all approved podcast bookings for the selected month (untuk ditampilkan di kalender)
-        $approvedBookings = PodcastBooking::whereYear('tanggal', $year)
+
+        // Get all bookings for the selected month (for calendar)
+        // Only count bookings that actually occupy the calendar: approved bookings
+        // or those tied to a booked `kalender` entry. Do NOT count 'penjadwalan ulang'.
+        $allBookings = PodcastBooking::whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
-            ->approved()
+            ->where(function ($q) {
+                $q->where('status_verifikasi', 'disetujui')
+                  ->orWhereHas('kalender', function ($k) {
+                      $k->where('sudah_dibooking', true);
+                  });
+            })
             ->get()
-            ->groupBy('tanggal')
-            ->map(function ($bookings) {
-                return $bookings->map(function ($booking) {
-                    return [
-                        'id' => $booking->id_podcast,
-                        'user_id' => $booking->id_user,
-                        'waktu' => $booking->waktu,
-                        'judul' => $booking->keterangan,
-                        'narasumber' => $booking->narasumber,
-                        'opd' => $booking->nama_opd,
-                        'host' => $booking->host,
-                        'is_mine' => $booking->id_user == Auth::id()
-                    ];
-                });
-            });
-        
+            ->groupBy(function ($b) { return $b->tanggal->format('Y-m-d'); });
+
+        // Get user's bookings for the selected month keyed by date string
+        $userBookings = PodcastBooking::where('id_user', Auth::id())
+            ->whereYear('tanggal', $year)
+            ->whereMonth('tanggal', $month)
+            ->get()
+            ->groupBy(function ($b) { return $b->tanggal->format('Y-m-d'); });
+
         // Generate calendar
         $calendar = $this->generateCalendar($month, $year);
-        
-        return view('podcast.index', compact('bookings', 'calendar', 'month', 'year', 'approvedBookings'));
+
+        return view('podcast.index', compact('bookings', 'calendar', 'month', 'year', 'userBookings', 'allBookings'));
     }
 
     private function generateCalendar($month, $year)
@@ -167,11 +167,24 @@ class PodcastController extends Controller
             return back()->withErrors(['tanggal' => 'Anda sudah memiliki pengajuan pending pada tanggal ini.'])->withInput();
         }
 
-        // Create podcast booking
+        // Prevent new submissions if the date is already approved/booked by someone else
+        $alreadyApproved = PodcastBooking::whereDate('tanggal', $validated['tanggal'])
+            ->where('status_verifikasi', 'disetujui')
+            ->exists();
+
+        $kalenderBooked = Kalender::whereDate('tanggal_kalender', $validated['tanggal'])
+            ->where('sudah_dibooking', true)
+            ->exists();
+
+        if ($alreadyApproved || $kalenderBooked) {
+            return back()->withErrors(['tanggal' => 'Tanggal ini sudah dibooking dan tidak dapat diajukan lagi.'])->withInput();
+        }
+
+        // Create podcast booking — use user's `instansi` as OPD name
         $booking = PodcastBooking::create([
             'id_user' => Auth::id(),
             'tanggal' => $validated['tanggal'],
-            'nama_opd' => Auth::user()->nama_opd,
+            'nama_opd' => Auth::user()->instansi,
             'nama_pic' => Auth::user()->nama_pic,
             'keterangan' => $validated['keterangan'],
             'narasumber' => $validated['narasumber'],

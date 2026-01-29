@@ -11,10 +11,12 @@ return new class extends Migration
         Schema::create('users', function (Blueprint $table) {
             $table->id();
             $table->string('email')->unique();
-            $table->string('nama_opd');
+            $table->string('kategori_instansi');
+            $table->string('instansi');
             $table->string('nama_pic');
             $table->string('kontak_pic', 20);
             $table->string('password');
+            $table->enum('status', ['aktif', 'nonaktif'])->default('aktif'); 
             $table->rememberToken();
             $table->timestamps();
         });

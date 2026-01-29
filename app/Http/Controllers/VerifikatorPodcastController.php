@@ -142,4 +142,52 @@ class VerifikatorPodcastController extends Controller
             
         return view('verifikator-podcast.report', compact('podcasts'));
     }
+
+    public function updateStatus(Request $request, $id)
+    {
+        $request->validate([
+            'status_verifikasi' => 'required|in:disetujui,ditolak,penjadwalan ulang',
+            'host' => 'nullable|string|max:100',
+            'waktu' => 'nullable|string|max:50',
+            'catatan' => 'nullable|string|max:500',
+        ]);
+
+        $podcast = PodcastBooking::findOrFail($id);
+        
+        $updateData = [
+            'status_verifikasi' => $request->status_verifikasi,
+            'verifikasi' => Auth::user()->nama_user,
+            'id_verifikator' => Auth::id(),
+            'catatan' => $request->catatan,
+        ];
+
+        if ($request->filled('host')) {
+            $updateData['host'] = $request->host;
+        }
+
+        if ($request->filled('waktu')) {
+            $updateData['waktu'] = $request->waktu;
+        }
+
+        $podcast->update($updateData);
+
+        // Create kalender entry if approved
+        if ($request->status_verifikasi == 'disetujui') {
+            $kalender = Kalender::updateOrCreate(
+                [
+                    'tanggal_kalender' => $podcast->tanggal,
+                    'jenis_agenda' => 'podcast',
+                    'id_agenda' => $podcast->id,
+                ],
+                [
+                    'waktu' => $request->waktu ?? '13:00-16:00',
+                    'sudah_dibooking' => true,
+                ]
+            );
+            
+            $podcast->update(['id_kalender' => $kalender->id_kalender]);
+        }
+
+        return back()->with('success', 'Status podcast berhasil diperbarui.');
+    }
 }

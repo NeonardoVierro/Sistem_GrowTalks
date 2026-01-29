@@ -7,7 +7,6 @@ use Illuminate\Database\Eloquent\Relations\HasMany;
 
 class Kalender extends Model
 {
-    protected $primaryKey = 'id_kalender';
     protected $table = 'kalenders';
 
     protected $fillable = [

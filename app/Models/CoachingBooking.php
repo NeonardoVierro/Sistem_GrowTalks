@@ -15,6 +15,7 @@ class CoachingBooking extends Model
         'id_kalender',
         'tanggal',
         'layanan',
+        'nama_opd',
         'keterangan',
         'pic',
         'no_telp',
@@ -43,5 +44,32 @@ class CoachingBooking extends Model
     public function kalender()
     {
         return $this->belongsTo(Kalender::class, 'id_kalender');
+    }
+
+    // Scope untuk status (sama seperti di PodcastBooking)
+    public function scopePending($query)
+    {
+        return $query->where('status_verifikasi', 'pending');
+    }
+    
+    public function scopeApproved($query)
+    {
+        return $query->where('status_verifikasi', 'disetujui');
+    }
+    
+    public function scopeRejected($query)
+    {
+        return $query->where('status_verifikasi', 'ditolak');
+    }
+    
+    public function scopeRescheduled($query)
+    {
+        return $query->where('status_verifikasi', 'penjadwalan ulang');
+    }
+
+    // Scope untuk user tertentu
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('id_user', $userId);
     }
 }

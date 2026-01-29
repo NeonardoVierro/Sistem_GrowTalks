@@ -3,7 +3,6 @@
 namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
-use Illuminate\Database\Eloquent\Relations\BelongsTo;
 
 class PodcastBooking extends Model
 {
@@ -12,7 +11,6 @@ class PodcastBooking extends Model
 
     protected $fillable = [
         'id_user',
-        'id_verifikator',
         'id_kalender',
         'tanggal',
         'nama_opd',
@@ -35,35 +33,40 @@ class PodcastBooking extends Model
     {
         return $this->belongsTo(User::class, 'id_user');
     }
-    
+
+    public function kalender()
+    {
+        return $this->belongsTo(Kalender::class, 'id_kalender');
+    }
+
     public function verifikator()
     {
         return $this->belongsTo(InternalUser::class, 'id_verifikator');
     }
 
-    public function kalender()
-    {
-        return $this->belongsTo(Kalender::class, 'id_kalender', 'id');
-    }
-
-    // Scope untuk status
+    // Scope helper for statuses
     public function scopePending($query)
     {
         return $query->where('status_verifikasi', 'pending');
     }
-    
+
     public function scopeApproved($query)
     {
         return $query->where('status_verifikasi', 'disetujui');
     }
-    
+
     public function scopeRejected($query)
     {
         return $query->where('status_verifikasi', 'ditolak');
     }
-    
+
     public function scopeRescheduled($query)
     {
         return $query->where('status_verifikasi', 'penjadwalan ulang');
+    }
+
+    public function scopeForUser($query, $userId)
+    {
+        return $query->where('id_user', $userId);
     }
 }

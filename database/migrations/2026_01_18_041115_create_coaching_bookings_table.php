@@ -14,13 +14,14 @@ return new class extends Migration
             $table->foreignId('id_kalender')->nullable()->constrained('kalenders');
             $table->date('tanggal');
             $table->string('layanan', 100);
-            $table->text('keterangan');
+            $table->string('nama_opd', 100);
             $table->string('pic', 100);
             $table->string('no_telp', 20);
             $table->string('verifikasi', 100)->nullable();
             $table->enum('status_verifikasi', ['pending', 'disetujui', 'ditolak', 'penjadwalan ulang'])->default('pending');
             $table->string('coach', 100)->nullable();
             $table->string('waktu', 50)->nullable();
+            $table->text('keterangan');
             $table->string('dokumentasi_path', 255)->nullable();
             $table->text('catatan')->nullable();
             $table->timestamps();

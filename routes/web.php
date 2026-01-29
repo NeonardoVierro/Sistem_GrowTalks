@@ -35,6 +35,7 @@ Route::middleware(['auth'])->group(function () {
     // Coaching Routes
     Route::prefix('coaching')->group(function () {
         Route::get('/', [CoachingController::class, 'index'])->name('coaching.index');
+        Route::get('/detail/{date}', [CoachingController::class, 'detail'])->name('coaching.detail');
         Route::post('/submit', [CoachingController::class, 'submit'])->name('coaching.submit');
         Route::delete('/{id}', [CoachingController::class, 'destroy'])->name('coaching.destroy');
     });
@@ -52,6 +53,15 @@ Route::prefix('admin')->name('admin.')->group(function () {
         
         Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])->name('podcasts.status');
         Route::put('/coachings/{id}/status', [AdminController::class, 'updateCoachingStatus'])->name('coachings.status');
+
+        Route::get('/users', [AdminController::class, 'users'])->name('users');
+        Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
+        Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+        Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('users.edit');
+        Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+        Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
+        Route::get('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
+        Route::post('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
     });
 });
 

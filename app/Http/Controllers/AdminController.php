@@ -346,10 +346,19 @@ class AdminController extends Controller
 
     public function podcasts()
     {
-        $podcasts = PodcastBooking::with(['user', 'kalender'])
-            ->orderBy('tanggal', 'desc')
+        $podcasts = PodcastBooking::with(['user','kalender'])
+            ->orderBy('tanggal','desc')
             ->get();
+
         return view('admin.podcast.index', compact('podcasts'));
+    }
+
+    public function showPodcast($id)
+    {
+        $podcast = PodcastBooking::with(['user','kalender'])
+            ->findOrFail($id);
+
+        return view('admin.podcast.show', compact('podcast'));
     }
 
     public function coachings()

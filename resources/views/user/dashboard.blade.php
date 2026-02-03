@@ -75,22 +75,79 @@
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
-                    {{-- Contoh Data --}}
+
+                    @php
+                    $agenda = collect();
+
+                    foreach ($recentPodcasts as $p) {
+                        $agenda->push([
+                            'tanggal' => $p->tanggal,
+                            'waktu' => $p->waktu ?? '-',
+                            'host' => $p->nama_pic ?? '-',
+                            'layanan' => 'Podcast',
+                            'judul' => $p->judul ?? $p->keterangan,
+                            'narasumber' => $p->narasumber ?? '-',
+                        ]);
+                    }
+
+                    foreach ($recentCoachings as $c) {
+                        $agenda->push([
+                            'tanggal' => $c->tanggal,
+                            'waktu' => $c->waktu ?? '-',
+                            'host' => $c->mentor ?? '-',
+                            'layanan' => 'Coaching Clinic',
+                            'judul' => $c->topik ?? 'Coaching',
+                            'narasumber' => '',
+                        ]);
+                    }
+
+                    $agenda = $agenda->sortByDesc('tanggal');
+                    @endphp
+
+
+                    @forelse($agenda as $row)
                     <tr class="hover:bg-slate-50 transition">
-                        <td class="px-6 py-4 text-sm text-slate-700">7 Januari 2026</td>
-                        <td class="px-6 py-4 text-sm font-medium text-blue-600">Coaching Clinic</td>
-                        <td class="px-6 py-4 text-sm text-slate-700">Oranya Cawana : Konsultasi Branding</td>
+
+                    {{-- TANGGAL + WAKTU + HOST --}}
+                    <td class="px-6 py-4 text-sm">
+                        <div class="font-medium">
+                            {{ \Carbon\Carbon::parse($row['tanggal'])->locale('id')->isoFormat('D MMMM YYYY') }}
+                        </div>
+
+                        <!-- <div class="text-xs text-gray-500 mt-1">
+                            Waktu: {{ $row['waktu'] }}
+                        </div>
+
+                        <div class="text-xs text-gray-500">
+                            Host: {{ $row['host'] }}
+                        </div> -->
+                    </td>
+
+
+                    {{-- LAYANAN --}}
+                    <td class="px-6 py-4 text-sm font-medium">
+                        @if($row['layanan'] == 'Podcast')
+                            <span class="text-green-600">Podcast</span>
+                        @else
+                            <span class="text-blue-600">Coaching Clinic</span>
+                        @endif
+                    </td>
+
+
+                    {{-- AGENDA --}}
+                    <td class="px-6 py-4 text-sm break-words">
+                        {{ $row['judul'] }}
+                    </td>
+
                     </tr>
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-6 py-4 text-sm text-slate-700">16 Januari 2026</td>
-                        <td class="px-6 py-4 text-sm font-medium text-green-600">Podcast</td>
-                        <td class="px-6 py-4 text-sm text-slate-700">Selamatkan Karir dan Keluarga Dengan Kenali, Cegah, dan Lawan Stroke</td>
+
+                    @empty
+                    <tr>
+                    <td colspan="3" class="text-center py-6 text-gray-500">
+                    Belum ada agenda diajukan
+                    </td>
                     </tr>
-                    <tr class="hover:bg-slate-50 transition">
-                        <td class="px-6 py-4 text-sm text-slate-700">23 Januari 2026</td>
-                        <td class="px-6 py-4 text-sm font-medium text-blue-600">Coaching Clinic</td>
-                        <td class="px-6 py-4 text-sm text-slate-700">Konsultasi Website & Aplikasi</td>
-                    </tr>
+                    @endforelse
                 </tbody>
             </table>
         </div>

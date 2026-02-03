@@ -76,7 +76,7 @@
                             {{ $podcast->tanggal->format('d/m/Y') }}
                         </td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->nama_opd }}</td>
-                        <td class="py-3 px-4 font-medium">{{ Str::limit($podcast->keterangan, 30) }}</td>
+                        <td class="py-3 px-4 text-sm">{{ Str::limit($podcast->keterangan, 30) }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->host ?? '-' }}</td>
                         <td class="py-3 px-4">

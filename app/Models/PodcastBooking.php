@@ -69,4 +69,9 @@ class PodcastBooking extends Model
     {
         return $query->where('id_user', $userId);
     }
+
+    public function getKodeBookingAttribute()
+    {
+        return $this->tanggal->format('Ymd') . '-' . str_pad($this->id, 4, '0', STR_PAD_LEFT);
+    }
 }

@@ -41,28 +41,39 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
-// Admin Routes
-Route::prefix('admin')->name('admin.')->group(function () {
-    Route::middleware(['auth:internal'])->group(function () {
-        Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
-        Route::get('/users', [AdminController::class, 'users'])->name('users');
-        Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
-        Route::get('/coachings', [AdminController::class, 'coachings'])->name('coachings');
-        Route::get('/reports/podcast', [AdminController::class, 'reportPodcast'])->name('reports.podcast');
-        Route::get('/reports/coaching', [AdminController::class, 'reportCoaching'])->name('reports.coaching');
-        
-        Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])->name('podcasts.status');
-        Route::put('/coachings/{id}/status', [AdminController::class, 'updateCoachingStatus'])->name('coachings.status');
+Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(function () {
 
-        Route::get('/users', [AdminController::class, 'users'])->name('users');
-        Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
-        Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
-        Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('users.edit');
-        Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
-        Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
-        Route::get('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
-        Route::post('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
-    });
+    Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
+
+    Route::get('/users', [AdminController::class, 'users'])->name('users');
+    Route::get('/users/create', [AdminController::class, 'createUser'])->name('users.create');
+    Route::post('/users', [AdminController::class, 'storeUser'])->name('users.store');
+    Route::get('/users/{id}/edit', [AdminController::class, 'editUser'])->name('users.edit');
+    Route::put('/users/{id}', [AdminController::class, 'updateUser'])->name('users.update');
+    Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
+    Route::get('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
+
+
+    Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
+    Route::get('/podcasts/{id}', [AdminController::class, 'showPodcast'])
+        ->name('podcasts.show');
+
+    Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])
+        ->name('podcasts.status');
+
+    Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
+    Route::get('/podcasts/{id}', [AdminController::class, 'showPodcast'])->name('podcast.show');
+    Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])->name('podcasts.status');
+
+    Route::get('/coachings', [AdminController::class, 'coachings'])->name('coachings');
+    Route::put('/coachings/{id}/status', [AdminController::class, 'updateCoachingStatus'])
+        ->name('coachings.status');
+
+    Route::get('/reports/podcast', [AdminController::class, 'reportPodcast'])
+        ->name('reports.podcast');
+
+    Route::get('/reports/coaching', [AdminController::class, 'reportCoaching'])
+        ->name('reports.coaching');
 });
 
 // Verifikator Podcast Routes

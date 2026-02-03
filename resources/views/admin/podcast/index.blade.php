@@ -2,189 +2,119 @@
 
 @section('title', 'Manajemen Podcast')
 
+@php use Illuminate\Support\Str; @endphp
+
 @section('content')
 <div class="space-y-6">
 
-    <!-- PAGE HEADER -->
-    <div class="flex justify-between items-center">
-        <div>
-            <h1 class="text-2xl font-bold text-gray-800">Manajemen Podcast</h1>
-            <p class="text-gray-600">Verifikasi dan kelola pengajuan podcast</p>
-        </div>
+    {{-- HEADER --}}
+    <div>
+        <h1 class="text-2xl font-bold text-gray-800">Laporan Podcast</h1>
+        <p class="text-gray-600">Daftar laporan dan verifikasi pengajuan podcast</p>
     </div>
 
-    <!-- PODCASTS TABLE -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-200 bg-gray-50">
-            <h2 class="text-lg font-bold text-gray-800">Daftar Pengajuan Podcast</h2>
+    {{-- TABLE CARD --}}
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+
+        <div class="px-6 py-4 border-b bg-gray-50">
+            <h2 class="text-lg font-semibold text-gray-800">
+                Laporan Pengajuan Podcast
+            </h2>
         </div>
 
-        <div class="overflow-x-auto p-4">
+        <div class="overflow-x-auto">
 
-            <div class="shadow-md rounded-lg overflow-hidden">
-                <table class="w-full">
-                    <thead>
-                        <thead class="bg-blue-900 text-white">
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">OPD</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                            <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Aksi</th>
-                        </tr>
-                    </thead>
+            <table class="w-full">
 
-                    <tbody class="divide-y divide-gray-200">
-                        @forelse($podcasts as $podcast)
-                        <tr class="hover:bg-gray-100 transition duration-200">
-                            <td class="py-3 px-4 font-mono text-sm shadow-sm">POD{{ $podcast->id }}</td>
+                {{-- ================= HEADER ================= --}}
+                <thead class="bg-blue-900 text-white">
+                    <tr>
+                        <th class="py-3 px-4 text-left text-sm">Status</th>
+                        <th class="py-3 px-4 text-left text-sm">Kode Booking</th>
+                        <th class="py-3 px-4 text-left text-sm">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm">Instansi</th>
+                        <th class="py-3 px-4 text-left text-sm">Judul</th>
+                        <th class="py-3 px-4 text-left text-sm">Narasumber</th>
+                        <th class="py-3 px-4 text-left text-sm">Host</th>
+                        <th class="py-3 px-4 text-left text-sm">Cover</th>
+                    </tr>
+                </thead>
 
-                            <td class="py-3 px-4 text-sm">
-                                {{ $podcast->tanggal->format('d/m/Y') }}
-                                @if($podcast->kalender && $podcast->kalender->waktu)
-                                    <br>
-                                    <span class="text-xs text-gray-500">{{ $podcast->kalender->waktu }}</span>
-                                @endif
-                            </td>
+                {{-- ================= BODY ================= --}}
+                <tbody class="divide-y divide-gray-200">
 
-                            <td class="py-3 px-4 text-sm">{{ $podcast->nama_opd }}</td>
+                    @forelse($podcasts as $podcast)
 
-                            <td class="py-3 px-4">
-                                <div class="font-medium text-gray-800">
-                                    {{ $podcast->keterangan }}
-                                </div>
-                            </td>
+                    <tr class="hover:bg-gray-50 transition">
 
-                            <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
+                        {{-- STATUS --}}
+                        <td class="py-3 px-4">
+                            <span class="px-2 py-1 text-xs rounded-full
+                                @if($podcast->status_verifikasi=='disetujui')
+                                bg-green-100 text-green-800
+                                @elseif($podcast->status_verifikasi=='ditolak')
+                                bg-red-100 text-red-800
+                                @else
+                                bg-yellow-100 text-yellow-800
+                                @endif">
+                                {{ ucfirst($podcast->status_verifikasi) }}
+                            </span>
+                        </td>
 
-                            <td class="py-3 px-4">
-                                <span class="px-3 py-1 text-xs rounded-full shadow
-                                    {{ $podcast->status_verifikasi == 'disetujui' ? 'bg-green-100 text-green-800' : 
-                                       ($podcast->status_verifikasi == 'ditolak' ? 'bg-red-100 text-red-800' : 
-                                       'bg-yellow-100 text-yellow-800') }}">
-                                    {{ ucfirst($podcast->status_verifikasi) }}
-                                </span>
-                            </td>
+                        {{-- KODE --}}
+                        <td class="py-3 px-4 font-mono text-sm">
+                            POD{{ $podcast->id }}
+                        </td>
 
-                            <td class="py-3 px-4">
-                                <div class="flex space-x-2">
-                                    <button onclick="openPodcastModal({{ $podcast->id }})"
-                                        class="text-blue-600 hover:text-blue-800 transition duration-200"
-                                        title="Verifikasi">
-                                        <i class="fas fa-check-circle"></i>
-                                    </button>
+                        {{-- TANGGAL --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ optional($podcast->tanggal)->format('d/m/Y') }}
 
-                                    <button class="text-gray-600 hover:text-gray-800 transition duration-200"
-                                        title="Detail">
-                                        <i class="fas fa-eye"></i>
-                                    </button>
-                                </div>
-                            </td>
-                        </tr>
+                            @if($podcast->kalender && $podcast->kalender->waktu)
+                            <br>
+                            <span class="text-xs text-gray-500">
+                            {{ $podcast->kalender->waktu }}
+                            </span>
+                        @endif
+                        </td>
 
-                        @empty
-                        <tr>
-                            <td colspan="7" class="py-10 text-center text-gray-500">
-                                <i class="fas fa-database text-4xl text-gray-300 mb-3"></i>
-                                <p>Belum ada pengajuan podcast</p>
-                            </td>
-                        </tr>
-                        @endforelse
+                        {{-- OPD --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ $podcast->nama_opd }}
+                        </td>
 
-                    </tbody>
-                </table>
-            </div>
+                        {{-- KETERANGAN --}}
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">
+                            {{ Str::limit($podcast->keterangan, 60) }}
+                        </td>
 
+                        {{-- NARASUMBER --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ $podcast->narasumber }}
+                        </td>
+
+                        {{-- HOST --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ $podcast->host ?? '-' }}
+                        </td>
+
+                        {{-- COVER --}}
+                        <td class="py-3 px-4 text-sm">
+                            @if($podcast->cover_path)
+                                <a href="{{ asset($podcast->cover_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat</a>
+                            @else
+                            <span class="text-gray-400">-</span>
+                            @endif
+                        </td>
+                    </tr>
+                    @empty
+                    <tr>
+                        <td colspan="9" class="py-16 text-center text-gray-400">Belum ada data podcast</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
         </div>
-    </div>
-</div>
-
-<!-- VERIFICATION MODAL -->
-<div id="verificationModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-
-    <div class="bg-white rounded-xl w-full max-w-md shadow-2xl">
-
-        <div class="px-6 py-4 border-b border-gray-200 relative bg-gray-50">
-            <h3 class="text-lg font-bold text-gray-800">Verifikasi Podcast</h3>
-
-            <button onclick="closeModal()"
-                class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
-                <i class="fas fa-times"></i>
-            </button>
-        </div>
-
-        <form id="verificationForm" method="POST" class="p-6">
-            @csrf
-            @method('PUT')
-
-            <div class="space-y-4">
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Status
-                    </label>
-
-                    <select name="status"
-                        class="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                        <option value="pending">Pending</option>
-                        <option value="disetujui">Disetujui</option>
-                        <option value="ditolak">Ditolak</option>
-                    </select>
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Host (Opsional)
-                    </label>
-
-                    <input type="text" name="host"
-                        class="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                        placeholder="Nama host">
-                </div>
-
-                <div>
-                    <label class="block text-sm font-medium text-gray-700 mb-2">
-                        Waktu (Opsional)
-                    </label>
-
-                    <input type="time" name="waktu"
-                        class="w-full px-3 py-2 border border-gray-300 rounded shadow-sm focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
-                </div>
-
-            </div>
-
-            <div class="mt-6 flex justify-end space-x-3">
-                <button type="button" onclick="closeModal()"
-                    class="px-4 py-2 border border-gray-300 text-gray-700 rounded hover:bg-gray-50 shadow-sm">
-                    Batal
-                </button>
-
-                <button type="submit"
-                    class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700 shadow-md">
-                    Simpan
-                </button>
-            </div>
-
-        </form>
     </div>
 </div>
-
-@push('scripts')
-<script>
-    let currentPodcastId = null;
-    
-    function openPodcastModal(id) {
-        currentPodcastId = id;
-        document.getElementById('verificationForm').action = `/admin/podcasts/${id}/status`;
-        document.getElementById('verificationModal').classList.remove('hidden');
-        document.getElementById('verificationModal').classList.add('flex');
-    }
-    
-    function closeModal() {
-        document.getElementById('verificationModal').classList.remove('flex');
-        document.getElementById('verificationModal').classList.add('hidden');
-    }
-</script>
-@endpush
 @endsection

@@ -63,9 +63,9 @@
                                 {{ ucfirst($podcast->status_verifikasi) }}
                             </span>
                         </td>
-                        <td class="py-3 px-4">
+                        <td class="py-3 px-4 text-sm">
                             <button class="text-gray-600 hover:text-gray-800">
-                                {{ $booking->catatan ?? '-' }}
+                                {{ $podcast->catatan ?? '-' }}
                             </button>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
@@ -84,8 +84,10 @@
                                 <div class="text-xs text-gray-600">Host: -</div>
                             @endif
                         </td>
-                        <td class="py-3 px-4 font-medium">{{ Str::limit($podcast->keterangan, 30) }}</td>
-                        <td class="py-3 px-4">{{ $podcast->narasumber }}</td>
+                        <td class="py-3 px-4 text-xs max-w-[180px] whitespace-normal break-words">
+                            {{ $podcast->keterangan }}
+                        </td>
+                        <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4">
                             @if($podcast->cover_path)
                                 <a href="{{ asset($podcast->cover_path) }}" target="_blank" 

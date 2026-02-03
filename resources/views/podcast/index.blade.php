@@ -230,11 +230,11 @@
         </div>
 
         <!-- Tabel Antrian Verifikasi Podcast -->
-        <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
+        <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto max-h-96 overflow-y-auto">
-                <table class="w-full text-sm table-striped-cols">
+                <table class="w-full text-sm border-collapse">
                     <thead class="bg-blue-900 text-white">
-                        <tr class="text-left">
+                        <tr>
                             <th class="px-4 py-3 text-center">Aksi</th>
                             <th class="px-4 py-3">Status</th>
                             <th class="px-4 py-3">Kode Booking</th>
@@ -245,30 +245,31 @@
                         </tr>
                     </thead>
 
-                    <tbody class="divide-y divide-gray-200">
+                    <tbody>
                         @forelse($bookings as $booking)
-                        <tr class="hover:bg-gradient-to-r hover:from-blue-50 hover:to-indigo-50 transition-all duration-200">
-                            <!-- aksi -->
-                            <td class="px-4 py-3">
+                        <tr class="border-t hover:bg-gray-100 transition">
+
+                            {{-- AKSI --}}
+                            <td class="px-4 py-3 text-center">
                                 @if($booking->status_verifikasi === 'pending')
-                                <form action="{{ route('podcast.destroy', $booking->id) }}" method="POST" class="inline">
+                                <form action="{{ route('podcast.destroy', $booking->id) }}" method="POST">
                                     @csrf
                                     @method('DELETE')
                                     <button onclick="return confirm('Batalkan pengajuan ini?')"
-                                        class="text-red-600 hover:text-red-800 w-9 h-9 flex items-center justify-center" title="Batalkan">
+                                        class="text-red-600 hover:text-red-800">
                                         <i class="fas fa-times-circle"></i>
                                     </button>
                                 </form>
                                 @else
-                                <span class="text-gray-400 cursor-not-allowed w-9 h-9 flex items-center justify-center" title="Tidak dapat dibatalkan">
+                                <span class="text-gray-400 cursor-not-allowed">
                                     <i class="fas fa-times-circle"></i>
                                 </span>
                                 @endif
                             </td>
 
-                            <!-- status -->
+                            {{-- STATUS --}}
                             <td class="px-4 py-3">
-                                <span class="px-2 py-1 rounded-full text-xs font-semibold
+                                <span class="px-2 py-1 rounded text-xs font-semibold
                                     @if($booking->status_verifikasi === 'pending') bg-yellow-100 text-yellow-800
                                     @elseif($booking->status_verifikasi === 'disetujui') bg-green-100 text-green-800
                                     @elseif($booking->status_verifikasi === 'penjadwalan ulang') bg-purple-100 text-purple-800
@@ -277,36 +278,44 @@
                                     {{ ucfirst($booking->status_verifikasi) }}
                                 </span>
                             </td>
-                            <!-- kode booking -->
-                            <td class="px-4 py-3 font-mono text-gray-800">
+
+                            {{-- KODE --}}
+                            <td class="px-4 py-3 font-mono">
                                 P{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                             </td>
-                            <!-- tanggal -->
-                            <td class="px-4 py-3">
-                                <div class="font-medium">
+                            <td class="py-3 px-4 text-sm">
+                                {{-- Tanggal --}}
+                                <div class="text-sm">
                                     {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
                                 </div>
+                                {{-- Waktu --}}
+                                @if($booking->waktu)
                                 <div class="text-xs text-gray-500">
-                                    @if($booking->waktu)
-                                    Waktu: {{ $booking->waktu }} <br>
-                                    @endif
-                                    @if($booking->host)
-                                    Host: {{ $booking->host }}
-                                    @endif
+                                    Waktu: {{ $booking->waktu }}
                                 </div>
+                                @endif
+                                {{-- Host --}}
+                                @if($booking->host)
+                                <div class="text-xs text-gray-500">
+                                    Host: {{ $booking->host }}
+                                </div>
+                                @endif
                             </td>
-                            <!-- judul -->
-                            <td class="px-4 py-3 font-semibold text-gray-800">
+                            {{-- JUDUL --}}
+                            <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">
                                 {{ $booking->keterangan }}
                             </td>
-                            <!-- narasumber -->
-                            <td class="px-4 py-3 text-gray-800">
+
+                            {{-- NARASUMBER --}}
+                            <td class="px-4 py-3">
                                 {{ $booking->narasumber }}
                             </td>
-                            <!-- keterangan -->
-                            <td class="px-4 py-3 w-60 text-gray-600">
+
+                            {{-- CATATAN --}}
+                            <td class="px-4 py-3 text-gray-600 max-w-xs break-words">
                                 {{ $booking->catatan ?? '-' }}
                             </td>
+
                         </tr>
                         @empty
                         <tr>

@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Dashboard Admin</h1>
-            <p class="text-gray-600">Monitoring sistem layanan digital</p>
+            <p class="text-gray-600 italic">Monitoring sistem layanan digital</p>
         </div>
 
         <div class="text-sm text-gray-500">

@@ -9,7 +9,7 @@
     <div class="flex justify-between items-center">
         <div>
             <h1 class="text-2xl font-bold text-gray-800">Manajemen User</h1>
-            <p class="text-gray-600">Kelola data user dan OPD</p>
+            <p class="text-gray-600 italic">Kelola data user dan OPD</p>
         </div>
         <a href="{{ route('admin.users.create') }}" 
            class="bg-blue-600 hover:bg-blue-700 text-white font-medium py-2.5 px-4 rounded-lg transition duration-200 flex items-center shadow-sm hover:shadow">

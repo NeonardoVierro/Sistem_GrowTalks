@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Approval Podcast</h1>
-        <p class="text-gray-600">Verifikasi pengajuan podcast dari user</p>
+        <p class="text-gray-600 italic">Verifikasi pengajuan podcast dari user</p>
     </div>
 
     <!-- Antrian Pengajuan Podcast -->
@@ -69,7 +69,7 @@
                             </button>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
-                            {{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id_podcast }}
+                           POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
                         <td class="py-3 px-4">
                             <div class="text-sm">{{ $podcast->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}</div>

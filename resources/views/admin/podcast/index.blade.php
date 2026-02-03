@@ -10,7 +10,7 @@
     {{-- HEADER --}}
     <div>
         <h1 class="text-2xl font-bold text-gray-800">Laporan Podcast</h1>
-        <p class="text-gray-600">Daftar laporan dan verifikasi pengajuan podcast</p>
+        <p class="text-gray-600 italic">Daftar laporan dan verifikasi pengajuan podcast</p>
     </div>
 
     {{-- TABLE CARD --}}
@@ -63,7 +63,7 @@
 
                         {{-- KODE --}}
                         <td class="py-3 px-4 font-mono text-sm">
-                            POD{{ $podcast->id }}
+                            POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
 
                         {{-- TANGGAL --}}

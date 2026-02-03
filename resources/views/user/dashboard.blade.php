@@ -21,8 +21,8 @@
                         Podcast
                     </span>
                 </div>
-                <img src="/images/podcast.jpg" alt="Podcast"
-                    class="rounded-xl w-full h-48 object-cover mb-4">
+                <img src="{{ asset('images/podcast3.jpg') }}" alt="Podcast"
+                    class="rounded-xl w-full h-49 object-cover mb-4">
                 <p class="text-sm text-gray-600 text-justify">
                     <strong>Podcast GrowTalks</strong> merupakan podcast yang menghadirkan
                     obrolan interaktif bersama berbagai narasumber untuk membahas isu sosial,
@@ -42,8 +42,8 @@
                         Coaching Clinic
                     </span>
                 </div>
-                <img src="/images/coaching.jpg" alt="Coaching"
-                    class="rounded-xl w-full h-48 object-cover mb-4">
+                <img src="{{ asset('images/coaching.jpg') }}" alt="Coaching"
+                    class="rounded-xl w-full h-49 object-cover mb-4">
                 <p class="text-sm text-gray-600 text-justify">
                     <strong>Coaching Clinic</strong> merupakan layanan pendampingan
                     yang dirancang untuk membantu peserta mengembangkan potensi diri
@@ -60,7 +60,7 @@
         <h2 class="text-lg font-bold tracking-wide text-black-700">
             Upcoming Agenda
         </h2>
-        <p class="text-sm text-slate-500">
+        <p class="text-sm text-slate-500 italic">
             Riwayat agenda podcast dan coaching clinic yang telah diajukan
         </p>
     </div>

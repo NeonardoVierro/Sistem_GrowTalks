@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Coaching Clinic</h1>
-        <p class="text-gray-600">Layanan pendampingan dan konsultasi untuk pengembangan kompetensi dan solusi teknis,
+        <p class="text-gray-600 italic">Layanan pendampingan dan konsultasi untuk pengembangan kompetensi dan solusi teknis,
     tersedia setiap hari Rabu dan Jumat.</p>
     </div>
 
@@ -201,7 +201,7 @@
                                 </span>
                             </td>
                         <td class="py-3 px-4 border-b font-mono">
-                            CC{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
+                            CCA-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                         </td>
                         <td class="py-3 px-4 border-b">
                             {{ $booking->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}

@@ -68,7 +68,7 @@
                     @forelse($recentCoachings as $coaching)
                     <tr class="table-row">
                         <td class="py-3 px-4 font-mono text-sm">
-                            CCA{{ $coaching->id_coaching }}
+                           CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
                         </td>
                         <td class="py-3 px-4 text-sm">
                             {{ $coaching->tanggal->format('d/m/Y') }}

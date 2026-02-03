@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Laporan Coaching Clinic</h1>
-        <p class="text-gray-600">Laporan dan statistik coaching clinic</p>
+        <p class="text-gray-600 italic">Laporan dan statistik coaching clinic</p>
     </div>
 
     <!-- Report Container -->
@@ -65,12 +65,32 @@
                     @forelse($coachings as $coaching)
                     <tr class="table-row">
                         <td class="py-3 px-4">
-                            <span class="status-badge status-{{ $coaching->status_verifikasi }}">
-                                {{ ucfirst($coaching->status_verifikasi) }}
-                            </span>
+                             @php
+        $status = strtolower($coaching->status_verifikasi);
+        switch($status) {
+            case 'disetujui':
+                $bg = 'bg-green-100 text-green-800';
+                break;
+            case 'pending':
+                $bg = 'bg-yellow-100 text-yellow-800';
+                break;
+            case 'ditolak':
+                $bg = 'bg-red-100 text-red-800';
+                break;
+            case 'penjadwalan ulang':
+                $bg = 'bg-purple-100 text-purple-800';
+                break;
+            default:
+                $bg = 'bg-gray-100 text-gray-800';
+        }
+    @endphp
+
+    <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
+        {{ ucfirst($coaching->status_verifikasi) }}
+    </span>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
-                            CCA{{ $coaching->id_coaching }}
+                             CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
                         </td>
                         <td class="py-3 px-4 text-sm">
                             {{ $coaching->tanggal->format('d/m/Y') }}

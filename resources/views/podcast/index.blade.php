@@ -7,7 +7,7 @@
     <!-- Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Podcast</h1>
-        <p class="text-gray-600">Ruang berbagi gagasan dan inspirasi bersama narasumber pilihan. Jadwal podcast tersedia khusus setiap hari Jumat.</p>
+        <p class="text-gray-600 italic">Ruang berbagi gagasan dan inspirasi bersama narasumber pilihan. Jadwal podcast tersedia khusus setiap hari Jumat.</p>
     </div>
     
     <!-- CONTENT -->
@@ -281,7 +281,7 @@
 
                             {{-- KODE --}}
                             <td class="px-4 py-3 font-mono">
-                                P{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
+                                POD-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                             </td>
                             <td class="py-3 px-4 text-sm">
                                 {{-- Tanggal --}}

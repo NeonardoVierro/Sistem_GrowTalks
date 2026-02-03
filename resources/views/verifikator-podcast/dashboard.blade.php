@@ -96,7 +96,7 @@
                     @forelse($recentPodcasts as $podcast)
                     <tr class="table-row">
                         <td class="py-3 px-4 font-mono text-sm">
-                            POD{{ $podcast->id_podcast }}
+                            POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
                         <td class="py-3 px-4 text-sm">
                             {{ $podcast->tanggal->format('d/m/Y') }}

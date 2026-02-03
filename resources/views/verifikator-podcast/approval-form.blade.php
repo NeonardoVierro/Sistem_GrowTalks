@@ -23,7 +23,7 @@
                     <!-- Kode Booking -->
                     <div class="mb-4">
                         <div class="text-sm text-gray-600 mb-1">Kode Booking</div>
-                        <div class="font-mono font-bold text-lg">{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}</div>
+                        <div class="font-mono font-bold text-lg">POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}</div>
                     </div>
 
                     <!-- Tanggal -->
@@ -78,6 +78,7 @@
             <form action="{{ route('verifikator-podcast.update-approval', $podcast->id) }}" method="POST" class="mt-8 border-t border-gray-200 pt-6">
                 @csrf
                 @method('PUT')
+                
                 
                 <div class="grid grid-cols-2 gap-6">
                     <div>

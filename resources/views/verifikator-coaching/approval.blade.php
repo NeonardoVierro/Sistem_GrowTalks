@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Approval Coaching Clinic</h1>
-        <p class="text-gray-600">Verifikasi pengajuan coaching clinic dari user</p>
+        <p class="text-gray-600 italic">Verifikasi pengajuan coaching clinic dari user</p>
     </div>
 
     <!-- Antrian Pengajuan Coaching -->

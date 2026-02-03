@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Laporan Podcast</h1>
-        <p class="text-gray-600">Laporan dan statistik podcast</p>
+        <p class="text-gray-600 italic">Laporan dan statistik podcast</p>
     </div>
 
     <!-- Report Container -->
@@ -70,7 +70,7 @@
                             </span>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
-                            POD{{ $podcast->id_podcast }}
+                             POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
                         <td class="py-3 px-4 text-sm">
                             {{ $podcast->tanggal->format('d/m/Y') }}

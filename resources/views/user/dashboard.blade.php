@@ -69,9 +69,10 @@
             <table class="w-full border border-gray-300 border-collapse">
                 <thead>
                     <tr class="bg-blue-900 text-white">
-                        <th class="px-6 py-3 text-left font-semibold">Tanggal</th>
-                        <th class="px-6 py-3 text-left font-semibold">Layanan</th>
-                        <th class="px-6 py-3 text-left font-semibold">Agenda</th>
+                        <th class="px-6 py-3 text-left font-semibold w-[20%]">Tanggal</th>
+                        <th class="px-6 py-3 text-left font-semibold w-[15%]">Layanan</th>
+                        <th class="px-6 py-3 text-left font-semibold w-[20%]">Instansi</th>
+                        <th class="px-6 py-3 text-left font-semibold w-[45%]">Agenda</th>
                     </tr>
                 </thead>
                 <tbody class="bg-white divide-y divide-gray-100">
@@ -87,6 +88,7 @@
                             'layanan' => 'Podcast',
                             'judul' => $p->judul ?? $p->keterangan,
                             'narasumber' => $p->narasumber ?? '-',
+                            'instansi' => $p->nama_opd ?? '-',
                         ]);
                     }
 
@@ -98,6 +100,7 @@
                             'layanan' => 'Coaching Clinic',
                             'judul' => $c->topik ?? 'Coaching',
                             'narasumber' => '',
+                            'instansi' => $c->nama_opd ?? '-',
                         ]);
                     }
 
@@ -133,6 +136,10 @@
                         @endif
                     </td>
 
+                    {{-- INSTANSI --}}
+                    <td class="px-6 py-4 text-sm">
+                        {{ $row['instansi'] }}
+                    </td>
 
                     {{-- AGENDA --}}
                     <td class="px-6 py-4 text-sm break-words">
@@ -143,7 +150,7 @@
 
                     @empty
                     <tr>
-                    <td colspan="3" class="text-center py-6 text-gray-500">
+                    <td colspan="4" class="text-center py-6 text-gray-500">
                     Belum ada agenda diajukan
                     </td>
                     </tr>

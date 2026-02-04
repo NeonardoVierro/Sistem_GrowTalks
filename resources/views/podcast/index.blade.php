@@ -10,6 +10,19 @@
         <p class="text-gray-600 italic">Ruang berbagi gagasan dan inspirasi bersama narasumber pilihan. Jadwal podcast tersedia khusus setiap hari Jumat.</p>
     </div>
     
+    <!-- Success/Error Messages -->
+    @if(session('success'))
+        <div class="mb-4 p-4 bg-green-100 text-green-700 rounded-lg">
+            {{ session('success') }}
+        </div>
+    @endif
+    
+    @if(session('error'))
+        <div class="mb-4 p-4 bg-red-100 text-red-700 rounded-lg">
+            {{ session('error') }}
+        </div>
+    @endif
+
     <!-- CONTENT -->
         <!-- Calendar Section -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-6 p-4">

@@ -21,8 +21,17 @@ class UserController extends Controller
             +
             CoachingBooking::where('id_user', $user->id)->where('status_verifikasi', 'pending')->count();
 
-        $recentPodcasts = PodcastBooking::where('id_user', $user->id)->get();
-        $recentCoachings = CoachingBooking::where('id_user', $user->id)->get();
+        $recentPodcasts = PodcastBooking::with('user')
+            ->where('status_verifikasi', 'disetujui')
+            ->whereDate('tanggal', '>=', now())
+            ->orderBy('tanggal', 'asc')
+            ->get();
+
+        $recentCoachings = CoachingBooking::with('user')
+            ->where('status_verifikasi', 'disetujui')
+            ->whereDate('tanggal', '>=', now())
+            ->orderBy('tanggal', 'asc')
+            ->get();
 
         return view('user.dashboard', compact(
             'podcastCount',

@@ -65,29 +65,28 @@
                     @forelse($coachings as $coaching)
                     <tr class="table-row">
                         <td class="py-3 px-4">
-                             @php
-        $status = strtolower($coaching->status_verifikasi);
-        switch($status) {
-            case 'disetujui':
-                $bg = 'bg-green-100 text-green-800';
-                break;
-            case 'pending':
-                $bg = 'bg-yellow-100 text-yellow-800';
-                break;
-            case 'ditolak':
-                $bg = 'bg-red-100 text-red-800';
-                break;
-            case 'penjadwalan ulang':
-                $bg = 'bg-purple-100 text-purple-800';
-                break;
-            default:
-                $bg = 'bg-gray-100 text-gray-800';
-        }
-    @endphp
-
-    <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
-        {{ ucfirst($coaching->status_verifikasi) }}
-    </span>
+                            @php
+                                $status = strtolower($coaching->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
+                                {{ ucfirst($coaching->status_verifikasi) }}
+                            </span>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
                              CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
@@ -95,9 +94,9 @@
                         <td class="py-3 px-4 text-sm">
                             {{ $coaching->tanggal->format('d/m/Y') }}
                         </td>
-                        <td class="py-3 px-4 text-sm">{{ $coaching->user->nama_opd }}</td>
+                        <td class="py-3 px-4 text-sm">{{ $coaching->nama_opd }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->layanan }}</td>
-                        <td class="py-3 px-4 font-medium">{{ Str::limit($coaching->keterangan, 30) }}</td>
+                        <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan) }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
                         <td class="py-3 px-4">
                             @if($coaching->dokumentasi_path)

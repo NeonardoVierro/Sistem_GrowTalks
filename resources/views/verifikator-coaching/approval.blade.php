@@ -107,12 +107,12 @@
                                 <div class="text-xs text-gray-600">Coach: -</div>
                             @endif
                         </td>
-                        <td class="py-3 px-4 font-medium">{{ $coaching->layanan }}</td>
-                        <td class="py-3 px-4">{{ Str::limit($coaching->keterangan, 30) }}</td>
-                        <td class="py-3 px-4">{{ $coaching->user->nama_opd ?? '-' }}</td>
-                        <td class="py-3 px-4">{{ $coaching->pic }}</td>
-                        <td class="py-3 px-4 text-sm text-gray-600">
-                            {{ $coaching->catatan ? Str::limit($coaching->catatan, 20) : '-' }}
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->layanan }}</td>
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ Str::limit($coaching->keterangan, 30) }}</td>
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->nama_opd ?? '-' }}</td>
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->pic }}</td>
+                        <td class="py-3 px-4 text-xs max-w-[180px] whitespace-normal break-words">
+                            {{ $coaching->catatan ? Str::limit($coaching->catatan) : '-' }}
                         </td>
                     </tr>
                     @empty

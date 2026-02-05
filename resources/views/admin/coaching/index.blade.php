@@ -71,7 +71,7 @@
 
                         {{-- INSTANSI --}}
                         <td class="py-3 px-4 text-sm">
-                            {{ $coaching->user->nama_opd }}
+                            {{ $coaching->nama_opd }}
                         </td>
 
                         {{-- KATEGORI --}}

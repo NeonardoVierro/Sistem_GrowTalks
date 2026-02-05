@@ -41,8 +41,8 @@
                     <thead class="bg-blue-900 text-white">
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Aksi</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Keterangan</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Keterangan</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
@@ -63,13 +63,13 @@
                                 {{ ucfirst($podcast->status_verifikasi) }}
                             </span>
                         </td>
+                        <td class="py-3 px-4 font-mono text-sm">
+                           POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
+                        </td>
                         <td class="py-3 px-4 text-sm">
                             <button class="text-gray-600 hover:text-gray-800">
                                 {{ $podcast->catatan ?? '-' }}
                             </button>
-                        </td>
-                        <td class="py-3 px-4 font-mono text-sm">
-                           POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
                         <td class="py-3 px-4">
                             <div class="text-sm">{{ $podcast->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}</div>

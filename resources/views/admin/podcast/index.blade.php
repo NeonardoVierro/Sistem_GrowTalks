@@ -83,7 +83,7 @@
                             {{ $podcast->nama_opd }}
                         </td>
 
-                        {{-- KETERANGAN --}}
+                        {{-- JUDUL --}}
                         <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">
                             {{ Str::limit($podcast->keterangan, 60) }}
                         </td>

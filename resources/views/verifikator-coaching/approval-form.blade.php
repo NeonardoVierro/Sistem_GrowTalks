@@ -36,7 +36,7 @@
                     <!-- Instansi -->
                     <div class="mb-4">
                         <div class="text-sm text-gray-600 mb-1">Instansi</div>
-                        <div class="font-bold">{{ $coaching->user->nama_opd ?? '-' }}</div>
+                        <div class="font-bold">{{ $coaching->nama_opd ?? '-' }}</div>
                     </div>
 
                     <!-- Pemohon -->

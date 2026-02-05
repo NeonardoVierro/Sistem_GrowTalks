@@ -64,19 +64,40 @@
                 <tbody class="divide-y divide-gray-200">
                     @forelse($podcasts as $podcast)
                     <tr class="table-row">
-                        <td class="py-3 px-4">
-                            <span class="status-badge status-{{ $podcast->status_verifikasi }}">
+                        <td class="py-3 px-2 w-[90px] text-center">
+                            @php
+                                $status = strtolower($podcast->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="inline-flex items-center justify-center w-fit mx-auto
+                                        text-[10px] px-2 py-0.5 rounded-full font-medium
+                                        whitespace-normal break-words text-center {{ $bg }}">
                                 {{ ucfirst($podcast->status_verifikasi) }}
                             </span>
                         </td>
-                        <td class="py-3 px-4 font-mono text-sm">
-                             POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
+                        <td class="py-3 px-4 font-mono text-sm whitespace-nowrap">
+                            POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
                         <td class="py-3 px-4 text-sm">
                             {{ $podcast->tanggal->format('d/m/Y') }}
                         </td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->nama_opd }}</td>
-                        <td class="py-3 px-4 text-sm">{{ Str::limit($podcast->keterangan, 30) }}</td>
+                        <td class="py-3 px-4 text-sm max-w-[220px] break-words whitespace-normal">{{ $podcast->keterangan }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->host ?? '-' }}</td>
                         <td class="py-3 px-4">

@@ -137,10 +137,28 @@
                             </td>
 
                             <td class="p-3">
-                                <span class="px-3 py-1 rounded text-xs shadow-sm
-                                    {{ $podcast->status_verifikasi == 'disetujui' ? 'bg-green-100 text-green-700' :
-                                       ($podcast->status_verifikasi == 'ditolak' ? 'bg-red-100 text-red-700' :
-                                       'bg-yellow-100 text-yellow-700') }}">
+                                @php
+                                    $status = strtolower($podcast->status_verifikasi);
+                                    switch($status) {
+                                        case 'disetujui':
+                                            $bg = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'pending':
+                                            $bg = 'bg-yellow-100 text-yellow-800';
+                                            break;
+                                        case 'ditolak':
+                                            $bg = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'penjadwalan ulang':
+                                            $bg = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $bg = 'bg-gray-100 text-gray-800';
+                                    }
+                                @endphp
+                                <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
+                                            rounded-full font-medium leading-tight text-center
+                                            whitespace-normal break-words {{ $bg }}">
                                     {{ ucfirst($podcast->status_verifikasi) }}
                                 </span>
                             </td>
@@ -185,12 +203,29 @@
                             <td class="p-3">
                                 {{ $coaching->layanan }}
                             </td>
-
                             <td class="p-3">
-                                <span class="px-3 py-1 rounded text-xs shadow-sm
-                                    {{ $coaching->status_verifikasi == 'disetujui' ? 'bg-green-100 text-green-700' :
-                                       ($coaching->status_verifikasi == 'ditolak' ? 'bg-red-100 text-red-700' :
-                                       'bg-yellow-100 text-yellow-700') }}">
+                                @php
+                                    $status = strtolower($coaching->status_verifikasi);
+                                    switch($status) {
+                                        case 'disetujui':
+                                            $bg = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'pending':
+                                            $bg = 'bg-yellow-100 text-yellow-800';
+                                            break;
+                                        case 'ditolak':
+                                            $bg = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'penjadwalan ulang':
+                                            $bg = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $bg = 'bg-gray-100 text-gray-800';
+                                    }
+                                @endphp
+                                <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
+                                            rounded-full font-medium leading-tight text-center
+                                            whitespace-normal break-words {{ $bg }}">
                                     {{ ucfirst($coaching->status_verifikasi) }}
                                 </span>
                             </td>

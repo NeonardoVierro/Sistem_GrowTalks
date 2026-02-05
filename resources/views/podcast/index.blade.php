@@ -249,12 +249,12 @@
                     <thead class="bg-blue-900 text-white">
                         <tr>
                             <th class="px-4 py-3 text-center">Aksi</th>
-                            <th class="px-4 py-3">Status</th>
-                            <th class="px-4 py-3">Kode Booking</th>
-                            <th class="px-4 py-3">Tanggal</th>
-                            <th class="px-4 py-3">Judul</th>
-                            <th class="px-4 py-3">Narasumber</th>
-                            <th class="px-4 py-3">Keterangan</th>
+                            <th class="px-4 py-3 text-left">Status</th>
+                            <th class="px-4 py-3 text-left">Kode Booking</th>
+                            <th class="px-4 py-3 text-left">Tanggal</th>
+                            <th class="px-4 py-3 text-left">Judul</th>
+                            <th class="px-4 py-3 text-left">Narasumber</th>
+                            <th class="px-4 py-3 text-left">Keterangan</th>
                         </tr>
                     </thead>
 
@@ -281,13 +281,29 @@
                             </td>
 
                             {{-- STATUS --}}
-                            <td class="px-4 py-3">
-                                <span class="px-2 py-1 rounded text-xs font-semibold
-                                    @if($booking->status_verifikasi === 'pending') bg-yellow-100 text-yellow-800
-                                    @elseif($booking->status_verifikasi === 'disetujui') bg-green-100 text-green-800
-                                    @elseif($booking->status_verifikasi === 'penjadwalan ulang') bg-purple-100 text-purple-800
-                                    @elseif($booking->status_verifikasi === 'ditolak') bg-red-100 text-red-800
-                                    @endif">
+                            <td class="px-4 py-3 w-[90px]">
+                                @php
+                                    $status = strtolower($booking->status_verifikasi);
+                                    switch($status) {
+                                        case 'disetujui':
+                                            $bg = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'pending':
+                                            $bg = 'bg-yellow-100 text-yellow-800';
+                                            break;
+                                        case 'ditolak':
+                                            $bg = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'penjadwalan ulang':
+                                            $bg = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $bg = 'bg-gray-100 text-gray-800';
+                                    }
+                                @endphp
+                                <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
+                                            rounded-full font-medium leading-tight text-center
+                                            whitespace-normal break-words {{ $bg }}">
                                     {{ ucfirst($booking->status_verifikasi) }}
                                 </span>
                             </td>
@@ -296,18 +312,18 @@
                             <td class="px-4 py-3 font-mono">
                                 POD-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                             </td>
-                            <td class="py-3 px-4 text-sm">
-                                {{-- Tanggal --}}
-                                <div class="text-sm">
+
+                            <!-- TANGGAL -->
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                <div>
                                     {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
                                 </div>
-                                {{-- Waktu --}}
                                 @if($booking->waktu)
                                 <div class="text-xs text-gray-500">
-                                    Waktu: {{ $booking->waktu }}
+                                    {{ $booking->waktu }}
                                 </div>
                                 @endif
-                                {{-- Host --}}
+
                                 @if($booking->host)
                                 <div class="text-xs text-gray-500">
                                     Host: {{ $booking->host }}
@@ -315,20 +331,20 @@
                                 @endif
                             </td>
                             {{-- JUDUL --}}
-                            <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">
-                                {{ $booking->keterangan }}
+                            <td class="py-3 px-4 text-sm max-w-[200px]">
+                                <div class="line-clamp-2 break-words">
+                                    {{ $booking->keterangan }}
+                                </div>
                             </td>
-
                             {{-- NARASUMBER --}}
                             <td class="px-4 py-3">
                                 {{ $booking->narasumber }}
                             </td>
 
-                            {{-- CATATAN --}}
-                            <td class="px-4 py-3 text-gray-600 max-w-xs break-words">
+                            <!-- KETERANGAN -->
+                            <td class="px-4 py-3 text-xs text-gray-600 w-[140px] break-words whitespace-normal">
                                 {{ $booking->catatan ?? '-' }}
                             </td>
-
                         </tr>
                         @empty
                         <tr>

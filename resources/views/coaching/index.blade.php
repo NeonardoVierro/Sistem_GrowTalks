@@ -159,7 +159,7 @@
     
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
         <div class="overflow-x-auto max-h-96 overflow-y-auto">
-            <table class="w-full text-sm table-striped-cols">
+            <table class="w-full text-sm border-collapse">
                 <thead class="bg-blue-900 text-white">
                     <tr class="text-left">
                         <th class="py-3 px-4 text center">Aksi</th>
@@ -191,20 +191,48 @@
                             @endif
                         </td>
                         <td class="py-3 px-4 border-b">
-                            <span class="px-2 py-1 rounded-full text-xs font-semibold
-                                    @if($booking->status_verifikasi === 'pending') bg-yellow-100 text-yellow-800
-                                    @elseif($booking->status_verifikasi === 'disetujui') bg-green-100 text-green-800
-                                    @elseif($booking->status_verifikasi === 'penjadwalan ulang') bg-purple-100 text-purple-800
-                                    @elseif($booking->status_verifikasi === 'ditolak') bg-red-100 text-red-800
-                                    @endif">
+                            @php
+                                $status = strtolower($booking->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
+                                            rounded-full font-medium leading-tight text-center
+                                            whitespace-normal break-words {{ $bg }}">
                                     {{ ucfirst($booking->status_verifikasi) }}
-                                </span>
+                            </span>
                             </td>
                         <td class="py-3 px-4 border-b font-mono">
                             CCA-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                         </td>
-                        <td class="py-3 px-4 border-b">
-                            {{ $booking->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}
+                        <td class="py-3 px-4 text-sm whitespace-nowrap">
+                            <div>
+                                {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
+                            </div>
+                            @if($booking->waktu)
+                            <div class="text-xs text-gray-500">
+                                {{ $booking->waktu }}
+                            </div>
+                            @endif
+                            @if($booking->coach)
+                            <div class="text-xs text-gray-500">
+                                Coach: {{ $booking->coach }}
+                            </div>
+                            @endif
                         </td>
                         <td class="py-3 px-4 border-b">{{ $booking->layanan }}</td>
                         <td class="py-3 px-4 border-b">{{ $booking->keterangan }}</td>

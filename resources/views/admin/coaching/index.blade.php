@@ -47,14 +47,28 @@
 
                         {{-- STATUS --}}
                         <td class="py-3 px-4">
-                            <span class="px-2 py-1 text-xs rounded-full
-                                @if($coaching->status_verifikasi=='disetujui')
-                                    bg-green-100 text-green-800
-                                @elseif($coaching->status_verifikasi=='ditolak')
-                                    bg-red-100 text-red-800
-                                @else
-                                    bg-yellow-100 text-yellow-800
-                                @endif">
+                            @php
+                                $status = strtolower($coaching->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="inline-flex items-center justify-center w-fit mx-auto
+                                        text-[10px] px-2 py-0.5 rounded-full font-medium
+                                        whitespace-normal break-words text-center {{ $bg }}">
                                 {{ ucfirst($coaching->status_verifikasi) }}
                             </span>
                         </td>

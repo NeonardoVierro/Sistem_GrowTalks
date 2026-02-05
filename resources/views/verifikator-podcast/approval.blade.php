@@ -10,105 +10,126 @@
         <p class="text-gray-600 italic">Verifikasi pengajuan podcast dari user</p>
     </div>
 
-    <!-- Antrian Pengajuan Podcast -->
-    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-bold text-gray-800">Antrian Pengajuan Podcast</h2>
-        </div>
-        
-        <!-- Tabs -->
-        <div class="border-b border-gray-200">
-            <nav class="flex -mb-px">
-                <button class="py-3 px-6 border-b-2 border-blue-500 text-blue-600 font-medium">
-                    Semua ({{ $podcasts->count() }})
-                </button>
-                <button class="py-3 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    Pending ({{ $podcasts->where('status_verifikasi', 'pending')->count() }})
-                </button>
-                <button class="py-3 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    Disetujui ({{ $podcasts->where('status_verifikasi', 'disetujui')->count() }})
-                </button>
-                <button class="py-3 px-6 border-b-2 border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300">
-                    Ditolak ({{ $podcasts->where('status_verifikasi', 'ditolak')->count() }})
-                </button>
-            </nav>
-        </div>
+    <!-- Tabel Antrian Verifikasi Podcast -->
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden">
+        <div>
 
-        <!-- Table -->
-        <div class="overflow-x-auto">
             <table class="w-full">
-                <thead>
-                    <thead class="bg-blue-900 text-white">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Aksi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Keterangan</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Cover</th>
+
+                <!-- HEADER -->
+                <thead class="bg-blue-900 text-white text-left">
+                    <tr>
+                        <th class="py-3 px-4 text-sm">Aksi</th>
+                        <th class="py-3 px-4 text-sm">Status</th>
+                        <th class="py-3 px-4 text-sm">Kode Booking</th>
+                        <th class="py-3 px-4 text-sm">Tanggal</th>
+                        <th class="py-3 px-4 text-sm">Judul</th>
+                        <th class="py-3 px-4 text-sm">Narasumber</th>
+                        <th class="py-3 px-4 text-sm">Keterangan</th>
+                        <th class="py-3 px-4 text-sm">Cover</th>
                     </tr>
                 </thead>
-                <tbody class="divide-y divide-gray-200">
+
+                <!-- BODY -->
+                <tbody class="divide-y divide-gray-200 text-sm">
+
                     @forelse($podcasts as $podcast)
-                    <tr class="table-row">
+                    <tr class="hover:bg-gray-50 transition">
+
+                        {{-- AKSI --}}
                         <td class="py-3 px-4">
                             <a href="{{ route('verifikator-podcast.approval-form', $podcast->id) }}" 
-                               class="text-blue-600 hover:text-blue-800" title="Verifikasi">
+                               class="text-green-600 hover:text-green-800" title="Verifikasi">
                                 <i class="fas fa-file-alt"></i>
                             </a>
                         </td>
-                        <td class="py-3 px-4">
-                            <span class="status-badge status-{{ $podcast->status_verifikasi }}">
+
+                        {{-- STATUS --}}
+                        <td class="py-3 px-4 text-center w-[110px]">
+                            @php
+                                $status = strtolower($podcast->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp
+                            <span class="inline-flex items-center justify-center w-fit mx-auto
+                                        text-[10px] px-2 py-0.5 rounded-full font-medium
+                                        whitespace-normal break-words text-center {{ $bg }}">
                                 {{ ucfirst($podcast->status_verifikasi) }}
                             </span>
                         </td>
+
+                        {{-- KODE --}}
                         <td class="py-3 px-4 font-mono text-sm">
-                           POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
+                            POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
-                        <td class="py-3 px-4 text-sm">
-                            <button class="text-gray-600 hover:text-gray-800">
-                                {{ $podcast->catatan ?? '-' }}
-                            </button>
-                        </td>
-                        <td class="py-3 px-4">
-                            <div class="text-sm">{{ $podcast->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}</div>
+
+                        {{-- TANGGAL --}}
+                        <td class="py-3 px-4 text-sm whitespace-nowrap">
+                            {{ \Carbon\Carbon::parse($podcast->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
+
                             @if($podcast->waktu)
-                                <div class="text-xs text-gray-600">Waktu: {{ $podcast->waktu }}</div>
-                            @else
-                                <div class="text-xs text-gray-600">Waktu: -</div>
+                                <div class="text-xs text-gray-500">
+                                    {{ $podcast->waktu }}
+                                </div>
                             @endif
+
                             @if($podcast->host)
-                                <div class="text-xs text-gray-600">Host: {{ $podcast->host }}</div>
-                            @else
-                                <div class="text-xs text-gray-600">Host: -</div>
+                                <div class="text-xs text-gray-500">
+                                    Host: {{ $podcast->host }}
+                                </div>
                             @endif
                         </td>
-                        <td class="py-3 px-4 text-xs max-w-[180px] whitespace-normal break-words">
+
+                        {{-- JUDUL --}}
+                        <td class="py-3 px-4 text-sm max-w-[260px] break-words whitespace-normal">
                             {{ $podcast->keterangan }}
                         </td>
-                        <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
-                        <td class="py-3 px-4">
-                            @if($podcast->cover_path)
-                                <a href="{{ asset($podcast->cover_path) }}" target="_blank" 
-                                   class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-link mr-1"></i>Unggah
-                                </a>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
+
+                        {{-- NARASUMBER --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ $podcast->narasumber }}
+                        </td>
+
+                        {{-- KETERANGAN --}}
+                        <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
+                            {{ $podcast->catatan ?? '-' }}
+                        </td>
+                        <td class="py-3 px-4"> 
+                            @if($podcast->cover_path) 
+                            <a href="{{ asset($podcast->cover_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800"> 
+                                <i class="fas fa-link mr-1"></i>Unggah </a> 
+                            @else 
+                            <span class="text-gray-400">-</span> 
+                            @endif 
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="8" class="py-8 text-center text-gray-500">
+                        <td colspan="7" class="py-16 text-center text-gray-400">
                             Belum ada pengajuan podcast
                         </td>
                     </tr>
                     @endforelse
+
                 </tbody>
             </table>
+
         </div>
     </div>
+
 </div>
 @endsection

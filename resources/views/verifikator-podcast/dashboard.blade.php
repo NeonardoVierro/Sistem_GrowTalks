@@ -103,12 +103,32 @@
                         </td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->nama_opd }}</td>
                         <td class="py-3 px-4">
-                            <div class="font-medium text-gray-800">{{ Str::limit($podcast->keterangan, 30) }}</div>
+                            <div class="font-medium text-gray-800 text-sm">{{ Str::limit($podcast->keterangan) }}</div>
                         </td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4">
-                            <span class="status-badge status-{{ $podcast->status_verifikasi }}">
-                                {{ ucfirst($podcast->status_verifikasi) }}
+                            @php
+                                $status = strtolower($podcast->status_verifikasi);
+                                switch($status) {
+                                    case 'disetujui':
+                                        $bg = 'bg-green-100 text-green-800';
+                                        break;
+                                    case 'pending':
+                                        $bg = 'bg-yellow-100 text-yellow-800';
+                                        break;
+                                    case 'ditolak':
+                                        $bg = 'bg-red-100 text-red-800';
+                                        break;
+                                    case 'penjadwalan ulang':
+                                        $bg = 'bg-purple-100 text-purple-800';
+                                        break;
+                                    default:
+                                        $bg = 'bg-gray-100 text-gray-800';
+                                }
+                            @endphp    
+                            <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
+                                        rounded-full font-medium leading-tight text-center whitespace-normal break-words {{ $bg }}">
+                                    {{ ucfirst($podcast->status_verifikasi) }}
                             </span>
                         </td>
                     </tr>

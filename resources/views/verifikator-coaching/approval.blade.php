@@ -87,24 +87,24 @@
                                         $bg = 'bg-gray-100 text-gray-800';
                                 }
                             @endphp
-                            <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
+                            <span class="inline-flex items-center justify-center w-fit mx-auto
+                                        text-[10px] px-2 py-0.5 rounded-full font-medium
+                                        whitespace-normal break-words text-center {{ $bg }}">
                                 {{ ucfirst($coaching->status_verifikasi) }}
                             </span>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
                             CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
                         </td>
-                        <td class="py-3 px-4">
-                            <div class="text-sm">{{ $coaching->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}</div>
+                        <td class="py-3 px-4 whitespace-nowrap">
+                            <div class="text-sm">
+                                {{ $coaching->tanggal->locale('id')->isoFormat('D MMMM YYYY') }}
+                            </div>
                             @if($coaching->waktu)
-                                <div class="text-xs text-gray-600">Waktu: {{ $coaching->waktu }}</div>
-                            @else
-                                <div class="text-xs text-gray-600">Waktu: -</div>
+                                <div class="text-xs text-gray-600">{{ $coaching->waktu }}</div>
                             @endif
                             @if($coaching->coach)
                                 <div class="text-xs text-gray-600">Coach: {{ $coaching->coach }}</div>
-                            @else
-                                <div class="text-xs text-gray-600">Coach: -</div>
                             @endif
                         </td>
                         <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->layanan }}</td>

@@ -95,5 +95,8 @@ Route::prefix('verifikator-coaching')->name('verifikator-coaching.')->group(func
         Route::get('/approval/{id}/form', [VerifikatorCoachingController::class, 'showApprovalForm'])->name('approval-form');
         Route::put('/approval/{id}/update', [VerifikatorCoachingController::class, 'updateApproval'])->name('update-approval');
         Route::get('/report', [VerifikatorCoachingController::class, 'report'])->name('report');
+         Route::post('/coaching/{id}/upload-dokumentasi',
+            [VerifikatorCoachingController::class, 'uploadDokumentasi']
+        )->name('upload');
     });
 });

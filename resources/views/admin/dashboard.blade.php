@@ -16,96 +16,7 @@
             {{ now()->locale('id')->isoFormat('dddd, D MMMM YYYY') }}
         </div>
     </div>
-
-    <!-- Statistik Utama -->
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
-
-        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
-            <div class="p-3 bg-blue-100 rounded-lg mr-4 shadow">
-                <i class="fas fa-users text-blue-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Total User</p>
-                <p class="text-2xl font-bold">{{ $stats['total_users'] }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
-            <div class="p-3 bg-purple-100 rounded-lg mr-4 shadow">
-                <i class="fas fa-podcast text-purple-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Total Podcast</p>
-                <p class="text-2xl font-bold">{{ $stats['total_podcasts'] }}</p>
-            </div>
-        </div>
-
-        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
-            <div class="p-3 bg-green-100 rounded-lg mr-4 shadow">
-                <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
-            </div>
-            <div>
-                <p class="text-sm text-gray-500">Total Coaching</p>
-                <p class="text-2xl font-bold">{{ $stats['total_coachings'] }}</p>
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Status Statistik -->
-    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
-
-        <!-- Statistik Podcast -->
-       <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-            <h2 class="text-lg font-bold mb-4">Statistik Podcast</h2>
-
-            <div class="space-y-3">
-
-                <div class="flex justify-between items-center bg-yellow-50 p-3 rounded shadow-sm">
-                    <span>Menunggu Persetujuan</span>
-                    <span class="font-bold">{{ $stats['podcast_pending'] }}</span>
-                </div>
-
-                <div class="flex justify-between items-center bg-green-50 p-3 rounded shadow-sm">
-                    <span>Disetujui</span>
-                    <span class="font-bold">{{ $stats['podcast_approved'] }}</span>
-                </div>
-
-                <div class="flex justify-between items-center bg-red-50 p-3 rounded shadow-sm">
-                    <span>Ditolak</span>
-                    <span class="font-bold">{{ $stats['podcast_rejected'] }}</span>
-                </div>
-
-            </div>
-        </div>
-
-        <!-- Statistik Coaching -->
-        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
-            <h2 class="text-lg font-bold mb-4">Statistik Coaching Clinic</h2>
-
-            <div class="space-y-3">
-
-                <div class="flex justify-between items-center bg-yellow-50 p-3 rounded shadow-sm">
-                    <span>Menunggu Persetujuan</span>
-                    <span class="font-bold">{{ $stats['coaching_pending'] }}</span>
-                </div>
-
-                <div class="flex justify-between items-center bg-green-50 p-3 rounded shadow-sm">
-                    <span>Disetujui</span>
-                    <span class="font-bold">{{ $stats['coaching_approved'] }}</span>
-                </div>
-
-                <div class="flex justify-between items-center bg-red-50 p-3 rounded shadow-sm">
-                    <span>Ditolak</span>
-                    <span class="font-bold">{{ $stats['coaching_rejected'] }}</span>
-                </div>
-
-            </div>
-        </div>
-
-    </div>
-
-    <!-- Tabel Data Terbaru -->
+<!-- Tabel Data Terbaru -->
     <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
 
         <!-- Podcast Terbaru -->
@@ -244,6 +155,95 @@
         </div>
 
     </div>
+
+<!-- Status Statistik -->
+    <div class="grid grid-cols-1 lg:grid-cols-2 gap-6">
+
+        <!-- Statistik Podcast -->
+       <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+            <h2 class="text-lg font-bold mb-4">Statistik Podcast</h2>
+
+            <div class="space-y-3">
+
+                <div class="flex justify-between items-center bg-yellow-50 p-3 rounded shadow-sm">
+                    <span>Menunggu Persetujuan</span>
+                    <span class="font-bold">{{ $stats['podcast_pending'] }}</span>
+                </div>
+
+                <div class="flex justify-between items-center bg-green-50 p-3 rounded shadow-sm">
+                    <span>Disetujui</span>
+                    <span class="font-bold">{{ $stats['podcast_approved'] }}</span>
+                </div>
+
+                <div class="flex justify-between items-center bg-red-50 p-3 rounded shadow-sm">
+                    <span>Ditolak</span>
+                    <span class="font-bold">{{ $stats['podcast_rejected'] }}</span>
+                </div>
+
+            </div>
+        </div>
+
+        <!-- Statistik Coaching -->
+        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+            <h2 class="text-lg font-bold mb-4">Statistik Coaching Clinic</h2>
+
+            <div class="space-y-3">
+
+                <div class="flex justify-between items-center bg-yellow-50 p-3 rounded shadow-sm">
+                    <span>Menunggu Persetujuan</span>
+                    <span class="font-bold">{{ $stats['coaching_pending'] }}</span>
+                </div>
+
+                <div class="flex justify-between items-center bg-green-50 p-3 rounded shadow-sm">
+                    <span>Disetujui</span>
+                    <span class="font-bold">{{ $stats['coaching_approved'] }}</span>
+                </div>
+
+                <div class="flex justify-between items-center bg-red-50 p-3 rounded shadow-sm">
+                    <span>Ditolak</span>
+                    <span class="font-bold">{{ $stats['coaching_rejected'] }}</span>
+                </div>
+
+            </div>
+        </div>
+
+    </div>
+
+    <!-- Statistik Utama -->
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
+            <div class="p-3 bg-blue-100 rounded-lg mr-4 shadow">
+                <i class="fas fa-users text-blue-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Total User</p>
+                <p class="text-2xl font-bold">{{ $stats['total_users'] }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
+            <div class="p-3 bg-purple-100 rounded-lg mr-4 shadow">
+                <i class="fas fa-podcast text-purple-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Total Podcast</p>
+                <p class="text-2xl font-bold">{{ $stats['total_podcasts'] }}</p>
+            </div>
+        </div>
+
+        <div class="bg-white rounded-xl shadow-lg hover:shadow-2xl transition duration-300 p-5 flex items-center">
+            <div class="p-3 bg-green-100 rounded-lg mr-4 shadow">
+                <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
+            </div>
+            <div>
+                <p class="text-sm text-gray-500">Total Coaching</p>
+                <p class="text-2xl font-bold">{{ $stats['total_coachings'] }}</p>
+            </div>
+        </div>
+
+    </div>
+
 
 </div>
 @endsection

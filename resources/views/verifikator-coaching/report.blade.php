@@ -100,16 +100,45 @@
                         <td class="py-3 px-4 text-sm">{{ $coaching->layanan }}</td>
                         <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan) }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
-                        <td class="py-3 px-4">
-                            @if($coaching->dokumentasi_path)
-                                <a href="{{ asset($coaching->dokumentasi_path) }}" target="_blank" 
-                                   class="text-green-600 hover:text-green-800">
-                                    <i class="fas fa-link mr-1"></i>Unggah
+                <td class="py-3 px-4">
+                        @if($coaching->dokumentasi_path)
+                            <div class="flex items-center gap-2">
+                                <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}" 
+                                target="_blank"
+                                class="text-green-600 hover:text-green-800 text-sm">
+                                    <i class="fas fa-image mr-1"></i>Lihat
                                 </a>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
+
+                                <form action="{{ route('verifikator-coaching.upload', $coaching->id) }}"
+                                    method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <label class="cursor-pointer text-blue-600 hover:text-blue-800 text-sm">
+                                        <i class="fas fa-upload mr-1"></i>Ganti
+                                        <input type="file"
+                                            name="dokumentasi"
+                                            accept="image/*"
+                                            class="hidden"
+                                            onchange="this.form.submit()">
+                                    </label>
+                                </form>
+                            </div>
+                        @else
+                            <form action="{{ route('verifikator-coaching.upload', $coaching->id) }}"
+                                method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <label class="cursor-pointer text-green-600 hover:text-green-800 text-sm">
+                                    <i class="fas fa-upload mr-1"></i>Unggah
+                                    <input type="file"
+                                        name="dokumentasi"
+                                        accept="image/*"
+                                        class="hidden"
+                                        onchange="this.form.submit()">
+                                </label>
+                            </form>
+                        @endif
+                    </td>
                     </tr>
                     @empty
                     <tr>

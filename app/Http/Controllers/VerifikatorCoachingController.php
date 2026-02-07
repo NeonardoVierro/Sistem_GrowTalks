@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Storage;
 use App\Models\CoachingBooking;
 use App\Models\User;
 use Carbon\Carbon;
@@ -208,5 +209,29 @@ class VerifikatorCoachingController extends Controller
         
         return view('verifikator-coaching.report', compact('coachings', 'stats', 'startDate', 'endDate'));
     }
+    public function uploadDokumentasi(Request $request, $id)
+{
+    $request->validate([
+        'dokumentasi' => 'required|image|max:2048',
+    ]);
+
+    $coaching = CoachingBooking::findOrFail($id);
+
+    // kalau sudah ada dokumentasi, hapus dulu (edit / replace)
+    if ($coaching->dokumentasi_path) {
+        Storage::disk('public')->delete($coaching->dokumentasi_path);
     }
-    
+
+    // simpan file baru
+    $path = $request->file('dokumentasi')
+                    ->store('dokumentasi-coaching', 'public');
+
+    // update ke database
+    $coaching->update([
+        'dokumentasi_path' => $path,
+    ]);
+
+    return back()->with('success', 'Dokumentasi berhasil diunggah.');
+
+    }
+}

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 use App\Models\PodcastBooking;
 use App\Models\User;
 use App\Models\Role;
@@ -143,6 +144,30 @@ class VerifikatorPodcastController extends Controller
         return view('verifikator-podcast.report', compact('podcasts'));
     }
 
+        public function uploadCover(Request $request, $id)
+        {
+        $request->validate([
+                'cover' => 'required|image|max:2048',
+            ]);
+
+            $podcast = PodcastBooking::findOrFail($id);
+
+            // hapus cover lama (kalau ada)
+            if ($podcast->cover_path) {
+                Storage::disk('public')->delete($podcast->cover_path);
+            }
+
+            // simpan cover baru
+            $path = $request->file('cover')
+                            ->store('cover-podcast', 'public');
+
+            // update DB
+            $podcast->update([
+                'cover_path' => $path,
+            ]);
+
+            return back()->with('success', 'Cover podcast berhasil diunggah.');
+}
     public function updateStatus(Request $request, $id)
     {
         $request->validate([

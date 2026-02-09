@@ -100,16 +100,48 @@
                         <td class="py-3 px-4 text-sm max-w-[220px] break-words whitespace-normal">{{ $podcast->keterangan }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->host ?? '-' }}</td>
-                        <td class="py-3 px-4">
-                            @if($podcast->cover_path)
-                                <a href="{{ asset($podcast->cover_path) }}" target="_blank" 
-                                   class="text-blue-600 hover:text-blue-800">
-                                    <i class="fas fa-link mr-1"></i>Unggah
+                       <td class="py-3 px-4">
+                        @if($podcast->cover_path)
+                            <div class="flex items-center gap-2">
+                                {{-- LIHAT --}}
+                                <a href="{{ asset('storage/'.$podcast->cover_path) }}"
+                                target="_blank"
+                                class="text-green-600 hover:text-green-800 text-sm">
+                                    <i class="fas fa-image mr-1"></i>Lihat
                                 </a>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
+
+                                {{-- GANTI --}}
+                                <form action="{{ route('verifikator-podcast.upload-cover', $podcast->id) }}"
+                                    method="POST"
+                                    enctype="multipart/form-data">
+                                    @csrf
+                                    <label class="cursor-pointer text-blue-600 hover:text-blue-800 text-sm">
+                                        <i class="fas fa-upload mr-1"></i>Ganti
+                                        <input type="file"
+                                            name="cover"
+                                            accept="image/*"
+                                            class="hidden"
+                                            onchange="this.form.submit()">
+                                    </label>
+                                </form>
+                            </div>
+                        @else
+                            {{-- UNGGAH --}}
+                            <form action="{{ route('verifikator-podcast.upload-cover', $podcast->id) }}"
+                                method="POST"
+                                enctype="multipart/form-data">
+                                @csrf
+                                <label class="cursor-pointer text-green-600 hover:text-green-800 text-sm">
+                                    <i class="fas fa-upload mr-1"></i>Unggah
+                                    <input type="file"
+                                        name="cover"
+                                        accept="image/*"
+                                        class="hidden"
+                                        onchange="this.form.submit()">
+                                </label>
+                            </form>
+                        @endif
+                    </td>
                     </tr>
                     @empty
                     <tr>

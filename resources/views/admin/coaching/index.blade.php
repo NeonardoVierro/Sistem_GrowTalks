@@ -104,16 +104,17 @@
                         </td>
 
                         {{-- DOKUMENTASI --}}
-                        <td class="py-3 px-4 text-sm">
-                            @if($coaching->dokumentasi_path)
-                                <a href="{{ asset($coaching->dokumentasi_path) }}" target="_blank"
-                                   class="text-blue-600 hover:text-blue-800">
-                                   Lihat
-                                </a>
-                            @else
-                                <span class="text-gray-400">-</span>
-                            @endif
-                        </td>
+                      <td class="py-3 px-4 text-sm">
+                        @if($coaching->dokumentasi_path)
+                            <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
+                            target="_blank"
+                            class="text-blue-600 hover:text-blue-800">
+                                Lihat
+                            </a>
+                        @else
+                            <span class="text-gray-400">-</span>
+                        @endif
+                    </td>
 
                     </tr>
                 @empty

@@ -84,6 +84,8 @@ Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->group(functi
         Route::get('/approval/{id}/form', [VerifikatorPodcastController::class, 'showApprovalForm'])->name('approval-form');
         Route::put('/approval/{id}/update', [VerifikatorPodcastController::class, 'updateApproval'])->name('update-approval');
         Route::get('/report', [VerifikatorPodcastController::class, 'report'])->name('report');
+        Route::post('/podcast/{id}/upload-cover',[VerifikatorPodcastController::class, 'uploadCover'])->name('upload-cover');
+
     });
 });
 

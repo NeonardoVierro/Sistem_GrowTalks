@@ -112,7 +112,7 @@
                         <!-- COVER -->
                         <td class="py-3 px-4 text-sm">
                             @if($podcast->cover_path)
-                                <a href="{{ asset($podcast->cover_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat</a>
+                                <a href="{{ asset('storage/' . $podcast->cover_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800">Lihat</a>
                             @else
                             <span class="text-gray-400">-</span>
                             @endif

@@ -8,14 +8,33 @@
     <script src="https://cdn.tailwindcss.com"></script>
 
     <style>
+        @import url('https://fonts.googleapis.com/css2?family=Oswald:wght@700&family=Poppins:wght@400;600&display=swap');
+        
         body {
-            background-image: url("{{ asset('images/background.png') }}");
-            background-size: cover;
-            background-position: center;
-            background-repeat: no-repeat;
+            background-image:
+                url("{{ asset('images/batik.png') }}"),
+                url("{{ asset('images/batik.png') }}"),
+                url("{{ asset('images/batik.png') }}"),
+                url("{{ asset('images/batik.png') }}"),
+                url("{{ asset('images/batik.png') }}"),
+                url("{{ asset('images/batik.png') }}");
+
+            background-size: 420px, 420px, 420px, 420px, 420px, 420px;
+            background-repeat: no-repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+
+            background-position:
+                left 500px top 60px,
+                left -90px top 150px,
+                right 60px top 150px,
+                right 10px top 500px,
+                right 500px top 450px,
+                left 50px top 550px;
+
             min-height: 100vh;
             font-family: 'Inter', system-ui, sans-serif;
         }
+
+        .font-oswald { font-family: 'Oswald', sans-serif; }
 
         .card {
             background: rgba(255, 255, 255, 0.97);
@@ -45,7 +64,7 @@
     </style>
 </head>
 
-<body class="flex items-center justify-center min-h-screen px-6">
+<body class="h-screen overflow-hidden flex items-center justify-center px-6">
 
     <!-- CARD UTAMA -->
     <div class="card w-full max-w-5xl overflow-hidden">
@@ -63,15 +82,9 @@
             <div class="p-10 md:p-14">
 
                 <!-- Judul -->
-                <h1 class="text-3xl font-bold text-gray-800 mb-2">
-                    Login
+                <h1 class="font-oswald uppercase text-3xl font-bold text-gray-800 mb-2">
+                    LOGIN GROWTALKS
                 </h1>
-                <div class="flex items-center gap-3 px-6 py-4 border-b">
-                    <span class="w-1 h-6 bg-red-500 rounded"></span>
-                    <h2 class="text-lg font-bold tracking-wide text-blue-600">
-                        SISTEM GROWTALKS 
-                    </h2>
-                </div>
 
                 <!-- FORM -->
                 <form method="POST" action="{{ route('login.store') }}" class="space-y-6">

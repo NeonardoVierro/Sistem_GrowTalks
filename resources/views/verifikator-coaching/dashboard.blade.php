@@ -17,9 +17,9 @@
     </div>
 
     <!-- Statistics Cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6 mb-8">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-8">
         <!-- Total Coaching -->
-     <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+    <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
             <div class="flex items-center">
                 <div class="p-3 bg-green-100 rounded-lg mr-4">
                     <i class="fas fa-chalkboard-teacher text-green-600 text-xl"></i>
@@ -45,6 +45,34 @@
                 </div>
             </div>
         </div>
+
+        <!-- Disetujui -->
+        <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+            <div class="flex items-center">
+                <div class="p-3 bg-green-100 rounded-lg mr-4">
+                    <i class="fas fa-check-circle text-green-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Disetujui</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $approvedCoachings }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Coaching Disetujui</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Ditolak -->
+         <div class="card-stat bg-white p-6 rounded-xl shadow-md hover:shadow-lg transition">
+            <div class="flex items-center">
+                <div class="p-3 bg-red-100 rounded-lg mr-4">
+                    <i class="fas fa-times-circle text-red-600 text-xl"></i>
+                </div>
+                <div>
+                    <p class="text-sm text-gray-600">Ditolak</p>
+                    <p class="text-2xl font-bold text-gray-800">{{ $rejectedCoachings }}</p>
+                    <p class="text-xs text-gray-500 mt-1">Caoching Ditolak</p>
+                </div>
+            </div>
+        </div>
     </div>
 
     <!-- Recent Coachings -->
@@ -61,47 +89,52 @@
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kategori</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Agenda</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Coach</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
                     </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($recentCoachings as $coaching)
                     <tr class="table-row">
-                        <td class="py-3 px-4 font-mono text-sm">
-                           CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
-                        </td>
-                        <td class="py-3 px-4 text-sm">
-                            {{ $coaching->tanggal->format('d/m/Y') }}
-                        </td>
-                        <td class="py-3 px-4 text-sm">{{ $coaching->nama_opd }}</td>
-                        <td class="py-3 px-4">
-                            <div class="font-medium text-gray-800">{{ $coaching->layanan }}</div>
-                        </td>
-                        <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan, 25) }}</td>
-                        <td class="py-3 px-4">
-                            @php
-                                $status = strtolower($coaching->status_verifikasi);
-                                switch($status) {
-                                    case 'disetujui':
-                                        $bg = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'pending':
-                                        $bg = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    case 'ditolak':
-                                        $bg = 'bg-red-100 text-red-800';
-                                        break;
-                                    case 'penjadwalan ulang':
-                                        $bg = 'bg-purple-100 text-purple-800';
-                                        break;
-                                    default:
-                                        $bg = 'bg-gray-100 text-gray-800';
-                                }
-                            @endphp
-                            <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
-                                {{ ucfirst($coaching->status_verifikasi) }}
-                            </span>
-                        </td>
+                        <tr class="hover:bg-gray-50 cursor-pointer"
+                            onclick="window.location='{{ route('verifikator-coaching.approval-form', $coaching->id) }}'">
+                            <td class="py-3 px-4 font-mono text-sm">
+                                CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
+                            </td>
+                            <td class="py-3 px-4 text-sm">
+                                {{ $coaching->tanggal->format('d/m/Y') }}
+                            </td>
+                            <td class="py-3 px-4 text-sm">{{ $coaching->nama_opd }}</td>
+                            <td class="py-3 px-4">
+                                <div class="font-medium text-gray-800">{{ $coaching->layanan }}</div>
+                            </td>
+                            <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan, 25) }}</td>
+                            <td class="py-3 px-4 text-sm">{{ $coaching->coach }}</td>
+                            <td class="py-3 px-4 text-sm">
+                                @php
+                                    $status = strtolower($coaching->status_verifikasi);
+                                    switch($status) {
+                                        case 'disetujui':
+                                            $bg = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'pending':
+                                            $bg = 'bg-yellow-100 text-yellow-800';
+                                            break;
+                                        case 'ditolak':
+                                            $bg = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'penjadwalan ulang':
+                                            $bg = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $bg = 'bg-gray-100 text-gray-800';
+                                    }
+                                @endphp
+                                <span class="px-2 py-1 rounded-full text-sm font-medium {{ $bg }}">
+                                    {{ ucfirst($coaching->status_verifikasi) }}
+                                </span>
+                            </td>
+                        </tr>
                     </tr>
                     @empty
                     <tr>

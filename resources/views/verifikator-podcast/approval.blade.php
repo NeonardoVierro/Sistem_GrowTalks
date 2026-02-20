@@ -37,10 +37,10 @@
                     <tr class="hover:bg-gray-50 transition">
 
                         {{-- AKSI --}}
-                        <td class="py-3 px-4">
+                        <td class="py-3 px-4 flex justify-center items-center">
                             <a href="{{ route('verifikator-podcast.approval-form', $podcast->id) }}" 
-                               class="text-green-600 hover:text-green-800" title="Verifikasi">
-                                <i class="fas fa-file-alt"></i>
+                               class="text-blue-700 hover:text-blue-800" title="Verifikasi">
+                                <i class="fas fa-edit"></i>
                             </a>
                         </td>
 

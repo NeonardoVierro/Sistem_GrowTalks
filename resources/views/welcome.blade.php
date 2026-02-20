@@ -1,8 +1,8 @@
-<!-- resources/views/public/dashboard.blade.php -->
 <!DOCTYPE html>
 <html lang="id">
 <head>
     <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>GrowTalks - Dashboard Publik</title>
     <script src="https://cdn.tailwindcss.com"></script>
     <style>
@@ -15,42 +15,71 @@
         }
 
         .font-oswald { font-family: 'Oswald', sans-serif; }
+
+        /* Custom Scrollbar */
+        ::-webkit-scrollbar {
+            width: 8px;
+        }
+        ::-webkit-scrollbar-track {
+            background: #f1f1f1;
+        }
+        ::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 10px;
+        }
+        ::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* Snap behavior stability */
+        .snap-container {
+            height: 100vh;
+            scroll-snap-type: y mandatory;
+            overflow-y: scroll;
+            scroll-behavior: smooth;
+        }
+        .snap-section {
+            scroll-snap-align: start;
+            min-height: 100vh;
+            position: relative;
+        }
     </style>
 </head>
 
-<!-- BODY pakai scroll snap biar rasa slider -->
-<body class="bg-gray-100 h-screen overflow-y-scroll scroll-smooth snap-y snap-mandatory">
+<body class="bg-gray-100 snap-container">
 
-<!-- NAVBAR -->
-<nav class="w-full bg-white shadow fixed top-0 left-0 z-50">
+<nav class="w-full bg-white/80 backdrop-blur-md shadow fixed top-0 left-0 z-50">
     <div class="max-w-7xl mx-auto px-6 py-4 flex items-center justify-between">
         <div class="flex items-center gap-3">
-            <img src="/images/logo_diskominfo.png" class="h-10" alt="logo">
+            <img src="{{ asset('images/logo_diskominfo.png') }}" class="h-10" alt="logo diskominfo">
+            <div class="flex flex-col leading-tight border-l pl-3 border-gray-300 hidden sm:flex">
+                <span class="font-oswald text-xl tracking-tighter text-blue-800">GROWTALKS</span>
+                <span class="text-[10px] uppercase tracking-widest text-gray-500">Diskominfo Surakarta</span>
+            </div>
         </div>
 
-        <!-- LOGIN BUTTON -->
-        <a href="{{ route('login') }}"
-           class="px-5 py-2 border rounded-full text-sm hover:bg-gray-100 transition">
-            Login
-        </a>
+        <div class="flex items-center gap-4">
+            <a href="{{ route('login') }}"
+               class="px-6 py-2 border-2 border-blue-600 text-blue-600 rounded-full text-sm font-semibold hover:bg-blue-600 hover:text-white transition-all duration-300 shadow-sm">
+                Login Dashboard
+            </a>
+        </div>
     </div>
 </nav>
 
 
-<!-- ================= HERO / GROWTALKS (SLIDE 1) ================= -->
-<section id="hero" class="min-h-screen snap-start flex items-center bg-white relative overflow-hidden">
-    <!-- LAYER BATIK OPACITY 50 -->
-    <div class="absolute inset-0 opacity-50 pointer-events-none z-0"
+<section id="hero" class="snap-section flex items-center bg-white overflow-hidden">
+    <div class="absolute inset-0 opacity-40 pointer-events-none z-0"
         style="
             background-image:
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png');
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}'),
+                url('{{ asset('images/batik.png') }}');
             background-repeat: no-repeat;
             background-size: 420px, 420px, 420px, 420px, 420px, 420px, 420px, 420px;
             background-position:
@@ -66,197 +95,174 @@
     </div>
 
     <div class="max-w-7xl mx-auto px-6 grid md:grid-cols-2 gap-10 items-center w-full z-10">
-        <div>
-            <h1 class="text-6xl font-oswald uppercase tracking-tighter mb-4">GROWTALKS</h1>
-            <p class="text-gray-600 mb-6 text-lg">
-                Ajukan agenda dan ide untuk podcast dan coaching clinic kalian dengan mudah dan efektif.
+        <div class="space-y-6">
+            <div class="inline-block px-4 py-1 bg-blue-100 text-blue-700 rounded-full text-xs font-bold tracking-widest uppercase">
+                Digital Transformation
+            </div>
+            <h1 class="text-6xl md:text-8xl font-oswald uppercase tracking-tighter leading-none text-gray-900">
+                GROW<span class="text-blue-600">TALKS</span>
+            </h1>
+            <p class="text-gray-600 text-lg md:text-xl leading-relaxed max-w-lg">
+                Ajukan agenda dan ide untuk podcast dan coaching clinic kalian dengan mudah dan efektif dalam satu genggaman platform.
             </p>
 
-            <!-- BUTTON SLIDE KE BAWAH -->
-            <button onclick="slideTo('about')"
-   class="inline-block bg-blue-600 text-white px-6 py-3 rounded-full shadow hover:bg-blue-700 transition">
-   About GrowTalks
-</button>
+            <div class="flex flex-wrap gap-4 pt-4">
+                <button onclick="slideTo('about')"
+                   class="inline-block bg-blue-600 text-white px-8 py-4 rounded-full shadow-xl hover:bg-blue-700 transform hover:-translate-y-1 transition-all font-bold">
+                   Jelajahi GrowTalks
+                </button>
+                <button onclick="slideTo('podcast')"
+                   class="inline-block bg-gray-100 text-gray-700 px-8 py-4 rounded-full shadow hover:bg-gray-200 transition-all font-bold">
+                   Lihat Gallery
+                </button>
+            </div>
         </div>
 
-        <div class="relative h-[650px]">
-            <!-- gambar atas -->
-            <img src="/images/podcast_pub.png" class="absolute w-[400px] top-[-60px] right-00 z-20">
-            <!-- gambar bawah (geser kiri + turun) -->
-            <img src="/images/coaching_pub.png" class="absolute w-[400px] top-40 right-[30px] z-20">
+        <div class="relative h-[650px] hidden md:block">
+            <img src="{{ asset('images/podcast_pub.png') }}" 
+                 class="absolute w-[450px] top-[-20px] right-[-20px] z-20 drop-shadow-2xl animate-pulse" 
+                 style="animation-duration: 4s;">
+            <img src="{{ asset('images/coaching_pub.png') }}" 
+                 class="absolute w-[450px] top-56 right-[120px] z-10 drop-shadow-2xl opacity-90">
+            
+            <div class="absolute top-40 right-40 w-64 h-64 bg-blue-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob"></div>
+            <div class="absolute top-20 right-10 w-64 h-64 bg-purple-400 rounded-full mix-blend-multiply filter blur-3xl opacity-20 animate-blob animation-delay-2000"></div>
         </div>
     </div>
 </section>
 
-<!-- ================= ABOUT GROWTALKS (SLIDE 2) ================= -->
-<section id="about" class="min-h-screen snap-start flex items-center bg-gray-50 relative overflow-hidden">
-    <!-- BATIK BACKGROUND -->
+<section id="about" class="snap-section flex items-center bg-gray-50 overflow-hidden">
     <div class="absolute inset-0 opacity-40 pointer-events-none z-0"
         style="
-            background-image: url('/images/batik.png'), url('/images/batik.png');
+            background-image: url('{{ asset('images/batik.png') }}'), url('{{ asset('images/batik.png') }}');
             background-repeat: no-repeat;
             background-size: 420px, 420px;
             background-position: left -120px top 100px, right -120px bottom 120px;
         ">
     </div>
 
-    <div class="max-w-6xl mx-auto px-6 z-10">
-        <h2 class="text-6xl font-oswald uppercase text-center mb-10">
-            About GrowTalks
-        </h2>
+    <div class="max-w-6xl mx-auto px-6 z-10 py-12">
+        <div class="text-center mb-12">
+            <h2 class="text-5xl md:text-6xl font-oswald uppercase mb-4 text-gray-800">
+                About GrowTalks
+            </h2>
+            <div class="h-1.5 w-32 bg-blue-600 mx-auto rounded-full"></div>
+        </div>
 
-        <p class="text-center text-gray-600 max-w-4xl mx-auto mb-16 text-lg leading-relaxed">
-            <strong>GrowTalks</strong> merupakan sebuah platform digital yang dikembangkan oleh
-            <strong>Dinas Komunikasi, Informatika, Statistik, dan Persandian (Diskominfo)
-            Kota Surakarta</strong> sebagai sarana pendukung pelayanan publik berbasis teknologi
-            informasi.
-            <br><br>
-            Website ini dirancang untuk memfasilitasi proses pengajuan, pengelolaan, dan
-            pemantauan kegiatan secara terstruktur, transparan, dan efisien, khususnya
-            dalam pelaksanaan kegiatan komunikasi dan pengembangan kapasitas sumber daya manusia.
-        </p>
+        <div class="bg-white/60 backdrop-blur-sm p-8 md:p-12 rounded-[3rem] shadow-2xl border border-white/50 mb-16">
+            <p class="text-center text-gray-700 text-lg md:text-xl leading-relaxed">
+                <span class="text-blue-600 font-bold italic">GrowTalks</span> merupakan sebuah platform digital yang dikembangkan oleh
+                <strong>Dinas Komunikasi, Informatika, Statistik, dan Persandian (Diskominfo)
+                Kota Surakarta</strong> sebagai sarana pendukung pelayanan publik berbasis teknologi
+                informasi. 
+                <br><br>
+                Website ini dirancang untuk memfasilitasi proses pengajuan, pengelolaan, dan
+                pemantauan kegiatan secara terstruktur, transparan, dan efisien, khususnya
+                dalam pelaksanaan kegiatan komunikasi dan pengembangan kapasitas sumber daya manusia.
+            </p>
+        </div>
 
-        <!-- LAYANAN DISKOMINFO -->
-        <h3 class="text-3xl font-semibold text-center mb-10">
-            Layanan Kegiatan GrowTalks
+        <h3 class="text-3xl font-oswald text-center mb-12 tracking-wide text-gray-600 uppercase italic">
+            Layanan Kegiatan Utama
         </h3>
 
-        <div class="grid md:grid-cols-2 gap-12">
-            <!-- PODCAST -->
-            <div class="bg-white rounded-2xl shadow-lg p-8 hover:scale-105 transition">
-                <div class="text-blue-600 text-4xl mb-4 text-center">🎙️</div>
-                <h4 class="font-semibold text-2xl mb-4 text-center">
-                    Podcast
-                </h4>
-                <p class="text-gray-600 text-sm leading-relaxed text-center">
-                    <p class="text-gray-600 text-sm leading-relaxed text-center">
-                <strong>KOMINPOD (Kominfo Podcast)</strong> merupakan media komunikasi strategis
-                yang dikelola oleh Dinas Komunikasi, Informatika, Statistik, dan Persandian
-                Kota Surakarta sebagai sarana edukatif bagi masyarakat.
-                <br><br>
-                Podcast ini menyajikan informasi seputar kebijakan publik, layanan pemerintah,
-                serta isu-isu terkini yang disampaikan langsung dari sumber resmi.
-                KOMINPOD disiarkan secara rutin setiap hari Jumat melalui
-                <strong>YouTube</strong> dan <strong>Radio Konata</strong>,
-                dengan tujuan memperkuat transparansi, meningkatkan literasi informasi,
-                serta membangun komunikasi publik yang informatif dan interaktif.
-            </p>
+        <div class="grid md:grid-cols-2 gap-10">
+            <div class="group bg-white rounded-[2.5rem] shadow-lg p-10 hover:shadow-2xl transition-all duration-500 border-b-8 border-blue-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <img src="{{ asset('images/batik.png') }}" class="w-32 rotate-12">
+                </div>
+                <div class="bg-blue-50 w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-inner">🎙️</div>
+                <h4 class="font-bold text-3xl mb-4 text-gray-800 italic">Podcast</h4>
+                <div class="text-gray-600 leading-relaxed space-y-4">
+                    <p><strong>KOMINPOD (Kominfo Podcast)</strong> dikelola oleh Diskominfo SP Kota Surakarta sebagai media edukasi kebijakan publik.</p>
+                    <p class="text-sm bg-blue-50 p-3 rounded-xl border-l-4 border-blue-400">
+                        📍 Disiarkan setiap <strong>Jumat</strong> melalui YouTube dan Radio Konata.
+                    </p>
+                </div>
             </div>
 
-            <!-- COACHING CLINIC -->
-            <div class="bg-white rounded-2xl shadow-lg p-8 hover:scale-105 transition">
-                <div class="text-green-600 text-4xl mb-4 text-center">🧠</div>
-                <h4 class="font-semibold text-2xl mb-4 text-center">
-                    Coaching Clinic
-                </h4>
-                <p class="text-gray-600 text-sm leading-relaxed text-center">
-                     <strong>Coaching Clinic Diskominfo SP Kota Surakarta</strong> merupakan layanan
-                pendampingan teknis yang diselenggarakan secara rutin setiap minggu,
-                yaitu pada hari <strong>Rabu dan Jumat</strong>, bertempat di
-                <strong>Ruang Upakari 3</strong>.
-                <br><br>
-                Program ini bertujuan untuk memfasilitasi konsultasi dan pendampingan bagi
-                perangkat daerah dalam implementasi
-                <strong>Tanda Tangan Elektronik (E-Sign)</strong>,
-                pengelolaan website dan aplikasi, serta pengembangan desain grafis
-                menggunakan platform <strong>Canva</strong>,
-                guna mendukung peningkatan kualitas layanan digital pemerintahan.
-                </p>
+            <div class="group bg-white rounded-[2.5rem] shadow-lg p-10 hover:shadow-2xl transition-all duration-500 border-b-8 border-green-500 relative overflow-hidden">
+                <div class="absolute top-0 right-0 p-4 opacity-10 group-hover:opacity-20 transition-opacity">
+                    <img src="{{ asset('images/batik.png') }}" class="w-32 -rotate-12">
+                </div>
+                <div class="bg-green-50 w-20 h-20 rounded-2xl flex items-center justify-center text-4xl mb-6 shadow-inner">🧠</div>
+                <h4 class="font-bold text-3xl mb-4 text-gray-800 italic">Coaching Clinic</h4>
+                <div class="text-gray-600 leading-relaxed space-y-4">
+                    <p>Layanan pendampingan teknis mingguan untuk implementasi E-Sign, web, dan desain grafis perangkat daerah.</p>
+                    <p class="text-sm bg-green-50 p-3 rounded-xl border-l-4 border-green-400">
+                        📍 <strong>Rabu & Jumat</strong> bertempat di Ruang Upakari 3.
+                    </p>
+                </div>
             </div>
         </div>
     </div>
 </section>
 
 
-<!-- ================= PODCAST (SLIDE 2) ================= -->
-<section id="podcast" class="min-h-screen snap-start flex items-center bg-white relative overflow-hidden">
-
-    <!-- BATIK BACKGROUND -->
-    <div class="absolute inset-0 opacity-50 pointer-events-none z-0"
-        style="
-            background-image: url('/images/batik.png');
-            background-repeat: repeat;
-            background-size: 420px;
-        ">
+<section id="podcast" class="snap-section flex items-center bg-white overflow-hidden">
+    <div class="absolute inset-0 opacity-10 pointer-events-none">
+        <div class="grid grid-cols-4 gap-4 transform -rotate-12 scale-150">
+            @for($i=0; $i<16; $i++)
+                <img src="{{ asset('images/batik.png') }}" class="w-full">
+            @endfor
+        </div>
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 w-full z-10">
-        <h2 class="text-6xl font-extrabold text-center mb-14 font-oswald uppercase">
-            PODCAST
+    <div class="max-w-7xl mx-auto px-6 w-full z-10 py-12">
+        <h2 class="text-6xl font-oswald uppercase text-center mb-4 text-gray-900 tracking-tighter">
+            PODCAST <span class="text-blue-600 italic">GALLERY</span>
         </h2>
+        <p class="text-center text-gray-500 mb-16 font-medium tracking-widest uppercase">Merekam Jejak Literasi Digital</p>
 
-        <!-- SLIDER -->
-        <div class="relative w-full h-[420px] flex items-center justify-center">
-
-            <!-- IMAGE 1 -->
-            <img src="/images/podcast_dummy.jpeg"
-                class="podcast-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
-
-            <!-- IMAGE 2 -->
-            <img src="/images/p1.jpg"
-                class="podcast-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
-
-            <!-- IMAGE 3 -->
-            <img src="/images/p2.jpg"
-                class="podcast-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
+        <div class="relative w-full h-[450px] flex items-center justify-center">
+            <img src="{{ asset('images/podcast_dummy.jpeg') }}"
+                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
+            <img src="{{ asset('images/p1.jpg') }}"
+                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
+            <img src="{{ asset('images/p2.jpg') }}"
+                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
         </div>
     </div>
 </section>
 
 
-<!-- ================= COACHING CLINIC (SLIDE 3) ================= -->
-<section id="coaching" class="min-h-screen snap-start flex items-center bg-white relative overflow-hidden">
-    <div class="absolute inset-0 opacity-50 pointer-events-none z-0"
-        style="
-            background-image:
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png'),
-                url('/images/batik.png');
-            background-repeat: no-repeat;
-            background-size: 420px;
-            background-position:
-                left 500px top 10px,
-                left -90px top 150px,
-                right 120px top 150px,
-                right 10px top 350px,
-                right 500px top 450px,
-                left 50px top 580px,
-                right -20px top 630px;
-        ">
+<section id="coaching" class="snap-section flex items-center bg-blue-950 overflow-hidden">
+    <div class="absolute inset-0 opacity-20 pointer-events-none" 
+         style="background-image: radial-gradient(circle at 2px 2px, white 1px, transparent 0); background-size: 40px 40px;">
     </div>
 
-    <div class="max-w-7xl mx-auto px-6 w-full z-10">
-        <h2 class="text-6xl font-extrabold text-center mb-14 font-oswald uppercase">
-            COACHING CLINIC
+    <div class="max-w-7xl mx-auto px-6 w-full z-10 py-12 text-white">
+        <h2 class="text-6xl font-oswald uppercase text-center mb-4 tracking-tighter">
+            COACHING <span class="text-blue-400">CLINIC</span>
         </h2>
+        <div class="h-1 w-20 bg-blue-400 mx-auto mb-16"></div>
 
-        <!-- SLIDER -->
-        <div class="relative h-[420px] flex items-center justify-center">
-            <img src="/images/cc1.jpg"
-                 class="cc-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
-            <img src="/images/cc2.jpg"
-                 class="cc-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
-            <img src="/images/cc3.jpg"
-                 class="cc-slide absolute w-[420px] rounded-2xl shadow-xl transition-all duration-700 ease-in-out">
+        <div class="relative h-[450px] flex items-center justify-center">
+            <img src="{{ asset('images/cc1.jpg') }}"
+                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
+            <img src="{{ asset('images/cc2.jpg') }}"
+                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
+            <img src="{{ asset('images/cc3.jpg') }}"
+                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
         </div>
     </div>
 </section>
 
-
-
-<!-- FOOTER -->
-<footer class="bg-gray-100 py-8 text-center text-gray-500 snap-start">
-    © {{ date('Y') }} GrowTalks — Diskominfo Surakarta
+<footer class="bg-gray-100 py-12 text-center snap-section flex flex-col items-center justify-center">
+    <img src="{{ asset('images/logo_diskominfo.png') }}" class="h-16 mb-6 opacity-80" alt="logo footer">
+    <p class="text-gray-600 font-semibold mb-2">GrowTalks — Digital Service Hub</p>
+    <p class="text-gray-400 text-sm italic mb-6">Diskominfo SP Kota Surakarta</p>
+    <div class="flex gap-4 mb-8">
+        <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs">FB</div>
+        <div class="w-8 h-8 rounded-full bg-pink-600 flex items-center justify-center text-white text-xs">IG</div>
+        <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs">YT</div>
+    </div>
+    <p class="text-gray-400 text-[10px] tracking-widest uppercase">© {{ date('Y') }} All Rights Reserved</p>
 </footer>
 
 
-<!-- SCRIPT -->
 <script>
-/* ================= SCROLL SLIDE ================= */
+/* Smooth Scroll Trigger */
 function slideTo(id) {
     document.getElementById(id).scrollIntoView({
         behavior: 'smooth',
@@ -264,63 +270,41 @@ function slideTo(id) {
     });
 }
 
-/* ================= PODCAST SLIDER ================= */
-const podcastSlides = document.querySelectorAll('.podcast-slide');
-let podcastCurrent = 0;
+/* Slider Engine */
+function initSlider(selector, interval) {
+    const slides = document.querySelectorAll(selector);
+    let current = 0;
 
-function updatePodcastSlides() {
-    podcastSlides.forEach((slide, index) => {
-        slide.className = slide.className.replace(
-            /z-\d+|scale-\d+|translate-x-\S+|opacity-\d+|blur-sm/g, ''
-        );
+    function update() {
+        slides.forEach((slide, index) => {
+            // Clean active classes
+            slide.classList.remove('z-30', 'scale-100', 'translate-x-0', 'opacity-100', 'z-20', 'scale-90', 'translate-x-48', 'opacity-60', 'blur-sm', 'z-10', '-translate-x-48');
+            
+            if (index === current) {
+                slide.classList.add('z-30', 'scale-100', 'translate-x-0', 'opacity-100');
+                slide.style.filter = "none";
+            } else if (index === (current + 1) % slides.length) {
+                slide.classList.add('z-20', 'scale-90', 'translate-x-48', 'opacity-60', 'blur-sm');
+            } else {
+                slide.classList.add('z-10', 'scale-90', '-translate-x-48', 'opacity-60', 'blur-sm');
+            }
+        });
+    }
 
-        if (index === podcastCurrent) {
-            slide.classList.add('z-30','scale-100','translate-x-0','opacity-100');
-        } else if (index === (podcastCurrent + 1) % podcastSlides.length) {
-            slide.classList.add('z-20','scale-90','translate-x-40','opacity-70','blur-sm');
-        } else {
-            slide.classList.add('z-10','scale-90','-translate-x-40','opacity-70','blur-sm');
-        }
-    });
+    if (slides.length > 0) {
+        setInterval(() => {
+            current = (current + 1) % slides.length;
+            update();
+        }, interval);
+        update();
+    }
 }
 
-if (podcastSlides.length > 0) {
-    setInterval(() => {
-        podcastCurrent = (podcastCurrent + 1) % podcastSlides.length;
-        updatePodcastSlides();
-    }, 3000);
-
-    updatePodcastSlides();
-}
-
-/* ================= COACHING CLINIC SLIDER ================= */
-const ccSlides = document.querySelectorAll('.cc-slide');
-let ccCurrent = 0;
-
-function updateCCSlides() {
-    ccSlides.forEach((slide, index) => {
-        slide.className = slide.className.replace(
-            /z-\d+|scale-\d+|translate-x-\S+|opacity-\d+|blur-sm/g, ''
-        );
-
-        if (index === ccCurrent) {
-            slide.classList.add('z-30','scale-100','translate-x-0','opacity-100');
-        } else if (index === (ccCurrent + 1) % ccSlides.length) {
-            slide.classList.add('z-20','scale-90','translate-x-40','opacity-70','blur-sm');
-        } else {
-            slide.classList.add('z-10','scale-90','-translate-x-40','opacity-70','blur-sm');
-        }
-    });
-}
-
-if (ccSlides.length > 0) {
-    setInterval(() => {
-        ccCurrent = (ccCurrent + 1) % ccSlides.length;
-        updateCCSlides();
-    }, 3500);
-
-    updateCCSlides();
-}
+// Start Sliders on Load
+document.addEventListener('DOMContentLoaded', () => {
+    initSlider('.podcast-slide', 3000);
+    initSlider('.cc-slide', 4000);
+});
 </script>
 
 </body>

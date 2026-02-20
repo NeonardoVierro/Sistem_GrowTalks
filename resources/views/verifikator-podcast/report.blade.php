@@ -110,19 +110,17 @@
                                     <i class="fas fa-image mr-1"></i>Lihat
                                 </a>
 
-                                {{-- GANTI --}}
-                                <form action="{{ route('verifikator-podcast.upload-cover', $podcast->id) }}"
+                                {{-- HAPUS --}}
+                                <form action="{{ route('verifikator-podcast.delete-cover', $podcast->id) }}"
                                     method="POST"
-                                    enctype="multipart/form-data">
+                                    style="display:inline;"
+                                    class="swal-delete">
                                     @csrf
-                                    <label class="cursor-pointer text-blue-600 hover:text-blue-800 text-sm">
-                                        <i class="fas fa-upload mr-1"></i>Ganti
-                                        <input type="file"
-                                            name="cover"
-                                            accept="image/*"
-                                            class="hidden"
-                                            onchange="this.form.submit()">
-                                    </label>
+                                    @method('DELETE')
+                                    <button type="submit"
+                                        class="text-red-600 hover:text-red-800 text-sm">
+                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                    </button>
                                 </form>
                             </div>
                         @else
@@ -158,4 +156,29 @@
         </div>
     </div>
 </div>
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function () {
+    document.querySelectorAll('form.swal-delete').forEach(function(form){
+        form.addEventListener('submit', function(e){
+            e.preventDefault();
+            Swal.fire({
+                title: 'Yakin ingin menghapus cover ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+@endpush
+
 @endsection

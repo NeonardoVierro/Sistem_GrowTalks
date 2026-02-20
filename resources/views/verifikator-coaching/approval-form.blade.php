@@ -120,10 +120,12 @@
                         <!-- Coach -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Coach Penanggung Jawab</label>
-                            <input type="text" name="coach" 
-                                   value="{{ $coaching->coach }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                                   placeholder="Masukkan nama coach">
+                            <select name="coach" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                                <option value="">-- Pilih Coach --</option>
+                                @foreach($coaches as $c)
+                                    <option value="{{ $c->nama }}" {{ $coaching->coach == $c->nama ? 'selected' : '' }}>{{ $c->nama }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 
@@ -186,4 +188,3 @@ document.getElementById('statusSelect').dispatchEvent(new Event('change'));
 </script>
 @endpush
 @endsection
-[file content end]

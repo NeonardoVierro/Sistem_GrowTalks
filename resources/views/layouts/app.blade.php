@@ -8,16 +8,17 @@
     <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600;700;800&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
     <style>
-
+        /* Style asli milikmu tetap dipertahankan 100% */
         .sidebar {
-        background-image: 
-            linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
-            url("{{ asset('images/background.png') }}");
-        background-size: cover;
-        background-position: center;
-        background-repeat: no-repeat;
-        color: white;
-}
+            background-image: 
+                linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
+                url("{{ asset('images/background.png') }}");
+            background-size: cover;
+            background-position: center;
+            background-repeat: no-repeat;
+            color: white;
+            transition: all 0.3s ease; /* Tambahan untuk animasi buka/tutup */
+        }
 
         .sidebar a {
             background: rgba(0,0,0,0.25);
@@ -33,7 +34,6 @@
             color: #E8CA00;
             font-weight: 600;
         }
-
 
         .calendar-day {
             transition: all 0.2s;
@@ -79,84 +79,86 @@
             color: #991b1b;
         }
 
-        /* Striping kolom ganjil & genap */
         .table-striped-cols td:nth-child(odd) {
-            background-color: #f9fafb; /* gray-50 */
+            background-color: #f9fafb;
         }
 
         .table-striped-cols td:nth-child(even) {
             background-color: #ffffff;
         }
 
-        /* Supaya hover baris tetap kelihatan */
         .table-striped-cols tbody tr:hover td {
-            background-color: #f3f4f6 !important; /* gray-100 */
+            background-color: #f3f4f6 !important;
+        }
+
+        /* LOGIKA RESPONSIVE BARU */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -100%; /* Sembunyi di HP */
+                z-index: 100;
+            }
+            .sidebar.active-mobile {
+                left: 0; /* Muncul saat diklik */
+            }
+            .main-content-area {
+                margin-left: 0 !important;
+            }
         }
     </style>
     @stack('styles')
 </head>
 <body class="bg-gray-50 min-h-screen font-['poppins']">
     @auth
-        <!-- Sidebar -->
-        <div class="sidebar fixed left-0 top-16 bottom-0 w-64 shadow-lg">
+        <div id="sidebarMenu" class="sidebar fixed left-0 top-16 bottom-0 w-64 shadow-lg">
             
-            <!-- Logo -->
             <div class="p-6 border-b border-gray-700 text-center">
                 <img src="{{ asset('images/logos.png') }}" alt="Logo" class="mx-auto h-12">
-
                 <h2 class="mt-3 inline-block px-4 py-1 text-lg font-bold text-white">
                     GrowTalks
                 </h2>
-
             </div>
 
-            <!-- Navigation -->
             <nav class="p-6 pt-10 space-y-2">
                 <a href="{{ route('dashboard') }}" 
                    class="block py-3 px-4 rounded-lg {{ request()->is('dashboard') ? 'active' : '' }}">
-                    <i class="fas fa-home mr-3"></i>
-                    Dashboard
+                    <i class="fas fa-home mr-3"></i> Dashboard
                 </a>
                 <a href="{{ route('podcast.index') }}" 
                    class="block py-3 px-4 rounded-lg {{ request()->is('podcast*') ? 'active' : '' }}">
-                    <i class="fas fa-podcast mr-3"></i>
-                    Podcast
+                    <i class="fas fa-podcast mr-3"></i> Podcast
                 </a>
                 <a href="{{ route('coaching.index') }}" 
                    class="block py-3 px-4 rounded-lg {{ request()->is('coaching*') ? 'active' : '' }}">
-                    <i class="fas fa-chalkboard-teacher mr-3"></i>
-                    Coaching Clinic
+                    <i class="fas fa-chalkboard-teacher mr-3"></i> Coaching Clinic
                 </a>
             </nav>
         </div>
     @endauth
 
     @auth
-    <!-- TOP NAVBAR -->
     <header
         class="fixed top-0 left-0 right-0 h-16
             bg-gradient-to-r from-gray-400 via-gray-100 to-white
             shadow border-b-4 border-gray-600 z-50
             flex items-center justify-between px-6 py-4">
  
-        <!-- Left Brand -->
         <div class="flex items-center gap-3">
-            <span class="font-bold text-lg text-gray-800">
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-800 p-2">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-base md:text-lg text-gray-800 truncate">
                 Podcast & Coaching Clinic
             </span>
         </div>
 
-        <!-- Right User Menu -->
         <div class="relative">
             <button onclick="toggleUserMenu()"
                 class="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium">
-
-                {{ Auth::user()->email }}
-
+                <span class="hidden sm:inline">{{ Auth::user()->email }}</span>
+                <i class="fas fa-user-circle md:hidden text-xl"></i>
                 <i class="fas fa-chevron-down text-xs"></i>
             </button>
 
-            <!-- Dropdown -->
             <div id="userDropdown"
                 class="hidden absolute right-0 mt-3 w-48 bg-white rounded-lg shadow-lg border border-gray-200 overflow-hidden">
                 
@@ -174,13 +176,10 @@
                 </form>
             </div>
         </div>
-
     </header>
     @endauth
 
-    
-    <!-- Main Content -->
-    <main class="@auth ml-64 pt-20 @endauth min-h-screen">
+    <main class="main-content-area @auth md:ml-64 pt-20 p-4 @endauth min-h-screen">
         @yield('content')
     </main>
 
@@ -189,14 +188,26 @@
             document.getElementById('userDropdown').classList.toggle('hidden');
         }
 
+        // Fungsi baru untuk buka/tutup sidebar di HP
+        function toggleSidebar() {
+            document.getElementById('sidebarMenu').classList.toggle('active-mobile');
+        }
+
         document.addEventListener('click', function(e) {
             const menu = document.getElementById('userDropdown');
+            const sidebar = document.getElementById('sidebarMenu');
+            
+            // Klik di luar menu profil untuk menutup
             if (!e.target.closest('.relative')) {
                 menu?.classList.add('hidden');
             }
+
+            // Klik di luar sidebar (saat di HP) untuk menutup otomatis
+            if (window.innerWidth < 768 && !sidebar.contains(e.target) && !e.target.closest('button')) {
+                sidebar.classList.remove('active-mobile');
+            }
         });
     </script>
-
 
     @stack('scripts')
 </body>

@@ -6,6 +6,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Storage;
 use App\Models\CoachingBooking;
 use App\Models\User;
+use App\Models\Staff;
 use Carbon\Carbon;
 
 class VerifikatorCoachingController extends Controller
@@ -88,7 +89,8 @@ class VerifikatorCoachingController extends Controller
             '14:30 - 15:30',
         ];
         
-        return view('verifikator-coaching.approval-form', compact('coaching', 'availableTimeSlots'));
+        $coaches = Staff::where('role', 'coach')->orderBy('nama')->get();
+        return view('verifikator-coaching.approval-form', compact('coaching', 'availableTimeSlots', 'coaches'));
     }
 
     // Route compatibility: some routes call `showApprovalForm`
@@ -209,29 +211,45 @@ class VerifikatorCoachingController extends Controller
         
         return view('verifikator-coaching.report', compact('coachings', 'stats', 'startDate', 'endDate'));
     }
+
     public function uploadDokumentasi(Request $request, $id)
-{
-    $request->validate([
-        'dokumentasi' => 'required|image|max:2048',
-    ]);
+    {
+        $request->validate([
+            'dokumentasi' => 'required|image|max:2048',
+        ]);
 
-    $coaching = CoachingBooking::findOrFail($id);
+        $coaching = CoachingBooking::findOrFail($id);
 
-    // kalau sudah ada dokumentasi, hapus dulu (edit / replace)
-    if ($coaching->dokumentasi_path) {
-        Storage::disk('public')->delete($coaching->dokumentasi_path);
+        // kalau sudah ada dokumentasi, hapus dulu (edit / replace)
+        if ($coaching->dokumentasi_path) {
+            Storage::disk('public')->delete($coaching->dokumentasi_path);
+        }
+
+        // simpan file baru
+        $path = $request->file('dokumentasi')
+                        ->store('dokumentasi-coaching', 'public');
+
+        // update ke database
+        $coaching->update([
+            'dokumentasi_path' => $path,
+        ]);
+
+        return back()->with('success', 'Dokumentasi berhasil diunggah.');
+
     }
 
-    // simpan file baru
-    $path = $request->file('dokumentasi')
-                    ->store('dokumentasi-coaching', 'public');
+    public function deleteDokumentasi($id)
+    {
+        $coaching = CoachingBooking::findOrFail($id);
 
-    // update ke database
-    $coaching->update([
-        'dokumentasi_path' => $path,
-    ]);
+        if ($coaching->dokumentasi_path) {
+            Storage::disk('public')->delete($coaching->dokumentasi_path);
+            $coaching->update([
+                'dokumentasi_path' => null,
+            ]);
+            return back()->with('success', 'Dokumentasi berhasil dihapus.');
+        }
 
-    return back()->with('success', 'Dokumentasi berhasil diunggah.');
-
+        return back()->with('error', 'Dokumentasi tidak ditemukan.');
     }
 }

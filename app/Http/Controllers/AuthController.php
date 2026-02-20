@@ -37,11 +37,19 @@ class AuthController extends Controller
         // Coba untuk login as InternalUser (Admin, Verifikator)
         if (Auth::guard('internal')->attempt($credentials, $request->remember)) {
             $request->session()->regenerate();
-            
+
             $user = Auth::guard('internal')->user();
-            // dd ($user);
-            $roleCode = Role::where('id', $user->id_role)->first()->kode_role;
-            // dd( $roleCode);
+
+            // gunakan relasi role jika ada
+            $roleCode = $user->role->kode_role ?? null;
+
+            if (! $roleCode) {
+                Auth::guard('internal')->logout();
+                return back()->withErrors([
+                    'email' => 'Akun internal tidak memiliki peran yang valid.',
+                ])->onlyInput('email');
+            }
+
             return $this->redirectBasedOnRole($roleCode);
         }
         

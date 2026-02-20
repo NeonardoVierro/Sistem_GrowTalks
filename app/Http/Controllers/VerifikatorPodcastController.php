@@ -9,6 +9,7 @@ use App\Models\PodcastBooking;
 use App\Models\User;
 use App\Models\Role;
 use App\Models\Kalender;
+use App\Models\Staff;
 
 class VerifikatorPodcastController extends Controller
 {
@@ -80,7 +81,8 @@ class VerifikatorPodcastController extends Controller
         
         $availableTimeSlots = array_diff($allTimeSlots, $bookedTimes);
         
-        return view('verifikator-podcast.approval-form', compact('podcast', 'availableTimeSlots'));
+        $hosts = Staff::where('role', 'host')->orderBy('nama')->get();
+        return view('verifikator-podcast.approval-form', compact('podcast', 'availableTimeSlots', 'hosts'));
     }
 
     public function updateApproval(Request $request, $id)
@@ -147,7 +149,7 @@ class VerifikatorPodcastController extends Controller
         public function uploadCover(Request $request, $id)
         {
         $request->validate([
-                'cover' => 'required|image|max:2048',
+                'cover' => 'required|image|mimes:jpg,jpeg,png,webp|max:2048'
             ]);
 
             $podcast = PodcastBooking::findOrFail($id);
@@ -157,17 +159,32 @@ class VerifikatorPodcastController extends Controller
                 Storage::disk('public')->delete($podcast->cover_path);
             }
 
-            // simpan cover baru
+            /// simpan ke storage/app/public/cover-podcast
             $path = $request->file('cover')
                             ->store('cover-podcast', 'public');
 
-            // update DB
             $podcast->update([
                 'cover_path' => $path,
             ]);
 
             return back()->with('success', 'Cover podcast berhasil diunggah.');
-}
+        }
+
+        public function deleteCover($id)
+        {
+            $podcast = PodcastBooking::findOrFail($id);
+
+            if ($podcast->cover_path) {
+                Storage::disk('public')->delete($podcast->cover_path);
+                $podcast->update([
+                    'cover_path' => null,
+                ]);
+                return back()->with('success', 'Cover podcast berhasil dihapus.');
+            }
+
+            return back()->with('error', 'Cover podcast tidak ditemukan.');
+        }
+
     public function updateStatus(Request $request, $id)
     {
         $request->validate([

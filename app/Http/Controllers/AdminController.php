@@ -384,7 +384,7 @@ class AdminController extends Controller
         $podcast->update([
             'status_verifikasi' => $status,
             'host' => $request->host,
-            'verifikasi' => auth()->guard('admin')->user()->nama_user,
+            'verifikasi' => auth()->guard('internal')->user()->nama_user,
         ]);
 
         // If approved, ensure there's a kalender entry and mark it booked
@@ -433,7 +433,7 @@ class AdminController extends Controller
         
         $coaching->update([
             'status_verifikasi' => $request->status,
-            'verifikasi' => auth()->guard('admin')->user()->nama_user,
+            'verifikasi' => auth()->guard('internal')->user()->nama_user,
         ]);
 
         return back()->with('success', 'Status coaching clinic berhasil diperbarui.');

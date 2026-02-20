@@ -97,10 +97,12 @@
                         <!-- Host -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Host</label>
-                            <input type="text" name="host" 
-                                   value="{{ $podcast->host }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                   placeholder="Masukkan nama host">
+                            <select name="host" class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                <option value="">-- Pilih Host --</option>
+                                @foreach($hosts as $h)
+                                    <option value="{{ $h->nama }}" {{ $podcast->host == $h->nama ? 'selected' : '' }}>{{ $h->nama }}</option>
+                                @endforeach
+                            </select>
                         </div>
                     </div>
 

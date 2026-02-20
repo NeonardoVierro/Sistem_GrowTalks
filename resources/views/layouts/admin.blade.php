@@ -76,6 +76,12 @@
                 Manajemen User
             </a>
 
+            <a href="{{ route('admin.staffs.index') }}"
+               class="block py-3 px-4 rounded-lg {{ request()->is('admin/staffs*') ? 'active' : '' }}">
+                <i class="fas fa-user-cog mr-3"></i>
+                Manajemen Staff
+            </a>
+            
             <a href="{{ route('admin.podcasts') }}"
                class="block py-3 px-4 rounded-lg {{ request()->is('admin/podcast*') ? 'active' : '' }}">
                 <i class="fas fa-podcast mr-3"></i>
@@ -107,7 +113,7 @@
             <button onclick="toggleAdminMenu()"
                 class="flex items-center gap-2 text-gray-700 font-medium">
 
-                {{ auth()->guard('admin')->user()->nama_user ?? 'Admin' }}
+                {{ auth()->guard('internal')->user()->nama_user ?? 'Admin' }}
                 <i class="fas fa-chevron-down text-xs"></i>
             </button>
 

@@ -103,46 +103,53 @@ class VerifikatorCoachingController extends Controller
     
     public function approval(Request $request)
     {
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
         $status = $request->get('status', 'all');
         $search = $request->get('search');
         
         $query = CoachingBooking::with('user');
         
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+        
         if ($search) {
             $query->where(function($q) use ($search) {
                 $q->where('keterangan', 'like', "%{$search}%")
                 ->orWhere('layanan', 'like', "%{$search}%")
-                ->orWhere('pic', 'like', "%{$search}%")
-                ->orWhereHas('user', function($userQuery) use ($search) {
-                    $userQuery->where('nama_opd', 'like', "%{$search}%");
-                });
+                ->orWhere('coach', 'like', "%{$search}%")
+                ->orWhere('nama_opd', 'like', "%{$search}%");
             });
-    }
-    
-    if ($status !== 'all') {
-        $query->where('status_verifikasi', $status);
-    }
-    
-    $coachings = $query->orderBy('created_at', 'desc')
-        ->paginate(15);
-    
-    // Hitung jumlah untuk setiap tab
-    $allCount = CoachingBooking::count();
-    $pendingCount = CoachingBooking::where('status_verifikasi', 'pending')->count();
-    $approvedCount = CoachingBooking::where('status_verifikasi', 'disetujui')->count();
-    $rejectedCount = CoachingBooking::where('status_verifikasi', 'ditolak')->count();
-    $rescheduledCount = CoachingBooking::where('status_verifikasi', 'penjadwalan ulang')->count();
-    
-    return view('verifikator-coaching.approval', compact(
-                                                            'coachings', 
-                                                            'status', 
-                                                            'search',
-                                                            'allCount',
-                                                            'pendingCount',
-                                                            'approvedCount',
-                                                            'rejectedCount',
-                                                            'rescheduledCount'
-                                                        ));
+        }
+        
+        if ($status !== 'all') {
+            $query->where('status_verifikasi', $status);
+        }
+        
+        $coachings = $query->orderBy('created_at', 'desc')
+            ->paginate(15);
+        
+        // Hitung jumlah untuk setiap tab
+        $allCount = CoachingBooking::count();
+        $pendingCount = CoachingBooking::where('status_verifikasi', 'pending')->count();
+        $approvedCount = CoachingBooking::where('status_verifikasi', 'disetujui')->count();
+        $rejectedCount = CoachingBooking::where('status_verifikasi', 'ditolak')->count();
+        $rescheduledCount = CoachingBooking::where('status_verifikasi', 'penjadwalan ulang')->count();
+        
+        return view('verifikator-coaching.approval', compact(
+            'coachings', 
+            'status', 
+            'search',
+            'startDate',
+            'endDate',
+            'allCount',
+            'pendingCount',
+            'approvedCount',
+            'rejectedCount',
+            'rescheduledCount'
+        ));
     }
 
     
@@ -246,48 +253,37 @@ class VerifikatorCoachingController extends Controller
     
     public function report(Request $request)
     {
-        $startDate = $request->get('start_date', Carbon::now()->startOfMonth()->format('Y-m-d'));
-        $endDate = $request->get('end_date', Carbon::now()->endOfMonth()->format('Y-m-d'));
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
         
-    $query = CoachingBooking::with('user')
-        ->where('status_verifikasi', 'disetujui');
-
-    // Filter pencarian
-    if ($request->filled('search')) {
-        $search = $request->search;
-        $query->where(function ($q) use ($search) {
-            $q->where('keterangan', 'like', "%{$search}%")
-              ->orWhere('layanan', 'like', "%{$search}%")
-              ->orWhere('coach', 'like', "%{$search}%")
-              ->orWhereHas('user', function ($u) use ($search) {
-                  $u->where('nama_opd', 'like', "%{$search}%");
-              });
-        });
-    }
-
-    // Filter status (optional, default disetujui)
-    if ($request->filled('status')) {
-        $query->where('status_verifikasi', $request->status);
-    }
-
-    // Filter tahun
-    if ($request->filled('year')) {
-        $query->whereYear('tanggal', $request->year);
-    }
-
-    $coachings = $query
-        ->orderBy('tanggal', 'desc')
-        ->get();
-
-    // Statistik (optional, buat dashboard laporan)
-    $stats = [
-        'total'     => CoachingBooking::count(),
-        'approved'  => CoachingBooking::where('status_verifikasi', 'disetujui')->count(),
-        'pending'   => CoachingBooking::where('status_verifikasi', 'pending')->count(),
-        'rejected'  => CoachingBooking::where('status_verifikasi', 'ditolak')->count(),
-    ];
+        $query = CoachingBooking::with('user');
         
-        return view('verifikator-coaching.report', compact('coachings', 'stats', 'startDate', 'endDate'));
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('layanan', 'like', "%{$search}%")
+                  ->orWhere('coach', 'like', "%{$search}%")
+                  ->orWhere('nama_opd', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+
+        $coachings = $query
+            ->orderBy('tanggal', 'desc')
+            ->get();
+            
+        return view('verifikator-coaching.report', compact('coachings', 'startDate', 'endDate'));
     }
 
     public function uploadDokumentasi(Request $request, $id)

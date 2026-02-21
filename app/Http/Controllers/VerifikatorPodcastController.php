@@ -94,13 +94,37 @@ class VerifikatorPodcastController extends Controller
         ))->with('bookings', $podcasts);
     }
 
-    public function approval()
+    public function approval(Request $request)
     {   
-        $podcasts = PodcastBooking::with(['user', 'verifikator'])
-            ->orderBy('created_at', 'desc')
-            ->get();
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $query = PodcastBooking::with(['user', 'verifikator']);
+        
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('narasumber', 'like', "%{$search}%")
+                  ->orWhere('host', 'like', "%{$search}%")
+                  ->orWhere('nama_opd', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+        
+        $podcasts = $query->orderBy('created_at', 'desc')->get();
             
-        return view('verifikator-podcast.approval', compact('podcasts'));
+        return view('verifikator-podcast.approval', compact('podcasts', 'startDate', 'endDate'));
     }
 
     public function showApprovalForm($id)
@@ -195,13 +219,39 @@ class VerifikatorPodcastController extends Controller
             ->with('success', 'Status podcast berhasil diperbarui.');
     }
 
-    public function report()
+    public function report(Request $request)
     {
-        $podcasts = PodcastBooking::with(['user', 'verifikator'])
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $query = PodcastBooking::with(['user', 'verifikator']);
+        
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('narasumber', 'like', "%{$search}%")
+                  ->orWhere('host', 'like', "%{$search}%")
+                  ->orWhere('nama_opd', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+
+        $podcasts = $query
             ->orderBy('tanggal', 'desc')
             ->get();
             
-        return view('verifikator-podcast.report', compact('podcasts'));
+        return view('verifikator-podcast.report', compact('podcasts', 'startDate', 'endDate'));
     }
 
         public function uploadCover(Request $request, $id)

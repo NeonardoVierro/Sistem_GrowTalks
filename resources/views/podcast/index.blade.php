@@ -406,19 +406,19 @@
 
 <!-- Detail Modal -->
 <div id="detailModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">
-    <div class="bg-white rounded-lg w-full max-w-md relative">
-        <div class="p-4 border-b border-gray-200">
+    <div class="bg-white rounded-lg w-full max-w-md relative flex flex-col max-h-[70vh]">
+        <div class="p-4 border-b border-gray-200 flex-shrink-0">
             <h3 class="text-lg font-bold text-gray-800" id="detailModalTitle">Detail Podcast</h3>
             <button onclick="closeDetailModal()" class="absolute top-4 right-4 text-gray-400 hover:text-gray-600">
                 <i class="fas fa-times"></i>
             </button>
         </div>
 
-        <div class="p-4 space-y-3" id="detailContent">
+        <div class="p-4 space-y-3 overflow-y-auto flex-1" id="detailContent">
             <!-- Content akan diisi oleh JavaScript -->
         </div>
 
-        <div class="p-4 border-t border-gray-200 flex justify-end">
+        <div class="p-4 border-t border-gray-200 flex justify-end flex-shrink-0">
             <button onclick="closeDetailModal()" class="px-4 py-2 bg-blue-600 text-white rounded hover:bg-blue-700">Tutup</button>
         </div>
     </div>
@@ -480,10 +480,6 @@ function showPodcastDetail(dateString, type, bookingData) {
                         })}</div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Booking</label>
-                        <div class="px-3 py-2 bg-gray-50 rounded font-mono">${bookingData.kode}</div>
-                    </div>
-                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
                         <div class="px-3 py-2 bg-gray-50 rounded">${bookingData.keterangan || '-'}</div>
                     </div>
@@ -502,10 +498,6 @@ function showPodcastDetail(dateString, type, bookingData) {
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Host</label>
                         <div class="px-3 py-2 bg-gray-50 rounded">${bookingData.host || 'Akan ditentukan'}</div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Verifikator</label>
-                        <div class="px-3 py-2 bg-gray-50 rounded">${bookingData.verifikasi || '-'}</div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>
@@ -584,10 +576,6 @@ function showPodcastDetail(dateString, type, bookingData) {
                         })}</div>
                     </div>
                     <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Kode Booking</label>
-                        <div class="px-3 py-2 bg-gray-50 rounded font-mono">${bookingData?.kode || '-'}</div>
-                    </div>
-                    <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Judul</label>
                         <div class="px-3 py-2 bg-gray-50 rounded">${bookingData?.keterangan || '-'}</div>
                     </div>
@@ -606,10 +594,6 @@ function showPodcastDetail(dateString, type, bookingData) {
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Host</label>
                         <div class="px-3 py-2 bg-gray-50 rounded">${bookingData?.host || 'Akan ditentukan'}</div>
-                    </div>
-                    <div>
-                        <label class="block text-sm font-medium text-gray-700 mb-1">Verifikator</label>
-                        <div class="px-3 py-2 bg-gray-50 rounded">${bookingData?.verifikasi || '-'}</div>
                     </div>
                     <div>
                         <label class="block text-sm font-medium text-gray-700 mb-1">Catatan</label>

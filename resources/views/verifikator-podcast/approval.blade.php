@@ -12,12 +12,50 @@
 
     <!-- Tabel Antrian Verifikasi Podcast -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden">
-        <div>
+        <!-- Filter -->
+        <div class="p-6 border-b border-gray-200">
+            <form method="GET" action="{{ route('verifikator-podcast.approval') }}" class="flex flex-wrap gap-4">
+                <div class="flex-1 min-w-[200px]">
+                    <input type="text" 
+                           name="search"
+                           value="{{ request('search') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                           placeholder="Cari judul, narasumber, host, atau instansi...">
+                </div>
+                <div class="w-50">
+                    <select name="status"
+                            class="w-full px-1 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="penjadwalan ulang" {{ request('status') == 'penjadwalan ulang' ? 'selected' : '' }}>Penjadwalan Ulang</option>
+                    </select>
+                </div>
+                <div class="w-43">
+                    <input type="date" 
+                           name="start_date"
+                           value="{{ request('start_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+                <div class="w-43">
+                    <input type="date" 
+                           name="end_date"
+                           value="{{ request('end_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                </div>
+                <button type="submit" class="px-6 py-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+                    Filter
+                </button>
+            </form>
+        </div>
+
+        <div class="{{ $podcasts->count() > 10 ? 'overflow-y-auto max-h-96' : '' }}">
 
             <table class="w-full">
 
                 <!-- HEADER -->
-                <thead class="bg-blue-900 text-white text-left">
+                <thead class="bg-blue-900 text-white text-left sticky top-0 z-10">
                     <tr>
                         <th class="py-3 px-4 text-sm">Aksi</th>
                         <th class="py-3 px-4 text-sm">Status</th>

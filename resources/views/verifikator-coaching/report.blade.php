@@ -18,39 +18,47 @@
 
         <!-- Filter -->
         <div class="p-6 border-b border-gray-200">
-            <div class="flex flex-wrap gap-4">
+            <form method="GET" action="{{ route('verifikator-coaching.report') }}" class="flex flex-wrap gap-4">
                 <div class="flex-1 min-w-[200px]">
                     <input type="text" 
+                           name="search"
+                           value="{{ request('search') }}"
                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                           placeholder="Cari...">
+                           placeholder="Cari kategori, agenda, coach, atau instansi...">
                 </div>
-                <div class="w-40">
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
-                        <option value="">Status</option>
-                        <option value="pending">Pending</option>
-                        <option value="disetujui">Disetujui</option>
-                        <option value="ditolak">Ditolak</option>
+                <div class="w-50">
+                    <select name="status"
+                            class="w-full px-1 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                        <option value="">Semua Status</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="penjadwalan ulang" {{ request('status') == 'penjadwalan ulang' ? 'selected' : '' }}>Penjadwalan Ulang</option>
                     </select>
                 </div>
-                <div class="w-32">
-                    <select class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
-                        <option value="">Tahun</option>
-                        <option value="2026">2026</option>
-                        <option value="2025">2025</option>
-                        <option value="2024">2024</option>
-                    </select>
+                <div class="w-43">
+                    <input type="date" 
+                           name="start_date"
+                           value="{{ request('start_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
                 </div>
-                <button class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                <div class="w-43">
+                    <input type="date" 
+                           name="end_date"
+                           value="{{ request('end_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                </div>
+                <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
                     Filter
                 </button>
-            </div>
+            </form>
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto {{ $coachings->count() > 10 ? 'max-h-96 overflow-y-auto' : '' }}">
             <table class="w-full">
-                <thead>
-                    <thead class="bg-blue-900 text-white">
+                <thead class="sticky top-0 z-10">
+                    <thead class="bg-blue-900 text-white sticky top-0 z-10">
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
@@ -102,11 +110,11 @@
                         <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
                 <td class="py-3 px-4">
                         @if($coaching->dokumentasi_path)
-                            <div class="flex items-center gap-2">
+                            <div class="flex items-center gap-6">
                                 <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}" 
                                 target="_blank"
                                 class="text-green-600 hover:text-green-800 text-sm">
-                                    <i class="fas fa-image mr-1"></i>Lihat
+                                    <i class="fas fa-image mr-1"></i>
                                 </a>
 
                                 <form action="{{ route('verifikator-coaching.delete-documentation', $coaching->id) }}"
@@ -117,7 +125,7 @@
                                     @method('DELETE')
                                     <button type="submit"
                                         class="text-red-600 hover:text-red-800 text-sm">
-                                        <i class="fas fa-trash mr-1"></i>Hapus
+                                        <i class="fas fa-trash mr-1"></i>
                                     </button>
                                 </form>
                             </div>
@@ -127,7 +135,7 @@
                                 enctype="multipart/form-data">
                                 @csrf
                                 <label class="cursor-pointer text-green-600 hover:text-green-800 text-sm">
-                                    <i class="fas fa-upload mr-1"></i>Unggah
+                                    <i class="fas fa-upload mr-1"></i>
                                     <input type="file"
                                         name="dokumentasi"
                                         accept="image/*"

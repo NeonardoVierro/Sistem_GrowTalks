@@ -16,36 +16,48 @@
             <h2 class="text-lg font-bold text-gray-800">Antrian Pengajuan Coaching Clinic</h2>
         </div>
         
-        <!-- Tabs -->
-        <div class="border-b border-gray-200">
-            <nav class="flex -mb-px">
-                <a href="{{ route('verifikator-coaching.approval') }}" 
-                   class="py-3 px-6 border-b-2 {{ request('status') == null ? 'border-green-500 text-green-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                    Semua ({{ $allCount }})
-                </a>
-                <a href="{{ route('verifikator-coaching.approval', ['status' => 'pending']) }}" 
-                   class="py-3 px-6 border-b-2 {{ request('status') == 'pending' ? 'border-green-500 text-green-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                    Pending ({{ $pendingCount }})
-                </a>
-                <a href="{{ route('verifikator-coaching.approval', ['status' => 'disetujui']) }}" 
-                   class="py-3 px-6 border-b-2 {{ request('status') == 'disetujui' ? 'border-green-500 text-green-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                    Disetujui ({{ $approvedCount }})
-                </a>
-                <a href="{{ route('verifikator-coaching.approval', ['status' => 'ditolak']) }}" 
-                   class="py-3 px-6 border-b-2 {{ request('status') == 'ditolak' ? 'border-green-500 text-green-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                    Ditolak ({{ $rejectedCount }})
-                </a>
-                <a href="{{ route('verifikator-coaching.approval', ['status' => 'penjadwalan ulang']) }}" 
-                   class="py-3 px-6 border-b-2 {{ request('status') == 'penjadwalan ulang' ? 'border-green-500 text-green-600 font-medium' : 'border-transparent text-gray-500 hover:text-gray-700 hover:border-gray-300' }}">
-                    Penjadwalan Ulang ({{ $rescheduledCount }})
-                </a>
-            </nav>
+        <!-- Filter -->
+        <div class="p-6 border-b border-gray-200">
+            <form method="GET" action="{{ route('verifikator-coaching.approval') }}" class="flex flex-wrap gap-4">
+                <div class="flex-1 min-w-[200px]">
+                    <input type="text" 
+                           name="search"
+                           value="{{ request('search') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                           placeholder="Cari kategori, agenda, coach, atau instansi...">
+                </div>
+                <div class="w-50">
+                    <select name="status"
+                            class="w-full px-1 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                        <option value="">Semua Status</option>
+                        <option value="pending" {{ request('status') == 'pending' ? 'selected' : '' }}>Pending</option>
+                        <option value="disetujui" {{ request('status') == 'disetujui' ? 'selected' : '' }}>Disetujui</option>
+                        <option value="ditolak" {{ request('status') == 'ditolak' ? 'selected' : '' }}>Ditolak</option>
+                        <option value="penjadwalan ulang" {{ request('status') == 'penjadwalan ulang' ? 'selected' : '' }}>Penjadwalan Ulang</option>
+                    </select>
+                </div>
+                <div class="w-43">
+                    <input type="date" 
+                           name="start_date"
+                           value="{{ request('start_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                </div>
+                <div class="w-43">
+                    <input type="date" 
+                           name="end_date"
+                           value="{{ request('end_date') }}"
+                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                </div>
+                <button type="submit" class="px-6 py-2 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                    Filter
+                </button>
+            </form>
         </div>
 
         <!-- Table -->
-        <div class="overflow-x-auto">
+        <div class="{{ $coachings->count() > 10 ? 'overflow-y-auto max-h-96' : '' }}">
             <table class="w-full">
-                <thead>
+                <thead class="sticky top-0 z-10">
                     <tr class="bg-blue-900 text-white">
                         <th class="py-3 px-4 text-left text-sm font-medium">Aksi</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Status</th>

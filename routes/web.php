@@ -8,6 +8,7 @@ use App\Http\Controllers\CoachingController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VerifikatorPodcastController;
 use App\Http\Controllers\VerifikatorCoachingController;
+use App\Http\Controllers\AdminStaffController;
 
 // Public Routes
 Route::get('/', function () {
@@ -41,6 +42,7 @@ Route::middleware(['auth'])->group(function () {
     });
 });
 
+// Admin Routes
 Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
@@ -70,16 +72,14 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(fun
         ->name('coachings.status');
 
     // Manage Hosts & Coaches
-    Route::get('/staffs', [App\Http\Controllers\AdminStaffController::class, 'index'])->name('staffs.index');
-    Route::get('/staffs/create', [App\Http\Controllers\AdminStaffController::class, 'create'])->name('staffs.create');
-    Route::post('/staffs', [App\Http\Controllers\AdminStaffController::class, 'store'])->name('staffs.store');
-    Route::get('/staffs/{id}/edit', [App\Http\Controllers\AdminStaffController::class, 'edit'])->name('staffs.edit');
-    Route::put('/staffs/{id}', [App\Http\Controllers\AdminStaffController::class, 'update'])->name('staffs.update');
-    Route::delete('/staffs/{id}', [App\Http\Controllers\AdminStaffController::class, 'destroy'])->name('staffs.destroy');
-
+    Route::get('/staffs', [AdminStaffController::class, 'index'])->name('staffs.index');
+    Route::get('/staffs/create', [AdminStaffController::class, 'create'])->name('staffs.create');
+    Route::post('/staffs', [AdminStaffController::class, 'store'])->name('staffs.store');
+    Route::get('/staffs/{id}/edit', [AdminStaffController::class, 'edit'])->name('staffs.edit');
+    Route::put('/staffs/{id}', [AdminStaffController::class, 'update'])->name('staffs.update');
+    Route::delete('/staffs/{id}', [AdminStaffController::class, 'destroy'])->name('staffs.destroy');
     Route::get('/reports/podcast', [AdminController::class, 'reportPodcast'])
         ->name('reports.podcast');
-
     Route::get('/reports/coaching', [AdminController::class, 'reportCoaching'])
         ->name('reports.coaching');
 });
@@ -94,8 +94,6 @@ Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->group(functi
         Route::get('/report', [VerifikatorPodcastController::class, 'report'])->name('report');
         Route::post('/podcast/{id}/upload-cover',[VerifikatorPodcastController::class, 'uploadCover'])->name('upload-cover');
         Route::delete('/podcast/{id}/delete-cover',[VerifikatorPodcastController::class, 'deleteCover'])->name('delete-cover');
-
-
     });
 });
 
@@ -103,6 +101,7 @@ Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->group(functi
 Route::prefix('verifikator-coaching')->name('verifikator-coaching.')->group(function () {
     Route::middleware(['auth:internal'])->group(function () {
         Route::get('/dashboard', [VerifikatorCoachingController::class, 'dashboard'])->name('dashboard');
+        Route::get('/get-bookings-by-date', [VerifikatorCoachingController::class, 'getBookingsByDate'])->name('get-bookings-by-date');
         Route::get('/approval', [VerifikatorCoachingController::class, 'approval'])->name('approval');
         Route::get('/approval/{id}/form', [VerifikatorCoachingController::class, 'showApprovalForm'])->name('approval-form');
         Route::put('/approval/{id}/update', [VerifikatorCoachingController::class, 'updateApproval'])->name('update-approval');

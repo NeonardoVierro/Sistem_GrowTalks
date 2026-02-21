@@ -10,6 +10,7 @@ use App\Models\User;
 use App\Models\Role;
 use App\Models\Kalender;
 use App\Models\Staff;
+use Carbon\Carbon;
 
 class VerifikatorPodcastController extends Controller
 {
@@ -24,7 +25,7 @@ class VerifikatorPodcastController extends Controller
     //     });
     // }
 
-    public function dashboard()
+    public function dashboard(request $request)
     {
         // dd( 'masuk');
         // $user = Auth::guard('internal')->user();
@@ -40,18 +41,61 @@ class VerifikatorPodcastController extends Controller
             ->limit(5)
             ->get();
 
+        // KALENDER
+        $month = $request->get('month', date('m'));
+        $year  = $request->get('year', date('Y'));
+
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
+
+        // Ambil booking di bulan tersebut
+        $podcasts = PodcastBooking::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
+            ->get()
+            ->groupBy(function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            });
+
+        // Buat struktur kalender
+        $calendar = [];
+        $currentDate = $startOfMonth->copy()->startOfWeek(Carbon::MONDAY);
+        $endOfCalendar = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
+
+        while ($currentDate <= $endOfCalendar) {
+
+            $week = [];
+
+            for ($i = 0; $i < 7; $i++) {
+
+                $week[] = [
+                    'date' => $currentDate->copy(),
+                    'date_string' => $currentDate->format('Y-m-d'),
+                    'day' => $currentDate->day,
+                    'is_current_month' => $currentDate->month == $month,
+                    'is_friday' => $currentDate->isFriday(),
+                ];
+
+                $currentDate->addDay();
+            }
+
+            $calendar[] = $week;
+        }
+        
         return view('verifikator-podcast.dashboard', compact(
             'totalPodcasts', 
             'pendingPodcasts', 
             'approvedPodcasts', 
             'rejectedPodcasts',
             'rescheduledPodcasts',
-            'recentPodcasts'
-        ));
+            'recentPodcasts',
+            'month',
+            'year',
+            'calendar',
+            'podcasts'
+        ))->with('bookings', $podcasts);
     }
 
     public function approval()
-    {
+    {   
         $podcasts = PodcastBooking::with(['user', 'verifikator'])
             ->orderBy('created_at', 'desc')
             ->get();
@@ -232,4 +276,5 @@ class VerifikatorPodcastController extends Controller
 
         return back()->with('success', 'Status podcast berhasil diperbarui.');
     }
+    
 }

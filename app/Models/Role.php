@@ -6,7 +6,7 @@ use Illuminate\Database\Eloquent\Model;
 
 class Role extends Model
 {
-    protected $primaryKey = 'id_role';
+    protected $primaryKey = 'id';
     protected $table = 'roles';
     
     protected $fillable = [
@@ -17,6 +17,6 @@ class Role extends Model
 
     public function internalUsers()
     {
-        return $this->hasMany(InternalUser::class, 'id_role');
+        return $this->hasMany(InternalUser::class, 'id');
     }
 }

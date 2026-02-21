@@ -79,7 +79,7 @@
     <div class="relative">
         <button onclick="toggleUserMenu()"
             class="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium">
-            {{ auth()->guard('internal')->user()->nama_user }}
+            {{ auth()->guard('internal')->user()->email }}
             <i class="fas fa-chevron-down text-xs"></i>
         </button>
 

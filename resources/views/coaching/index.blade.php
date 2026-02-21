@@ -159,16 +159,17 @@
     
     <div class="bg-white rounded-2xl shadow-xl overflow-hidden border border-gray-200">
         <div class="overflow-x-auto max-h-96 overflow-y-auto">
-            <table class="w-full text-sm border-collapse">
+            <table class="w-full text-sm border-collapse" style="table-layout: fixed;">
                 <thead class="bg-blue-900 text-white">
                     <tr class="text-left">
-                        <th class="py-3 px-4 text center">Aksi</th>
-                        <th class="py-3 px-4 ">Status</th>
-                        <th class="py-3 px-4 ">Kode Booking</th>
-                        <th class="py-3 px-4 ">Tanggal</th>
-                        <th class="py-3 px-4 ">Layanan</th>
-                        <th class="py-3 px-4 ">Agenda</th>
-                        <th class="py-3 px-4 ">Catatan</th>
+                        <th class="py-3 px-4 text-center" style="width: 5%;">Aksi</th>
+                        <th class="py-3 px-4" style="width: 10%;">Status</th>
+                        <th class="py-3 px-4" style="width: 12%;">Kode Booking</th>
+                        <th class="py-3 px-4" style="width: 15%;">Tanggal</th>
+                        <th class="py-3 px-4" style="width: 15%;">Layanan</th>
+                        <th class="py-3 px-4" style="width: 18%;">Agenda</th>
+                        <th class="py-3 px-4" style="width: 12%;">Coach</th>
+                        <th class="py-3 px-4" style="width: 13%;">Catatan</th>
                     </tr>
                 </thead>
                 <tbody>
@@ -216,10 +217,10 @@
                                     {{ ucfirst($booking->status_verifikasi) }}
                             </span>
                             </td>
-                        <td class="py-3 px-4 border-b font-mono">
+                        <td class="py-3 px-4 border-b font-mono break-words">
                             CCA-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                         </td>
-                        <td class="py-3 px-4 text-sm whitespace-nowrap">
+                        <td class="py-3 px-4 text-sm border-b break-words">
                             <div>
                                 {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
                             </div>
@@ -228,21 +229,17 @@
                                 {{ $booking->waktu }}
                             </div>
                             @endif
-                            @if($booking->coach)
-                            <div class="text-xs text-gray-500">
-                                Coach: {{ $booking->coach }}
-                            </div>
-                            @endif
                         </td>
-                        <td class="py-3 px-4 border-b">{{ $booking->layanan }}</td>
-                        <td class="py-3 px-4 border-b">{{ $booking->keterangan }}</td>
-                        <td class="py-3 px-4 border-b text-sm text-gray-600">
+                        <td class="py-3 px-4 border-b break-words">{{ $booking->layanan }}</td>
+                        <td class="py-3 px-4 border-b break-words">{{ $booking->keterangan }}</td>
+                        <td class="py-3 px-4 border-b text-sm break-words">{{ $booking->coach ?? '-' }}</td>
+                        <td class="py-3 px-4 border-b text-sm text-gray-600 break-words">
                             {{ $booking->catatan ?? '-' }}
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="9" class="py-8 px-4 text-center text-gray-500">
+                        <td colspan="8" class="py-8 px-4 text-center text-gray-500">
                             Belum ada pengajuan coaching clinic
                         </td>
                     </tr>

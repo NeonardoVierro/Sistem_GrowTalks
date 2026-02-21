@@ -22,11 +22,11 @@
                         <th class="py-3 px-4 text-sm">Aksi</th>
                         <th class="py-3 px-4 text-sm">Status</th>
                         <th class="py-3 px-4 text-sm">Kode Booking</th>
-                        <th class="py-3 px-4 text-sm">Tanggal</th>
+                        <th class="py-3 px-4 text-sm">Jadwal</th>
                         <th class="py-3 px-4 text-sm">Judul</th>
                         <th class="py-3 px-4 text-sm">Narasumber</th>
                         <th class="py-3 px-4 text-sm">Keterangan</th>
-                        <th class="py-3 px-4 text-sm">Cover</th>
+                        <th class="py-3 px-4 text-sm">Host</th>
                     </tr>
                 </thead>
 
@@ -86,12 +86,6 @@
                                     {{ $podcast->waktu }}
                                 </div>
                             @endif
-
-                            @if($podcast->host)
-                                <div class="text-xs text-gray-500">
-                                    Host: {{ $podcast->host }}
-                                </div>
-                            @endif
                         </td>
 
                         {{-- JUDUL --}}
@@ -108,18 +102,15 @@
                         <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
                             {{ $podcast->catatan ?? '-' }}
                         </td>
-                        <td class="py-3 px-4"> 
-                            @if($podcast->cover_path) 
-                            <a href="{{ asset($podcast->cover_path) }}" target="_blank" class="text-blue-600 hover:text-blue-800"> 
-                                <i class="fas fa-link mr-1"></i>Unggah </a> 
-                            @else 
-                            <span class="text-gray-400">-</span> 
-                            @endif 
+
+                        {{-- HOST --}}
+                        <td class="py-3 px-4 text-sm">
+                            {{ $podcast->host ?? '-' }}
                         </td>
                     </tr>
                     @empty
                     <tr>
-                        <td colspan="7" class="py-16 text-center text-gray-400">
+                        <td colspan="8" class="py-16 text-center text-gray-400">
                             Belum ada pengajuan podcast
                         </td>
                     </tr>

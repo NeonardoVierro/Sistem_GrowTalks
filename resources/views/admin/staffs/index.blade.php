@@ -10,43 +10,91 @@
     </div>
 
     @if(session('success'))
-        <div class="mb-4 text-green-600">{{ session('success') }}</div>
+        <div class="mb-4 p-3 bg-green-100 text-green-700 rounded">{{ session('success') }}</div>
     @endif
 
-    <div class="bg-white rounded shadow overflow-hidden">
-        <table class="w-full">
-            <thead class="bg-gray-100">
-                <tr>
-                    <th class="px-4 py-3 text-left">Nama</th>
-                    <th class="px-4 py-3 text-left">Role</th>
-                    <th class="px-4 py-3 text-left">No. HP</th>
-                    <th class="px-4 py-3 text-left">Bidang</th>
-                    <th class="px-4 py-3 text-right">Aksi</th>
-                </tr>
-            </thead>
-            <tbody>
-                @foreach($staffs as $s)
-                <tr class="border-t">
-                    <td class="px-4 py-3">{{ $s->nama }}</td>
-                    <td class="px-4 py-3">{{ ucfirst($s->role) }}</td>
-                    <td class="px-4 py-3">{{ $s->no_hp ?? '-' }}</td>
-                    <td class="px-4 py-3">{{ $s->bidang ?? '-' }}</td>
-                    <td class="px-4 py-3 text-right">
-                        <a href="{{ route('admin.staffs.edit', $s->id) }}" class="text-blue-600 mr-3">Edit</a>
-                        <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus staff ini?');">
-                            @csrf
-                            @method('DELETE')
-                            <button class="text-red-600">Hapus</button>
-                        </form>
-                    </td>
-                </tr>
-                @endforeach
-            </tbody>
-        </table>
+    <!-- TABEL HOST -->
+    <div class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Host</h2>
+        <div class="bg-white rounded shadow overflow-hidden">
+            <table class="w-full" style="table-layout: fixed;">
+                <thead class="bg-blue-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left" style="width: 25%;">Nama</th>
+                        <th class="px-4 py-3 text-left" style="width: 20%;">No. HP</th>
+                        <th class="px-4 py-3 text-left" style="width: 35%;">Bidang</th>
+                        <th class="px-4 py-3 text-right" style="width: 20%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($staffs->where('role', 'host') as $s)
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 break-words">{{ $s->nama }}</td>
+                        <td class="px-4 py-3 break-words">{{ $s->no_hp ?? '-' }}</td>
+                        <td class="px-4 py-3 break-words">{{ $s->bidang ?? '-' }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{{ route('admin.staffs.edit', $s->id) }}" class="text-blue-600 mr-3 hover:text-blue-800" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus staff ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-600 hover:text-red-800" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr class="border-t">
+                        <td colspan="4" class="px-4 py-8 text-center text-gray-400">Belum ada data host</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 
-    <div class="mt-4">
-        {{ $staffs->links() }}
+    <!-- TABEL COACH -->
+    <div class="mb-8">
+        <h2 class="text-xl font-bold mb-4">Coach</h2>
+        <div class="bg-white rounded shadow overflow-hidden">
+            <table class="w-full" style="table-layout: fixed;">
+                <thead class="bg-green-100">
+                    <tr>
+                        <th class="px-4 py-3 text-left" style="width: 25%;">Nama</th>
+                        <th class="px-4 py-3 text-left" style="width: 20%;">No. HP</th>
+                        <th class="px-4 py-3 text-left" style="width: 35%;">Bidang</th>
+                        <th class="px-4 py-3 text-right" style="width: 20%;">Aksi</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @forelse($staffs->where('role', 'coach') as $s)
+                    <tr class="border-t hover:bg-gray-50">
+                        <td class="px-4 py-3 break-words">{{ $s->nama }}</td>
+                        <td class="px-4 py-3 break-words">{{ $s->no_hp ?? '-' }}</td>
+                        <td class="px-4 py-3 break-words">{{ $s->bidang ?? '-' }}</td>
+                        <td class="px-4 py-3 text-right">
+                            <a href="{{ route('admin.staffs.edit', $s->id) }}" class="text-blue-600 mr-3 hover:text-blue-800" title="Edit">
+                                <i class="fas fa-edit"></i>
+                            </a>
+                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus staff ini?');">
+                                @csrf
+                                @method('DELETE')
+                                <button class="text-red-600 hover:text-red-800" title="Hapus">
+                                    <i class="fas fa-trash"></i>
+                                </button>
+                            </form>
+                        </td>
+                    </tr>
+                    @empty
+                    <tr class="border-t">
+                        <td colspan="4" class="px-4 py-8 text-center text-gray-400">Belum ada data coach</td>
+                    </tr>
+                    @endforelse
+                </tbody>
+            </table>
+        </div>
     </div>
 </div>
 @endsection

@@ -113,7 +113,7 @@
             <button onclick="toggleAdminMenu()"
                 class="flex items-center gap-2 text-gray-700 font-medium">
 
-                {{ auth()->guard('internal')->user()->nama_user ?? 'Admin' }}
+                {{ auth()->guard('internal')->user()->email ?? 'Admin' }}
                 <i class="fas fa-chevron-down text-xs"></i>
             </button>
 

@@ -32,7 +32,7 @@
         </div>
         <div class="mb-4">
             <label class="block text-sm text-gray-700 mb-2">No. HP</label>
-            <input type="text" name="no_hp" value="{{ old('no_hp', $staff->no_hp) }}" class="w-full px-4 py-2 border rounded" />
+            <input type="number" name="no_hp" value="{{ old('no_hp', $staff->no_hp) }}" class="w-full px-4 py-2 border rounded" inputmode="numeric" placeholder="Contoh: 081234567890" />
         </div>
         <div class="mb-4">
             <label class="block text-sm text-gray-700 mb-2">Bidang</label>

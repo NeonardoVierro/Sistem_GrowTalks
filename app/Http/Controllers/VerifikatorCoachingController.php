@@ -11,7 +11,7 @@ use Carbon\Carbon;
 
 class VerifikatorCoachingController extends Controller
 {
-    public function dashboard()
+    public function dashboard(Request $request)
     {
         $totalCoachings = CoachingBooking::count();
         $pendingCoachings = CoachingBooking::where('status_verifikasi', 'pending')->count();
@@ -22,14 +22,83 @@ class VerifikatorCoachingController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
-        
+        // Kalender params
+        $month = $request->get('month', date('m'));
+        $year  = $request->get('year', date('Y'));
+
+        $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
+        $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
+
+        // Ambil bookings di bulan tersebut
+        $coachings = CoachingBooking::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
+            ->orderBy('tanggal')
+            ->get()
+            ->groupBy(function ($item) {
+                return Carbon::parse($item->tanggal)->format('Y-m-d');
+            });
+
+        // Buat struktur kalender (awal minggu Senin - akhir Minggu)
+        $calendar = [];
+        $currentDate = $startOfMonth->copy()->startOfWeek(Carbon::MONDAY);
+        $endOfCalendar = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
+
+        while ($currentDate <= $endOfCalendar) {
+            $week = [];
+            for ($i = 0; $i < 7; $i++) {
+                $week[] = [
+                    'date' => $currentDate->copy(),
+                    'date_string' => $currentDate->format('Y-m-d'),
+                    'day' => $currentDate->day,
+                    'is_current_month' => $currentDate->month == $month,
+                    // Available days for coaching (example: Rabu dan Jumat)
+                    'is_available_day' => in_array($currentDate->dayOfWeek, [Carbon::WEDNESDAY, Carbon::FRIDAY]),
+                ];
+                $currentDate->addDay();
+            }
+            $calendar[] = $week;
+        }
+
         return view('verifikator-coaching.dashboard', compact(
             'totalCoachings', 
             'pendingCoachings', 
             'approvedCoachings', 
             'rejectedCoachings',
-            'recentCoachings'
-        ));
+            'recentCoachings',
+            'month',
+            'year',
+            'calendar'
+        ))->with('bookings', $coachings);
+    }
+
+    /**
+     * AJAX: get bookings by date for modal
+     */
+    public function getBookingsByDate(Request $request)
+    {
+        $date = $request->get('date');
+        if (!$date) {
+            return response()->json(['success' => false, 'message' => 'Date required']);
+        }
+
+        $coachings = CoachingBooking::whereDate('tanggal', $date)->orderBy('waktu')->get();
+
+        $data = $coachings->map(function ($c) {
+            return [
+                'id' => $c->id,
+                'kode' => 'CCA-' . $c->tanggal->format('Ymd') . $c->id,
+                'status' => $c->status_verifikasi,
+                'instansi' => $c->nama_opd ?? $c->instansi ?? '-',
+                'layanan' => $c->layanan,
+                'agenda' => $c->keterangan,
+                'pic' => $c->pic,
+                'no_telp' => $c->no_telp,
+                'waktu' => $c->waktu ?? 'Akan ditentukan',
+                'coach' => $c->coach ?? '-',
+                'catatan' => $c->catatan,
+            ];
+        })->toArray();
+
+        return response()->json(['success' => true, 'bookings' => $data]);
     }
     
     public function approval(Request $request)

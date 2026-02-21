@@ -248,18 +248,79 @@
     </div>
 </section>
 
-<footer class="bg-gray-100 py-12 text-center snap-section flex flex-col items-center justify-center">
-    <img src="{{ asset('images/logo_diskominfo.png') }}" class="h-16 mb-6 opacity-80" alt="logo footer">
-    <p class="text-gray-600 font-semibold mb-2">GrowTalks — Digital Service Hub</p>
-    <p class="text-gray-400 text-sm italic mb-6">Diskominfo SP Kota Surakarta</p>
-    <div class="flex gap-4 mb-8">
-        <div class="w-8 h-8 rounded-full bg-blue-600 flex items-center justify-center text-white text-xs">FB</div>
-        <div class="w-8 h-8 rounded-full bg-pink-600 flex items-center justify-center text-white text-xs">IG</div>
-        <div class="w-8 h-8 rounded-full bg-red-600 flex items-center justify-center text-white text-xs">YT</div>
-    </div>
-    <p class="text-gray-400 text-[10px] tracking-widest uppercase">© {{ date('Y') }} All Rights Reserved</p>
-</footer>
+<footer class="bg-gray-100 py-8 text-center">
 
+    <!-- Logo -->
+    <img src="{{ asset('images/logo_diskominfo.png') }}" 
+         class="h-12 mx-auto mb-3" 
+         alt="Diskominfo Surakarta">
+
+    <!-- Title -->
+    <p class="text-gray-700 font-semibold text-base">
+        GrowTalks — Digital Service Hub
+    </p>
+
+    <p class="text-gray-500 text-sm mb-4">
+        Diskominfo SP Kota Surakarta
+    </p>
+
+    <!-- Social Media -->
+    <div class="flex justify-center gap-6 mb-4">
+
+        <!-- Website -->
+        <a href="https://diskominfosp.surakarta.go.id/" 
+           target="_blank"
+           class="text-gray-600 hover:text-blue-600 transition transform hover:scale-110">
+
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="w-6 h-6" 
+                 fill="none" 
+                 viewBox="0 0 24 24" 
+                 stroke="currentColor">
+                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="1.8" 
+                      d="M12 2a10 10 0 100 20 10 10 0 000-20zm0 0c2.5 2.7 4 6 4 10s-1.5 7.3-4 10m0-20C9.5 4.7 8 8 8 12s1.5 7.3 4 10" />
+            </svg>
+
+        </a>
+
+        <!-- Instagram -->
+        <a href="https://www.instagram.com/diskominfosp_surakarta" 
+           target="_blank"
+           class="text-gray-600 hover:text-pink-600 transition transform hover:scale-110">
+
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="w-6 h-6" 
+                 fill="none" 
+                 viewBox="0 0 24 24" 
+                 stroke="currentColor">
+                <rect x="3" y="3" width="18" height="18" rx="5" stroke-width="1.8"/>
+                <circle cx="12" cy="12" r="4" stroke-width="1.8"/>
+                <circle cx="17.5" cy="6.5" r="1" fill="currentColor"/>
+            </svg>
+
+        </a>
+
+        <!-- YouTube -->
+        <a href="https://www.youtube.com/@diskominfospsurakarta8388" 
+           target="_blank"
+           class="text-gray-600 hover:text-red-600 transition transform hover:scale-110">
+
+            <svg xmlns="http://www.w3.org/2000/svg" 
+                 class="w-6 h-6" 
+                 viewBox="0 0 24 24" 
+                 fill="currentColor">
+                <path d="M21.8 8s-.2-1.4-.8-2c-.8-.8-1.7-.8-2.1-.9C15.9 5 12 5 12 5h-.1s-3.9 0-6.9.1c-.4 0-1.3.1-2.1.9C2.3 6.6 2 8 2 8S2 9.6 2 11.2v1.6C2 14.4 2 16 2 16s.2 1.4.8 2c.8.8 1.9.8 2.4.9 1.7.1 6.8.1 6.8.1s3.9 0 6.9-.1c.4 0 1.3-.1 2.1-.9.6-.6.8-2 .8-2s.2-1.6.2-3.2v-1.6C22 9.6 21.8 8 21.8 8zM10 14.5v-5l5 2.5-5 2.5z"/>
+            </svg>
+
+        </a>
+
+    </div>
+
+    <p class="text-gray-400 text-xs tracking-widest uppercase">
+        © {{ date('Y') }} GrowTalks. All Rights Reserved
+    </p>
+
+</footer>
 
 <script>
 /* Smooth Scroll Trigger */
@@ -306,6 +367,8 @@ document.addEventListener('DOMContentLoaded', () => {
     initSlider('.cc-slide', 4000);
 });
 </script>
+
+<script src="https://unpkg.com/heroicons@2.0.18/dist/heroicons.js"></script>
 
 </body>
 </html>

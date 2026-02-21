@@ -50,11 +50,11 @@
                         <th class="py-3 px-4 text-left text-sm font-medium">Aksi</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Status</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Kode Booking</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium">Jadwal</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Layanan</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Agenda</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium">PIC</th>
+                        <th class="py-3 px-4 text-left text-sm font-medium">Coach</th>
                         <th class="py-3 px-4 text-left text-sm font-medium">Catatan</th>
                     </tr>
                 </thead>
@@ -103,14 +103,11 @@
                             @if($coaching->waktu)
                                 <div class="text-xs text-gray-600">{{ $coaching->waktu }}</div>
                             @endif
-                            @if($coaching->coach)
-                                <div class="text-xs text-gray-600">Coach: {{ $coaching->coach }}</div>
-                            @endif
                         </td>
                         <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->layanan }}</td>
                         <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ Str::limit($coaching->keterangan, 30) }}</td>
                         <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->nama_opd ?? '-' }}</td>
-                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->pic }}</td>
+                        <td class="py-3 px-4 text-sm max-w-xs break-words whitespace-normal">{{ $coaching->coach ?? '-' }}</td>
                         <td class="py-3 px-4 text-xs max-w-[180px] whitespace-normal break-words">
                             {{ $coaching->catatan ? Str::limit($coaching->catatan) : '-' }}
                         </td>

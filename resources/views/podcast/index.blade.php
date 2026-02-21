@@ -245,16 +245,17 @@
         <!-- Tabel Antrian Verifikasi Podcast -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto max-h-96 overflow-y-auto">
-                <table class="w-full text-sm border-collapse">
+                <table class="w-full text-sm border-collapse" style="table-layout: fixed;">
                     <thead class="bg-blue-900 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-center">Aksi</th>
-                            <th class="px-4 py-3 text-left">Status</th>
-                            <th class="px-4 py-3 text-left">Kode Booking</th>
-                            <th class="px-4 py-3 text-left">Tanggal</th>
-                            <th class="px-4 py-3 text-left">Judul</th>
-                            <th class="px-4 py-3 text-left">Narasumber</th>
-                            <th class="px-4 py-3 text-left">Keterangan</th>
+                            <th class="px-4 py-3 text-center" style="width: 5%;">Aksi</th>
+                            <th class="px-4 py-3 text-left" style="width: 10%;">Status</th>
+                            <th class="px-4 py-3 text-left" style="width: 12%;">Kode Booking</th>
+                            <th class="px-4 py-3 text-left" style="width: 15%;">Tanggal</th>
+                            <th class="px-4 py-3 text-left" style="width: 20%;">Judul</th>
+                            <th class="px-4 py-3 text-left" style="width: 13%;">Narasumber</th>
+                            <th class="px-4 py-3 text-left" style="width: 10%;">Host</th>
+                            <th class="px-4 py-3 text-left" style="width: 15%;">Keterangan</th>
                         </tr>
                     </thead>
 
@@ -309,12 +310,12 @@
                             </td>
 
                             {{-- KODE --}}
-                            <td class="px-4 py-3 font-mono">
+                            <td class="px-4 py-3 font-mono break-words">
                                 POD-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                             </td>
 
                             <!-- TANGGAL -->
-                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                            <td class="py-3 px-4 text-sm border-b break-words">
                                 <div>
                                     {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
                                 </div>
@@ -323,32 +324,29 @@
                                     {{ $booking->waktu }}
                                 </div>
                                 @endif
-
-                                @if($booking->host)
-                                <div class="text-xs text-gray-500">
-                                    Host: {{ $booking->host }}
-                                </div>
-                                @endif
                             </td>
                             {{-- JUDUL --}}
-                            <td class="py-3 px-4 text-sm max-w-[200px]">
-                                <div class="line-clamp-2 break-words">
-                                    {{ $booking->keterangan }}
-                                </div>
+                            <td class="py-3 px-4 text-sm border-b break-words">
+                                {{ $booking->keterangan }}
                             </td>
                             {{-- NARASUMBER --}}
-                            <td class="px-4 py-3">
+                            <td class="px-4 py-3 border-b break-words">
                                 {{ $booking->narasumber }}
                             </td>
 
+                            {{-- HOST --}}
+                            <td class="px-4 py-3 text-sm border-b break-words">
+                                {{ $booking->host ?? '-' }}
+                            </td>
+
                             <!-- KETERANGAN -->
-                            <td class="px-4 py-3 text-xs text-gray-600 w-[140px] break-words whitespace-normal">
+                            <td class="px-4 py-3 text-xs text-gray-600 border-b break-words">
                                 {{ $booking->catatan ?? '-' }}
                             </td>
                         </tr>
                         @empty
                         <tr>
-                            <td colspan="7" class="py-10 text-center text-gray-500">
+                            <td colspan="8" class="py-10 text-center text-gray-500">
                                 Belum ada pengajuan podcast
                             </td>
                         </tr>

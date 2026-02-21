@@ -350,7 +350,7 @@ class AdminController extends Controller
             ->orderBy('tanggal','desc')
             ->get();
 
-        return view('admin.podcast.index', compact('podcasts'));
+        return view('admin.reports.podcast', compact('podcasts'));
     }
 
     public function showPodcast($id)
@@ -359,14 +359,14 @@ class AdminController extends Controller
             ->findOrFail($id);
 
         return view('admin.podcast.show', compact('podcast'));
-    }
+    }   
 
     public function coachings()
     {
         $coachings = CoachingBooking::with(['user', 'kalender'])
             ->orderBy('tanggal', 'desc')
             ->get();
-        return view('admin.coaching.index', compact('coachings'));
+        return view('admin.reports.coaching', compact('coachings'));
     }
 
     public function updatePodcastStatus(Request $request, $id)
@@ -439,19 +439,67 @@ class AdminController extends Controller
         return back()->with('success', 'Status coaching clinic berhasil diperbarui.');
     }
 
-    public function reportPodcast()
+    public function reportPodcast(Request $request)
     {
-        $podcasts = PodcastBooking::with('user')
-            ->orderBy('tanggal', 'desc')
-            ->get();
-        return view('admin.reports.podcast', compact('podcasts'));
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $query = PodcastBooking::with('user');
+        
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('narasumber', 'like', "%{$search}%")
+                  ->orWhere('host', 'like', "%{$search}%")
+                  ->orWhere('nama_opd', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+        
+        $podcasts = $query->orderBy('tanggal', 'desc')->get();
+        return view('admin.reports.podcast', compact('podcasts', 'startDate', 'endDate'));
     }
 
-    public function reportCoaching()
+    public function reportCoaching(Request $request)
     {
-        $coachings = CoachingBooking::with('user')
-            ->orderBy('tanggal', 'desc')
-            ->get();
-        return view('admin.reports.coaching', compact('coachings'));
+        $startDate = $request->get('start_date');
+        $endDate = $request->get('end_date');
+        
+        $query = CoachingBooking::with('user');
+        
+        // Apply date range filter only if both dates are provided
+        if ($startDate && $endDate) {
+            $query->whereBetween('tanggal', [$startDate, $endDate]);
+        }
+
+        // Filter pencarian
+        if ($request->filled('search')) {
+            $search = $request->search;
+            $query->where(function ($q) use ($search) {
+                $q->where('keterangan', 'like', "%{$search}%")
+                  ->orWhere('layanan', 'like', "%{$search}%")
+                  ->orWhere('coach', 'like', "%{$search}%")
+                  ->orWhere('nama_opd', 'like', "%{$search}%");
+            });
+        }
+
+        // Filter status
+        if ($request->filled('status')) {
+            $query->where('status_verifikasi', $request->status);
+        }
+        
+        $coachings = $query->orderBy('tanggal', 'desc')->get();
+        return view('admin.reports.coaching', compact('coachings', 'startDate', 'endDate'));
     }
 }

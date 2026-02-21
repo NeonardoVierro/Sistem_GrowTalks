@@ -236,8 +236,9 @@
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-800">Podcast Terbaru</h2>
         </div>
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="p-4">
+            <div class="{{ $recentPodcasts->count() > 7 ? 'max-h-72 overflow-y-auto' : '' }}">
+                <table class="w-full table-fixed">
                 <thead>
                     <thead class="bg-blue-900 text-white">
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
@@ -297,6 +298,7 @@
                     @endforelse
                 </tbody>
             </table>
+            </div>
         </div>
     </div>
 

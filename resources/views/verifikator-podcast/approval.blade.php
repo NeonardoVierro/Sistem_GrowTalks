@@ -63,8 +63,8 @@
                         <th class="py-3 px-4 text-sm">Jadwal</th>
                         <th class="py-3 px-4 text-sm">Judul</th>
                         <th class="py-3 px-4 text-sm">Narasumber</th>
-                        <th class="py-3 px-4 text-sm">Keterangan</th>
                         <th class="py-3 px-4 text-sm">Host</th>
+                        <th class="py-3 px-4 text-sm">Keterangan</th>
                     </tr>
                 </thead>
 
@@ -136,14 +136,14 @@
                             {{ $podcast->narasumber }}
                         </td>
 
-                        {{-- KETERANGAN --}}
-                        <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
-                            {{ $podcast->catatan ?? '-' }}
-                        </td>
-
                         {{-- HOST --}}
                         <td class="py-3 px-4 text-sm">
                             {{ $podcast->host ?? '-' }}
+                        </td>
+                    
+                        {{-- KETERANGAN --}}
+                        <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
+                            {{ $podcast->catatan ?? '-' }}
                         </td>
                     </tr>
                     @empty

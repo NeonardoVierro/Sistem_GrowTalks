@@ -55,13 +55,10 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(fun
     Route::delete('/users/{id}', [AdminController::class, 'deleteUser'])->name('users.delete');
     Route::get('/users/{id}/toggle-status', [AdminController::class, 'toggleStatus'])->name('users.toggle-status');
 
-
-    Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
-    Route::get('/podcasts/{id}', [AdminController::class, 'showPodcast'])
-        ->name('podcasts.show');
-
-    Route::put('/podcasts/{id}/status', [AdminController::class, 'updatePodcastStatus'])
-        ->name('podcasts.status');
+    Route::get('/reports/podcast', [AdminController::class, 'reportPodcast'])
+        ->name('reports.podcast');
+    Route::get('/reports/coaching', [AdminController::class, 'reportCoaching'])
+        ->name('reports.coaching');
 
     Route::get('/podcasts', [AdminController::class, 'podcasts'])->name('podcasts');
     Route::get('/podcasts/{id}', [AdminController::class, 'showPodcast'])->name('podcast.show');
@@ -78,10 +75,6 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(fun
     Route::get('/staffs/{id}/edit', [AdminStaffController::class, 'edit'])->name('staffs.edit');
     Route::put('/staffs/{id}', [AdminStaffController::class, 'update'])->name('staffs.update');
     Route::delete('/staffs/{id}', [AdminStaffController::class, 'destroy'])->name('staffs.destroy');
-    Route::get('/reports/podcast', [AdminController::class, 'reportPodcast'])
-        ->name('reports.podcast');
-    Route::get('/reports/coaching', [AdminController::class, 'reportCoaching'])
-        ->name('reports.coaching');
 });
 
 // Verifikator Podcast Routes

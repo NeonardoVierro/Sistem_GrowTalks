@@ -58,7 +58,7 @@
         <div class="overflow-x-auto {{ $podcasts->count() > 10 ? 'max-h-96 overflow-y-auto' : '' }}">
             <table class="w-full">
                 <thead class="sticky top-0 z-10">
-                   <thead class="bg-blue-900 text-white sticky top-0 z-10">
+                    <thead class="bg-blue-900 text-white sticky top-0 z-10">
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
@@ -67,7 +67,6 @@
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Host</th>
                         <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Cover</th>
-                    </tr>
                 </thead>
                 <tbody class="divide-y divide-gray-200">
                     @forelse($podcasts as $podcast)

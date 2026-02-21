@@ -27,7 +27,8 @@
             </div>
 
             <div class="shadow-md rounded-lg overflow-hidden">
-                <table class="w-full text-sm">
+                <div class="{{ $recentPodcasts->count() > 7 ? 'max-h-72 overflow-y-auto' : '' }}">
+                <table class="w-full text-sm table-fixed">
                      <thead class="bg-blue-900 text-white">
                         <tr>
                             <th class="p-3 text-left">Tanggal</th>
@@ -83,6 +84,7 @@
                     @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
 
         </div>
@@ -95,7 +97,8 @@
             </div>
 
             <div class="shadow-md rounded-lg overflow-hidden">
-                <table class="w-full text-sm">
+                <div class="{{ $recentCoachings->count() > 7 ? 'max-h-72 overflow-y-auto' : '' }}">
+                <table class="w-full text-sm table-fixed">
                      <thead class="bg-blue-900 text-white">
                         <tr>
                             <th class="p-3 text-left">Tanggal</th>
@@ -150,6 +153,7 @@
                     @endforelse
                     </tbody>
                 </table>
+                </div>
             </div>
 
         </div>

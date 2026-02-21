@@ -134,28 +134,38 @@ class VerifikatorPodcastController extends Controller
         $request->validate([
             'status_verifikasi' => 'required|in:pending,disetujui,ditolak,penjadwalan ulang',
             'host' => 'nullable|string|max:100',
-            'waktu' => 'nullable|string',
+            'narasumber' => 'nullable|string|max:100',
+            'waktu_mulai' => 'nullable|date_format:H:i',
+            'waktu_selesai' => 'nullable|date_format:H:i',
             'catatan' => 'nullable|string',
         ]);
 
         $podcast = PodcastBooking::findOrFail($id);
         $user = Auth::guard('internal')->user();
 
+        // Format waktu dari input time menjadi format "HH.MM - HH.MM"
+        $waktu = null;
+        if ($request->waktu_mulai && $request->waktu_selesai) {
+            $jamMulai = str_replace(':', '.', $request->waktu_mulai);
+            $jamSelesai = str_replace(':', '.', $request->waktu_selesai);
+            $waktu = "{$jamMulai} - {$jamSelesai}";
+        }
+
         // Jika status disetujui, wajib ada waktu dan host
         if ($request->status_verifikasi === 'disetujui') {
-            if (!$request->waktu) {
-                return back()->withErrors(['waktu' => 'Waktu wajib diisi untuk status disetujui.'])->withInput();
+            if (!$waktu) {
+                return back()->withErrors(['waktu_mulai' => 'Waktu wajib diisi untuk status disetujui.'])->withInput();
             }
             
             // Check if time slot is already taken
             $existingBooking = PodcastBooking::whereDate('tanggal', $podcast->tanggal)
-                ->where('waktu', $request->waktu)
+                ->where('waktu', $waktu)
                 ->where('status_verifikasi', 'disetujui')
                 ->where('id', '!=', $id)
                 ->exists();
                 
             if ($existingBooking) {
-                return back()->withErrors(['waktu' => 'Slot waktu ini sudah ditempati oleh booking lain.'])->withInput();
+                return back()->withErrors(['waktu_mulai' => 'Slot waktu ini sudah ditempati oleh booking lain.'])->withInput();
             }
         }
 
@@ -166,13 +176,17 @@ class VerifikatorPodcastController extends Controller
             'catatan' => $request->catatan,
         ];
 
-        // Only update host and waktu if provided
+        // Only update host, narasumber, and waktu if provided
         if ($request->host) {
             $updateData['host'] = $request->host;
         }
         
-        if ($request->waktu) {
-            $updateData['waktu'] = $request->waktu;
+        if ($request->narasumber) {
+            $updateData['narasumber'] = $request->narasumber;
+        }
+        
+        if ($waktu) {
+            $updateData['waktu'] = $waktu;
         }
 
         $podcast->update($updateData);

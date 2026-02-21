@@ -79,7 +79,6 @@
                 @csrf
                 @method('PUT')
                 
-                
                 <div class="grid grid-cols-2 gap-6">
                     <div>
                         <!-- Status Verifikasi -->
@@ -104,16 +103,43 @@
                                 @endforeach
                             </select>
                         </div>
+
+                        <!-- Narasumber -->
+                        <div class="mb-4">
+                            <div class="flex items-center gap-2 mb-2">
+                                <label class="block text-sm font-medium text-gray-700">Narasumber</label>
+                            </div>
+                            <input type="text" name="narasumber" 
+                                   value="{{ $podcast->narasumber }}"
+                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                                   placeholder="Masukkan nama narasumber">
+                            <p class="text-xs text-gray-500 mt-1"><span class="text-red-500 font-semibold">*</span> Ubah jika diperlukan koreksi atau perubahan narasumber</p>
+                        </div>
                     </div>
 
                     <div>
                         <!-- Waktu -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Waktu Podcast</label>
-                            <input type="text" name="waktu" 
-                                   value="{{ $podcast->waktu }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
-                                   placeholder="Contoh: 13.00 - 16.00">
+                            <div class="flex items-center gap-3">
+                                @php
+                                    $times = $podcast->waktu ? explode(' - ', $podcast->waktu) : ['', ''];
+                                    $jamMulai = $times[0] ? str_replace('.', ':', $times[0]) : '';
+                                    $jamSelesai = isset($times[1]) ? str_replace('.', ':', $times[1]) : '';
+                                @endphp
+                                <div class="flex-1">
+                                    <input type="time" name="waktu_mulai" 
+                                           value="{{ $jamMulai }}"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                </div>
+                                <span class="text-gray-500 font-medium">-</span>
+                                <div class="flex-1">
+                                    <input type="time" name="waktu_selesai" 
+                                           value="{{ $jamSelesai }}"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Pilih jam mulai dan jam selesai</p>
                         </div>
 
                         <!-- Catatan -->

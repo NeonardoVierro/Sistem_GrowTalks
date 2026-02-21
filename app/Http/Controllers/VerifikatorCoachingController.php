@@ -173,16 +173,25 @@ class VerifikatorCoachingController extends Controller
         $validated = $request->validate([
             'status_verifikasi' => 'required|in:pending,disetujui,ditolak,penjadwalan ulang',
             'coach' => 'nullable|string|max:100',
-            'waktu' => 'nullable|string|max:50',
+            'waktu_mulai' => 'nullable|date_format:H:i',
+            'waktu_selesai' => 'nullable|date_format:H:i',
             'catatan' => 'nullable|string',
         ]);
         
         $coaching = CoachingBooking::findOrFail($id);
         
+        // Format waktu dari input time menjadi format "HH.MM - HH.MM"
+        $waktu = null;
+        if ($request->waktu_mulai && $request->waktu_selesai) {
+            $jamMulai = str_replace(':', '.', $request->waktu_mulai);
+            $jamSelesai = str_replace(':', '.', $request->waktu_selesai);
+            $waktu = "{$jamMulai} - {$jamSelesai}";
+        }
+        
         // Jika disetujui, pastikan waktu dan coach diisi
         if ($validated['status_verifikasi'] == 'disetujui') {
-            if (empty($validated['waktu'])) {
-                return back()->withErrors(['waktu' => 'Waktu harus diisi untuk coaching yang disetujui.']);
+            if (empty($waktu)) {
+                return back()->withErrors(['waktu_mulai' => 'Waktu harus diisi untuk coaching yang disetujui.'])->withInput();
             }
         }
         
@@ -190,7 +199,7 @@ class VerifikatorCoachingController extends Controller
         $coaching->update([
             'status_verifikasi' => $validated['status_verifikasi'],
             'coach' => $validated['coach'] ?? null,
-            'waktu' => $validated['waktu'] ?? null,
+            'waktu' => $waktu ?? null,
             'catatan' => $validated['catatan'] ?? null,
             'id_verifikator' => auth()->id(),
             'verifikasi' => Carbon::now(),

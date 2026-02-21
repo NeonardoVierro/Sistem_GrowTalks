@@ -133,10 +133,25 @@
                         <!-- Waktu -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Waktu Coaching</label>
-                            <input type="text" name="waktu" 
-                                   value="{{ $coaching->waktu }}"
-                                   class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500"
-                                   placeholder="Contoh: 09.00 - 11.00">
+                            <div class="flex items-center gap-3">
+                                @php
+                                    $times = $coaching->waktu ? explode(' - ', $coaching->waktu) : ['', ''];
+                                    $jamMulai = $times[0] ? str_replace('.', ':', $times[0]) : '';
+                                    $jamSelesai = isset($times[1]) ? str_replace('.', ':', $times[1]) : '';
+                                @endphp
+                                <div class="flex-1">
+                                    <input type="time" name="waktu_mulai" 
+                                           value="{{ $jamMulai }}"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                                </div>
+                                <span class="text-gray-500 font-medium">-</span>
+                                <div class="flex-1">
+                                    <input type="time" name="waktu_selesai" 
+                                           value="{{ $jamSelesai }}"
+                                           class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
+                                </div>
+                            </div>
+                            <p class="text-xs text-gray-500 mt-1">Pilih jam mulai dan jam selesai</p>
                         </div>
 
                         <!-- Catatan -->

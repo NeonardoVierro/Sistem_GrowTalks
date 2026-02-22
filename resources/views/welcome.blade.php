@@ -67,7 +67,6 @@
     </div>
 </nav>
 
-
 <section id="hero" class="snap-section flex items-center bg-white overflow-hidden">
     <div class="absolute inset-0 opacity-40 pointer-events-none z-0"
         style="
@@ -214,14 +213,44 @@
         </h2>
         <p class="text-center text-gray-500 mb-16 font-medium tracking-widest uppercase">Merekam Jejak Literasi Digital</p>
 
-        <div class="relative w-full h-[450px] flex items-center justify-center">
-            <img src="{{ asset('images/podcast_dummy.jpeg') }}"
-                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
-            <img src="{{ asset('images/p1.jpg') }}"
-                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
-            <img src="{{ asset('images/p2.jpg') }}"
-                class="podcast-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl transition-all duration-700 ease-in-out">
+       <div class="relative w-full h-[450px] flex items-center justify-center">
+
+    <!-- Slide 1 -->
+    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+            <img src="{{ asset('images/p3.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
+            <div class="p-5 border-t">
+                <h3 class="font-semibold text-lg text-gray-800">
+                    Gerakan Sapu Jagat bersama BAPENDA Surakarta
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Jumat, 26 September 2025</p>
+            </div>
         </div>
+    </div>
+
+    <!-- Slide 2 -->
+    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+            <img src="{{ asset('images/p1.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
+            <div class="p-5 border-t">
+                <h3 class="font-semibold text-lg text-gray-800">
+                    Ngobrol Sehat Bareng Direktur RSUD Bung Karno
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Jumat, 5 Desember 2025</p>
+            </div>
+        </div>
+    </div>
+
+    <!-- Slide 3 -->
+    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+            <img src="{{ asset('images/p2.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
+            <div class="p-5 border-t">
+                <h3 class="font-semibold text-lg text-gray-800">
+                    Museum Keris Nusantara Bersama Kepala UPTD
+                </h3>
+                <p class="text-sm text-gray-500 mt-1">Jumat, 22 Agustus 2025</p>
+</div>
     </div>
 </section>
 
@@ -370,5 +399,36 @@ document.addEventListener('DOMContentLoaded', () => {
 
 <script src="https://unpkg.com/heroicons@2.0.18/dist/heroicons.js"></script>
 
+<script>
+function openImage(src) {
+    const lightbox = document.getElementById('lightbox');
+    const img = document.getElementById('lightbox-img');
+
+    img.src = src;
+    lightbox.classList.remove('hidden');
+    lightbox.classList.add('flex');
+}
+
+function closeImage() {
+    const lightbox = document.getElementById('lightbox');
+    lightbox.classList.add('hidden');
+    lightbox.classList.remove('flex');
+}
+</script>
+
 </body>
+<!-- LIGHTBOX -->
+<div id="lightbox"
+     class="fixed inset-0 bg-black/80 hidden items-center justify-center z-[9999]"
+     onclick="closeImage()">
+
+    <img id="lightbox-img"
+         class="max-w-[90%] max-h-[90%] rounded-2xl shadow-2xl">
+
+    <!-- Close Button -->
+    <button onclick="closeImage()"
+            class="absolute top-6 right-6 text-white text-4xl font-bold">
+        &times;
+    </button>
+</div>
 </html>

@@ -10,6 +10,7 @@ use App\Http\Controllers\VerifikatorPodcastController;
 use App\Http\Controllers\VerifikatorCoachingController;
 use App\Http\Controllers\AdminStaffController;
 
+
 // Public Routes
 Route::get('/', function () {
     return view('welcome');

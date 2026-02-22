@@ -9,11 +9,15 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\VerifikatorPodcastController;
 use App\Http\Controllers\VerifikatorCoachingController;
 use App\Http\Controllers\AdminStaffController;
-
+use App\Models\PodcastBooking;
 
 // Public Routes
 Route::get('/', function () {
-    return view('welcome');
+    $podcasts = PodcastBooking::whereNotNull('cover_path')
+                    ->latest()
+                    ->get();
+
+    return view('welcome', compact('podcasts'));
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

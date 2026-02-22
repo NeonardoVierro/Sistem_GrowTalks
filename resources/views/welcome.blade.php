@@ -215,42 +215,44 @@
 
        <div class="relative w-full h-[450px] flex items-center justify-center">
 
-    <!-- Slide 1 -->
-    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
-        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
-            <img src="{{ asset('images/p3.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
-            <div class="p-5 border-t">
-                <h3 class="font-semibold text-lg text-gray-800">
-                    Gerakan Sapu Jagat bersama BAPENDA Surakarta
-                </h3>
-                <p class="text-sm text-gray-500 mt-1">Jumat, 26 September 2025</p>
-            </div>
-        </div>
-    </div>
+    
+        @if($podcasts->count() > 0)
 
-    <!-- Slide 2 -->
-    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
-        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
-            <img src="{{ asset('images/p1.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
-            <div class="p-5 border-t">
-                <h3 class="font-semibold text-lg text-gray-800">
-                    Ngobrol Sehat Bareng Direktur RSUD Bung Karno
-                </h3>
-                <p class="text-sm text-gray-500 mt-1">Jumat, 5 Desember 2025</p>
-            </div>
-        </div>
-    </div>
+        <div class="relative w-full h-[450px] flex items-center justify-center">
 
-    <!-- Slide 3 -->
-    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
-        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
-            <img src="{{ asset('images/p2.jpg') }}" onclick="openImage(this.src)" class="w-full h-[300px] object-cover">
-            <div class="p-5 border-t">
-                <h3 class="font-semibold text-lg text-gray-800">
-                    Museum Keris Nusantara Bersama Kepala UPTD
-                </h3>
-                <p class="text-sm text-gray-500 mt-1">Jumat, 22 Agustus 2025</p>
-</div>
+            @foreach($podcasts as $podcast)
+                <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+                    <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+
+                        <img src="{{ asset('storage/'.$podcast->cover_path) }}"
+                            onclick="openImage(this.src)"
+                            class="w-full h-[300px] object-cover">
+
+                        <div class="p-5 border-t">
+                            <h3 class="font-semibold text-lg text-gray-800">
+                                {{ $podcast->nama_opd }}
+                            </h3>
+
+                            <p class="text-sm text-gray-500 mt-1">
+                                {{ \Carbon\Carbon::parse($podcast->tanggal)->format('d F Y') }}
+                            </p>
+
+                            <p class="text-sm text-gray-600 mt-2">
+                                {{ $podcast->keterangan }}
+                            </p>
+                        </div>
+
+                    </div>
+                </div>
+            @endforeach
+
+        </div>
+
+        @else
+            <p class="text-center text-gray-500">
+                Belum ada podcast yang dipublikasikan.
+            </p>
+        @endif
     </div>
 </section>
 

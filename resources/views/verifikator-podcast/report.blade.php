@@ -107,7 +107,7 @@
                         <td class="py-3 px-4 text-sm max-w-[220px] break-words whitespace-normal">{{ $podcast->keterangan }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
                         <td class="py-3 px-4 text-sm">{{ $podcast->host ?? '-' }}</td>
-                       <td class="py-3 px-4">
+                        <td class="py-3 px-4">
                         @if($podcast->cover_path)
                             <div class="flex items-center gap-6">
                                 {{-- LIHAT --}}

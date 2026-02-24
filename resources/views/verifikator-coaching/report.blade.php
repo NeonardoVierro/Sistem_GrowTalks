@@ -109,15 +109,17 @@
                         <td class="py-3 px-4 text-sm">{{ $coaching->layanan }}</td>
                         <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan) }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
-                <td class="py-3 px-4">
+                        <td class="py-3 px-4">
                         @if($coaching->dokumentasi_path)
                             <div class="flex items-center gap-6">
-                                <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}" 
+                                {{-- LIHAT --}}
+                                <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
                                 target="_blank"
                                 class="text-green-600 hover:text-green-800 text-sm">
                                     <i class="fas fa-image mr-1"></i>
                                 </a>
 
+                                {{-- HAPUS --}}
                                 <form action="{{ route('verifikator-coaching.delete-documentation', $coaching->id) }}"
                                     method="POST"
                                     style="display:inline;"
@@ -131,6 +133,7 @@
                                 </form>
                             </div>
                         @else
+                            {{-- UNGGAH --}}
                             <form action="{{ route('verifikator-coaching.upload', $coaching->id) }}"
                                 method="POST"
                                 enctype="multipart/form-data">

@@ -10,6 +10,7 @@ use App\Http\Controllers\VerifikatorPodcastController;
 use App\Http\Controllers\VerifikatorCoachingController;
 use App\Http\Controllers\AdminStaffController;
 use App\Models\PodcastBooking;
+use App\Models\CoachingBooking;
 
 // Public Routes
 Route::get('/', function () {
@@ -17,7 +18,11 @@ Route::get('/', function () {
                     ->latest()
                     ->get();
 
-    return view('welcome', compact('podcasts'));
+    $coachings = CoachingBooking::whereNotNull('dokumentasi_path')
+                    ->latest()
+                    ->get();
+
+    return view('welcome', compact('podcasts', 'coachings'));
 });
 
 Route::get('/login', [AuthController::class, 'showLogin'])->name('login');

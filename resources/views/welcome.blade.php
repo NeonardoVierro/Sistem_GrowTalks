@@ -213,46 +213,44 @@
         </h2>
         <p class="text-center text-gray-500 mb-16 font-medium tracking-widest uppercase">Merekam Jejak Literasi Digital</p>
 
-       <div class="relative w-full h-[450px] flex items-center justify-center">
-
-    
-        @if($podcasts->count() > 0)
-
         <div class="relative w-full h-[450px] flex items-center justify-center">
+            @if($podcasts->count() > 0)
+            <div class="relative w-full h-[450px] flex items-center justify-center">
 
-            @foreach($podcasts as $podcast)
-                <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
-                    <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+                @foreach($podcasts as $podcast)
+                    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+                        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
 
-                        <img src="{{ asset('storage/'.$podcast->cover_path) }}"
-                            onclick="openImage(this.src)"
-                            class="w-full h-[300px] object-cover">
+                            <img src="{{ asset('storage/'.$podcast->cover_path) }}"
+                                onclick="openImage(this.src)"
+                                class="w-full h-[300px] object-cover">
 
-                        <div class="p-5 border-t">
-                            <h3 class="font-semibold text-lg text-gray-800">
-                                {{ $podcast->nama_opd }}
-                            </h3>
+                            <div class="p-5 border-t">
+                                <h3 class="font-semibold text-lg text-gray-800">
+                                    {{ $podcast->nama_opd }}
+                                </h3>
 
-                            <p class="text-sm text-gray-500 mt-1">
-                                {{ \Carbon\Carbon::parse($podcast->tanggal)->format('d F Y') }}
-                            </p>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {{ \Carbon\Carbon::parse($podcast->tanggal)->format('d F Y') }}
+                                </p>
 
-                            <p class="text-sm text-gray-600 mt-2">
-                                {{ $podcast->keterangan }}
-                            </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ $podcast->keterangan }}
+                                </p>
+                            </div>
+
                         </div>
-
                     </div>
-                </div>
-            @endforeach
+                @endforeach
 
+            </div>
+
+            @else
+                <p class="text-center text-gray-500">
+                    Belum ada podcast yang dipublikasikan.
+                </p>
+            @endif
         </div>
-
-        @else
-            <p class="text-center text-gray-500">
-                Belum ada podcast yang dipublikasikan.
-            </p>
-        @endif
     </div>
 </section>
 
@@ -268,13 +266,35 @@
         </h2>
         <div class="h-1 w-20 bg-blue-400 mx-auto mb-16"></div>
 
-        <div class="relative h-[450px] flex items-center justify-center">
-            <img src="{{ asset('images/cc1.jpg') }}"
-                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
-            <img src="{{ asset('images/cc2.jpg') }}"
-                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
-            <img src="{{ asset('images/cc3.jpg') }}"
-                 class="cc-slide absolute w-[300px] md:w-[500px] rounded-[2rem] shadow-2xl border-4 border-white/20 transition-all duration-700 ease-in-out">
+        <div class="relative w-full h-[450px] flex items-center justify-center">
+            @if($coachings->count() > 0)
+            <div class="relative w-full h-[450px] flex items-center justify-center">
+                @foreach($coachings as $coaching)
+                    <div class="podcast-slide absolute w-[300px] md:w-[500px] transition-all duration-700">
+                        <div class="bg-white rounded-[2rem] shadow-2xl overflow-hidden">
+                            <img src="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
+                                onclick="openImage(this.src)"
+                                class="w-full h-[300px] object-cover">
+                            <div class="p-5 border-t">
+                                <h3 class="font-semibold text-lg text-gray-800">
+                                    {{ $coaching->nama_opd }}
+                                </h3>
+                                <p class="text-sm text-gray-500 mt-1">
+                                    {{ \Carbon\Carbon::parse($coaching->tanggal)->format('d F Y') }}
+                                </p>
+                                <p class="text-sm text-gray-600 mt-2">
+                                    {{ $coaching->keterangan }}
+                                </p>
+                            </div>
+                        </div>
+                    </div>
+                @endforeach
+            </div>
+            @else
+                <p class="text-center text-gray-500">
+                    Belum ada coaching yang dipublikasikan.
+                </p>
+            @endif
         </div>
     </div>
 </section>

@@ -4,6 +4,7 @@ namespace App\Http\Controllers;
 
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Hash;
 use App\Models\PodcastBooking;
 use App\Models\CoachingBooking;
 
@@ -40,5 +41,42 @@ class UserController extends Controller
             'recentPodcasts',
             'recentCoachings'
         ));
+    }
+
+    public function showProfile()
+    {
+        $user = Auth::user();
+        return view('user.profil', compact('user'));
+    }
+
+    public function editProfile()
+    {
+        $user = Auth::user();
+        return view('user.edit-profile', compact('user'));
+    }
+
+    public function updateProfile(Request $request)
+    {
+        $user = Auth::user();
+
+        $request->validate([
+            'nama_pic' => 'required|string|max:100',
+            'kontak_pic' => 'required|string|max:20',
+            'password' => 'nullable|string|min:8|confirmed',
+        ]);
+
+        $updateData = [
+            'nama_pic' => $request->nama_pic,
+            'kontak_pic' => $request->kontak_pic,
+        ];
+
+        if ($request->filled('password')) {
+            $updateData['password'] = Hash::make($request->password);
+        }
+
+        $user->update($updateData);
+
+        return redirect()->route('user.profile')
+            ->with('success', 'Profil berhasil diperbarui.');
     }
 }

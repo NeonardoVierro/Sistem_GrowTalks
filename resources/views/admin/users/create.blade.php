@@ -43,11 +43,35 @@
                     <label class="block text-sm font-medium text-gray-700 mb-2">
                         Instansi <span class="text-red-500">*</span>
                     </label>
-                    <select name="instansi" id="instansi" 
-                            required
-                            class="w-full border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent">
-                        <option value="">Pilih Instansi</option>
-                    </select>
+                    
+                    <!-- Wrapper untuk toggle antara select dan input -->
+                    <div id="instansiWrapper" class="flex gap-2">
+                        <select name="instansi" id="instansiSelect" 
+                                class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hidden">
+                            <option value="">Pilih Instansi</option>
+                        </select>
+                        
+                        <input type="text" id="instansiInput" 
+                               placeholder="Ketik instansi baru..."
+                               class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hidden"
+                               value="{{ old('instansi') }}">
+                        
+                        <!-- Button untuk toggle input/select -->
+                        <button type="button" id="toggleInstansiBtn" 
+                                class="bg-gray-200 hover:bg-gray-300 text-gray-700 font-medium py-2 px-4 rounded-lg transition duration-200"
+                                title="Klik untuk mengganti mode input">
+                            <i class="fas fa-edit"></i>
+                        </button>
+                    </div>
+                    
+                    <!-- Hidden input untuk menyimpan value instansi yang dipilih -->
+                    <input type="hidden" name="instansi" id="instansiValue" value="{{ old('instansi') }}">
+                    
+                    <p class="mt-2 text-xs text-gray-500">
+                        <i class="fas fa-info-circle mr-1"></i>
+                        <span id="instansiHelpText">Pilih dari dropdown atau klik tombol edit untuk ketik instansi baru</span>
+                    </p>
+                    
                     @error('instansi')
                         <p class="mt-1 text-sm text-red-600">{{ $message }}</p>
                     @enderror
@@ -164,10 +188,13 @@
 // Data instansi berdasarkan kategori
 const instansiData = @json(app('App\Http\Controllers\AdminController')->getInstansiList());
 
+// State untuk track apakah mode input atau select
+let isCustomInput = false;
+
 // Update instansi dropdown berdasarkan kategori yang dipilih
 document.getElementById('kategori_instansi').addEventListener('change', function() {
     const kategori = this.value;
-    const instansiSelect = document.getElementById('instansi');
+    const instansiSelect = document.getElementById('instansiSelect');
     
     // Clear existing options
     instansiSelect.innerHTML = '<option value="">Pilih Instansi</option>';
@@ -187,10 +214,52 @@ document.getElementById('kategori_instansi').addEventListener('change', function
             instansiSelect.appendChild(option);
         });
     }
+    
+    // Reset ke mode select
+    if (!isCustomInput) {
+        instansiSelect.classList.remove('hidden');
+    }
+});
+
+// Handle toggle button untuk switch antara select dan input
+document.getElementById('toggleInstansiBtn').addEventListener('click', function(e) {
+    e.preventDefault();
+    const instansiSelect = document.getElementById('instansiSelect');
+    const instansiInput = document.getElementById('instansiInput');
+    const toggleBtn = document.getElementById('toggleInstansiBtn');
+    const helpText = document.getElementById('instansiHelpText');
+    
+    isCustomInput = !isCustomInput;
+    
+    if (isCustomInput) {
+        // Switch ke input mode
+        instansiSelect.classList.add('hidden');
+        instansiInput.classList.remove('hidden');
+        toggleBtn.innerHTML = '<i class="fas fa-list"></i>';
+        toggleBtn.title = 'Klik untuk memilih dari dropdown';
+        helpText.textContent = 'Ketik nama instansi baru yang tidak ada di daftar';
+        instansiInput.focus();
+    } else {
+        // Switch ke select mode
+        instansiSelect.classList.remove('hidden');
+        instansiInput.classList.add('hidden');
+        toggleBtn.innerHTML = '<i class="fas fa-edit"></i>';
+        toggleBtn.title = 'Klik untuk ketik instansi baru';
+        helpText.textContent = 'Pilih dari dropdown atau klik tombol edit untuk ketik instansi baru';
+    }
+});
+
+// Sync value dari select/input ke hidden input
+document.getElementById('instansiSelect').addEventListener('change', function() {
+    document.getElementById('instansiValue').value = this.value;
+});
+
+document.getElementById('instansiInput').addEventListener('input', function() {
+    document.getElementById('instansiValue').value = this.value;
 });
 
 // Auto-suggest email based on instansi (optional, bisa diisi manual)
-document.getElementById('instansi').addEventListener('change', function() {
+document.getElementById('instansiSelect').addEventListener('change', function() {
     const instansi = this.value;
     const emailInput = document.getElementById('email');
     
@@ -210,10 +279,43 @@ document.getElementById('instansi').addEventListener('change', function() {
     }
 });
 
+// Juga untuk input custom instansi
+document.getElementById('instansiInput').addEventListener('blur', function() {
+    const instansi = this.value;
+    const emailInput = document.getElementById('email');
+    
+    // Only suggest if email field is empty
+    if (!emailInput.value && instansi) {
+        // Simple suggestion
+        const suggestedEmail = instansi.toLowerCase()
+            .replace(/[^a-z0-9\s]/g, '')
+            .replace(/\s+/g, '.')
+            .replace(/\.+/g, '.')
+            .replace(/^(dinas|badan|bagian|kecamatan|kelurahan|rumah\.sakit\.umum\.daerah|perumda|satuan\.polisi\.pamong\.praja|dewan\.perwakilan\.rakyat\.daerah)\./, '')
+            .replace(/\.$/, '');
+        
+        if (suggestedEmail.length > 2) {
+            emailInput.value = suggestedEmail + '@solo.go.id';
+        }
+    }
+});
+
 // Form submission confirmation
 function confirmSubmit() {
     const emailInput = document.getElementById('email');
     const emailValue = emailInput.value;
+    const instansiValue = document.getElementById('instansiValue').value;
+    
+    // Check if instansi is filled
+    if (!instansiValue.trim()) {
+        Swal.fire({
+            title: 'Instansi Belum Dipilih',
+            text: 'Pilih instansi dari dropdown atau ketik nama instansi baru',
+            icon: 'warning',
+            confirmButtonText: 'OK'
+        });
+        return;
+    }
     
     // Check if email ends with @solo.go.id
     if (!emailValue.endsWith('@solo.go.id')) {

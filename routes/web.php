@@ -30,11 +30,11 @@ Route::post('/login', [AuthController::class, 'login'])->name('login.store');
 Route::post('/logout', [AuthController::class, 'logout'])->name('logout');
 
 // User Routes
-Route::middleware(['auth'])->group(function () {
+Route::middleware(['auth', 'guard.web'])->group(function () {
     Route::get('/dashboard', [UserController::class, 'dashboard'])->name('dashboard');
-    Route::get('/profile', function () {
-        return view('user.profil');
-    })->name('user.profile')->middleware('auth');
+    Route::get('/profile', [UserController::class, 'showProfile'])->name('user.profile');
+    Route::get('/profile/edit', [UserController::class, 'editProfile'])->name('user.profile.edit');
+    Route::put('/profile', [UserController::class, 'updateProfile'])->name('user.profile.update');
 
     // Podcast Routes
     Route::prefix('podcast')->group(function () {
@@ -53,7 +53,7 @@ Route::middleware(['auth'])->group(function () {
 });
 
 // Admin Routes
-Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(function () {
+Route::prefix('admin')->name('admin.')->middleware(['auth:internal', 'guard.internal'])->group(function () {
 
     Route::get('/dashboard', [AdminController::class, 'dashboard'])->name('dashboard');
 
@@ -88,32 +88,28 @@ Route::prefix('admin')->name('admin.')->middleware(['auth:internal'])->group(fun
 });
 
 // Verifikator Podcast Routes
-Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->group(function () {
-    Route::middleware(['auth:internal'])->group(function () {
-        Route::get('/dashboard', [VerifikatorPodcastController::class, 'dashboard'])->name('dashboard');
-        Route::get('/approval', [VerifikatorPodcastController::class, 'approval'])->name('approval');
-        Route::get('/approval/{id}/form', [VerifikatorPodcastController::class, 'showApprovalForm'])->name('approval-form');
-        Route::put('/approval/{id}/update', [VerifikatorPodcastController::class, 'updateApproval'])->name('update-approval');
-        Route::get('/report', [VerifikatorPodcastController::class, 'report'])->name('report');
-        Route::post('/podcast/{id}/upload-cover',[VerifikatorPodcastController::class, 'uploadCover'])->name('upload-cover');
-        Route::delete('/podcast/{id}/delete-cover',[VerifikatorPodcastController::class, 'deleteCover'])->name('delete-cover');
-    });
+Route::prefix('verifikator-podcast')->name('verifikator-podcast.')->middleware(['auth:internal', 'guard.internal'])->group(function () {
+    Route::get('/dashboard', [VerifikatorPodcastController::class, 'dashboard'])->name('dashboard');
+    Route::get('/approval', [VerifikatorPodcastController::class, 'approval'])->name('approval');
+    Route::get('/approval/{id}/form', [VerifikatorPodcastController::class, 'showApprovalForm'])->name('approval-form');
+    Route::put('/approval/{id}/update', [VerifikatorPodcastController::class, 'updateApproval'])->name('update-approval');
+    Route::get('/report', [VerifikatorPodcastController::class, 'report'])->name('report');
+    Route::post('/podcast/{id}/upload-cover',[VerifikatorPodcastController::class, 'uploadCover'])->name('upload-cover');
+    Route::delete('/podcast/{id}/delete-cover',[VerifikatorPodcastController::class, 'deleteCover'])->name('delete-cover');
 });
 
 // Verifikator Coaching Routes
-Route::prefix('verifikator-coaching')->name('verifikator-coaching.')->group(function () {
-    Route::middleware(['auth:internal'])->group(function () {
-        Route::get('/dashboard', [VerifikatorCoachingController::class, 'dashboard'])->name('dashboard');
-        Route::get('/get-bookings-by-date', [VerifikatorCoachingController::class, 'getBookingsByDate'])->name('get-bookings-by-date');
-        Route::get('/approval', [VerifikatorCoachingController::class, 'approval'])->name('approval');
-        Route::get('/approval/{id}/form', [VerifikatorCoachingController::class, 'showApprovalForm'])->name('approval-form');
-        Route::put('/approval/{id}/update', [VerifikatorCoachingController::class, 'updateApproval'])->name('update-approval');
-        Route::get('/report', [VerifikatorCoachingController::class, 'report'])->name('report');
-         Route::post('/coaching/{id}/upload-dokumentasi',
-            [VerifikatorCoachingController::class, 'uploadDokumentasi']
-        )->name('upload');
-        Route::delete('/coaching/{id}/delete-documentation',
-            [VerifikatorCoachingController::class, 'deleteDokumentasi']
-        )->name('delete-documentation');
-    });
+Route::prefix('verifikator-coaching')->name('verifikator-coaching.')->middleware(['auth:internal', 'guard.internal'])->group(function () {
+    Route::get('/dashboard', [VerifikatorCoachingController::class, 'dashboard'])->name('dashboard');
+    Route::get('/get-bookings-by-date', [VerifikatorCoachingController::class, 'getBookingsByDate'])->name('get-bookings-by-date');
+    Route::get('/approval', [VerifikatorCoachingController::class, 'approval'])->name('approval');
+    Route::get('/approval/{id}/form', [VerifikatorCoachingController::class, 'showApprovalForm'])->name('approval-form');
+    Route::put('/approval/{id}/update', [VerifikatorCoachingController::class, 'updateApproval'])->name('update-approval');
+    Route::get('/report', [VerifikatorCoachingController::class, 'report'])->name('report');
+     Route::post('/coaching/{id}/upload-dokumentasi',
+        [VerifikatorCoachingController::class, 'uploadDokumentasi']
+    )->name('upload');
+    Route::delete('/coaching/{id}/delete-documentation',
+        [VerifikatorCoachingController::class, 'deleteDokumentasi']
+    )->name('delete-documentation');
 });

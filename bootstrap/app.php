@@ -11,7 +11,11 @@ return Application::configure(basePath: dirname(__DIR__))
         health: '/up',
     )
     ->withMiddleware(function (Middleware $middleware): void {
-        //
+        // Middleware untuk handle session names berbeda per guard
+        $middleware->alias([
+            'guard.internal' => \App\Http\Middleware\SeparateGuardSessions::class . ':internal',
+            'guard.web' => \App\Http\Middleware\SeparateGuardSessions::class . ':web',
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         //

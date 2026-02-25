@@ -33,10 +33,12 @@ class AuthController extends Controller
             'host' => $request->getHost(),
         ]);
 
-
         // Coba untuk login as InternalUser (Admin, Verifikator)
         if (Auth::guard('internal')->attempt($credentials, $request->remember)) {
+            // Regenerate session dengan session name khusus untuk internal
             $request->session()->regenerate();
+            // Set session name untuk internal guard
+            session(['guard' => 'internal']);
 
             $user = Auth::guard('internal')->user();
 
@@ -55,7 +57,10 @@ class AuthController extends Controller
         
         // Coba untuk login as regular User 
         if (Auth::guard('web')->attempt($credentials, $request->remember)) {
+            // Regenerate session dengan session name khusus untuk web
             $request->session()->regenerate();
+            // Set session name untuk web guard
+            session(['guard' => 'web']);
             return redirect()->intended('/dashboard');
         }
 
@@ -80,14 +85,23 @@ class AuthController extends Controller
 
     public function logout(Request $request)
     {
+        // Logout dari semua guard
         if (Auth::guard('internal')->check()) {
             Auth::guard('internal')->logout();
-         } elseif (Auth::guard('web')->check()) {
-            Auth::logout();
         }
         
+        if (Auth::guard('web')->check()) {
+            Auth::guard('web')->logout();
+        }
+        
+        // Invalidate dan regenerate session
         $request->session()->invalidate();
         $request->session()->regenerateToken();
+        
+        // Hapus semua cookies untuk semua guard sessions
+        \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('growtalks_internal_session'));
+        \Illuminate\Support\Facades\Cookie::queue(\Illuminate\Support\Facades\Cookie::forget('growtalks_web_session'));
+        
         return redirect('/');
     }
 }

@@ -36,11 +36,11 @@ class DatabaseSeeder extends Seeder
 
         // Akun admin user (use firstOrCreate to avoid duplicates)
         InternalUser::firstOrCreate(
-            ['email' => 'admin@example.com'],
+            ['email' => 'admin@growtalks.com'],
             [
                 'id_role' => $roleAdmin->id_role ?? ($roleAdmin->id ?? null),
                 'nama_user' => 'Administrator',
-                'password' => Hash::make('admin123'),
+                'password' => Hash::make('admingrowtalks'),
                 'jabatan' => 'Super Admin',
                 'no_hp' => '081234567890',
                 'status' => 'aktif',
@@ -49,11 +49,11 @@ class DatabaseSeeder extends Seeder
 
         // Akun verifikator podcast
         InternalUser::firstOrCreate(
-            ['email' => 'verifikator.podcast@example.com'],
+            ['email' => 'verifikator.podcast@growtalks.com'],
             [
                 'id_role' => $roleVerifikatorPodcast->id_role ?? ($roleVerifikatorPodcast->id ?? null),
                 'nama_user' => 'Verifikator Podcast',
-                'password' => Hash::make('verifikator123'),
+                'password' => Hash::make('verifpodcast99'),
                 'jabatan' => 'Verifikator Podcast',
                 'no_hp' => '081234567891',
                 'status' => 'aktif',
@@ -62,26 +62,13 @@ class DatabaseSeeder extends Seeder
 
         // Akun verifikator coaching
         InternalUser::firstOrCreate(
-            ['email' => 'verifikator.coaching@example.com'],
+            ['email' => 'verifikator.coaching@growtalks.com'],
             [
                 'id_role' => $roleVerifikatorCoaching->id_role ?? ($roleVerifikatorCoaching->id ?? null),
                 'nama_user' => 'Verifikator Coaching',
-                'password' => Hash::make('verifikator123'),
+                'password' => Hash::make('verifcoaching99'),
                 'jabatan' => 'Verifikator Coaching',
                 'no_hp' => '081234567892',
-                'status' => 'aktif',
-            ]
-        );
-
-        // Create regular user (use firstOrCreate to avoid duplicates)
-        $user = User::firstOrCreate(
-            ['email' => 'dinas.kesehatan@solo.go.id'],
-            [
-                'kategori_instansi' => 'DAFTAR DINAS',
-                'instansi' => 'Dinas Kesehatan',
-                'nama_pic' => 'Budi Santoso',
-                'kontak_pic' => '081234567890',
-                'password' => Hash::make('password'),
                 'status' => 'aktif',
             ]
         );
@@ -225,7 +212,7 @@ class DatabaseSeeder extends Seeder
                         'instansi' => $instansi,
                         'nama_pic' => $namaPIC,
                         'kontak_pic' => '0812' . str_pad($counter, 8, '0', STR_PAD_LEFT),
-                        'password' => Hash::make('password123'),
+                        'password' => Hash::make('instansi99'),
                         'status' => $counter % 10 == 0 ? 'nonaktif' : 'aktif', // Setiap user ke-10 nonaktif
                     ]
                 );
@@ -233,67 +220,8 @@ class DatabaseSeeder extends Seeder
                 $counter++;
             }
         }
-
-
-        // Create podcast bookings
-        $podcastData = [
-            [
-                'id_user' => 1,
-                'tanggal' => '2026-01-16',
-                'nama_opd' => 'Dinas 1',
-                'nama_pic' => 'PIC 1',
-                'keterangan' => 'Selamatkan Karir dan Keluarga Dengan Kenali, Cegah, dan Lawan Stroke',
-                'narasumber' => 'Ahmad Basuki',
-                'status_verifikasi' => 'pending',
-            ],
-            [
-                'id_user' => 2,
-                'tanggal' => '2026-01-09',
-                'nama_opd' => 'Dinas 2',
-                'nama_pic' => 'PIC 2',
-                'keterangan' => 'Selamatkan Karir dan Keluarga Dengan Kenali, Cegah, dan Lawan Stroke',
-                'narasumber' => 'Ahmad Basuki',
-                'verifikasi' => 'Verifikator Podcast',
-                'status_verifikasi' => 'disetujui',
-                'host' => 'Widiyoko',
-                'waktu' => '13.00-16.00',
-            ]
-        ];
-
-        foreach ($podcastData as $data) {
-            PodcastBooking::create($data);
-        }
-
-        // Create coaching clinic bookings
-        $coachingData = [
-            [
-                'id_user' => 3,
-                'tanggal' => '2026-01-21',
-                'layanan' => 'Website & Aplikasi',
-                'nama_opd' => 'Dinas Coaching 1',
-                'keterangan' => 'Konsultasi Webinar',
-                'pic' => 'PIC 3',
-                'no_telp' => '081200000003',
-                'status_verifikasi' => 'disetujui',
-            ],
-            [
-                'id_user' => 4,
-                'tanggal' => '2026-01-14',
-                'layanan' => 'TTL Design',
-                'nama_opd' => 'Dinas Coaching 2',
-                'keterangan' => 'Konsultasi Website',
-                'pic' => 'PIC 4',
-                'no_telp' => '081200000004',
-                'verifikasi' => 'Verifikator Coaching',
-                'status_verifikasi' => 'disetujui',
-                'waktu' => '13.00-16.00',
-            ]
-        ];
-
-        foreach ($coachingData as $data) {
-            CoachingBooking::create($data);
-        }
     }
+
     private function generateEmail($instansi)
     {
         // Format: dinaskesehatan@solo.go.id

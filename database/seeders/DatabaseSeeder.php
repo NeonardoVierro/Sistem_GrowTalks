@@ -16,6 +16,10 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
+        // Call other seeders
+        $this->call(HostSeeder::class);
+        $this->call(CoachSeeder::class);
+
         // Create roles (use firstOrCreate to avoid duplicate key errors)
         $roleUser = Role::firstOrCreate(
             ['kode_role' => 'user'],
@@ -231,12 +235,13 @@ class DatabaseSeeder extends Seeder
         $email = str_replace(['kecamatan', 'kelurahan', 'dinas', 'badan', 'bagian', 'rumahsakitumumdaerah'], '', $email);
         $email = $email . '@solo.go.id';
         
-        // Ensure uniqueness
+        // Ensure uniqueness - insert counter before @solo.go.id
         $originalEmail = $email;
         $counter = 1;
         
         while (User::where('email', $email)->exists()) {
-            $email = $originalEmail . $counter;
+            // Insert number before @solo.go.id instead of appending
+            $email = str_replace('@solo.go.id', $counter . '@solo.go.id', $originalEmail);
             $counter++;
         }
         

@@ -200,11 +200,10 @@
                         <!-- AKSI -->
                         <td class="py-3 px-3 text-center whitespace-nowrap">
                             @if($booking->status_verifikasi == 'pending')
-                            <form action="{{ route('coaching.destroy', $booking->id) }}" method="POST">
+                            <form action="{{ route('coaching.destroy', $booking->id) }}" method="POST" class="form-cancel">
                                 @csrf
                                 @method('DELETE')
-                                <button onclick="return confirm('Batalkan pengajuan ini?')"
-                                    class="text-red-600 hover:text-red-800">
+                                <button type="button" class="btn-cancel-coaching text-red-600 hover:text-red-800">
                                     <i class="fas fa-times-circle"></i>
                                 </button>
                             </form>
@@ -589,6 +588,30 @@
             e.preventDefault();
             alert('Harap setujui persyaratan sebelum mengajukan.');
         }
+    });
+
+    // Sweet Alert untuk batalkan pengajuan coaching
+    document.addEventListener('DOMContentLoaded', function() {
+        document.querySelectorAll('.btn-cancel-coaching').forEach(button => {
+            button.addEventListener('click', function(e) {
+                e.preventDefault();
+                const form = this.closest('.form-cancel');
+                Swal.fire({
+                    title: 'Batalkan Pengajuan?',
+                    text: 'Apakah Anda yakin ingin membatalkan pengajuan coaching clinic ini?',
+                    icon: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#dc2626',
+                    cancelButtonColor: '#6b7280',
+                    confirmButtonText: 'Ya, Batalkan',
+                    cancelButtonText: 'Batal'
+                }).then((result) => {
+                    if (result.isConfirmed) {
+                        form.submit();
+                    }
+                });
+            });
+        });
     });
 </script>
 @endpush

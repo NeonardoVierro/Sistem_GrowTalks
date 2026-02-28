@@ -12,11 +12,9 @@ class PodcastController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil parameter bulan dan tahun
         $month = $request->get('month', date('m'));
         $year = $request->get('year', date('Y'));
 
-        // Validasi bulan (1-12)
         if ($month < 1 || $month > 12) {
             $month = date('m');
         }
@@ -24,7 +22,6 @@ class PodcastController extends Controller
             $year = date('Y');
         }
 
-        // Paginated bookings for the user's queue table
         $bookings = PodcastBooking::where('id_user', Auth::id())
             ->orderBy('tanggal', 'desc')
             ->with('kalender')
@@ -32,9 +29,6 @@ class PodcastController extends Controller
             ->with('kalender')
             ->paginate(8);
 
-        // Get all bookings for the selected month (for calendar)
-        // Only count bookings that actually occupy the calendar: approved bookings
-        // or those tied to a booked `kalender` entry. Do NOT count 'penjadwalan ulang'.
         $allBookings = PodcastBooking::whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->where(function ($q) {
@@ -46,14 +40,12 @@ class PodcastController extends Controller
             ->get()
             ->groupBy(function ($b) { return $b->tanggal->format('Y-m-d'); });
 
-        // Get user's bookings for the selected month keyed by date string
         $userBookings = PodcastBooking::where('id_user', Auth::id())
             ->whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->get()
             ->groupBy(function ($b) { return $b->tanggal->format('Y-m-d'); });
 
-        // Generate calendar
         $calendar = $this->generateCalendar($month, $year);
 
         return view('podcast.index', compact('bookings', 'calendar', 'month', 'year', 'userBookings', 'allBookings'));
@@ -67,10 +59,8 @@ class PodcastController extends Controller
         $calendar = [];
         $currentWeek = [];
         
-        // Mulai dari Senin
         $startDay = $firstDay->copy()->startOfWeek(Carbon::MONDAY);
         
-        // Tambah hari-hari dari bulan sebelumnya
         while ($startDay->lt($firstDay)) {
             $currentWeek[] = [
                 'day' => $startDay->day,
@@ -81,7 +71,6 @@ class PodcastController extends Controller
             $startDay->addDay();
         }
         
-        // Tambah hari-hari dari bulan ini
         $currentDate = $firstDay->copy();
         while ($currentDate->lte($lastDay)) {
             if (count($currentWeek) === 7) {
@@ -100,7 +89,6 @@ class PodcastController extends Controller
             $currentDate->addDay();
         }
         
-        // Tambah hari-hari dari bulan berikutnya
         $endDay = $lastDay->copy()->endOfWeek(Carbon::SUNDAY);
         $currentDate = $lastDay->copy()->addDay();
         while ($currentDate->lte($endDay)) {
@@ -137,27 +125,13 @@ class PodcastController extends Controller
 
         $date = Carbon::parse($validated['tanggal']);
 
-        // Check if it's a Friday
         if ($date->dayOfWeek !== Carbon::FRIDAY) {
             return back()->withErrors(['tanggal' => 'Podcast hanya bisa diajukan pada hari Jumat.'])->withInput();
         }
 
-        // Check if date is in the past
         if ($date->lt(Carbon::today())) {
             return back()->withErrors(['tanggal' => 'Tidak bisa membooking tanggal yang sudah lewat.'])->withInput();
         }
-
-        // // Check if time slot is already booked
-        // $existingBooking = PodcastBooking::whereDate('tanggal', $validated['tanggal'])
-        //     ->where('waktu', $validated['waktu'])
-        //     ->where('status_verifikasi', 'disetujui')
-        //     ->exists();
-            
-        // if ($existingBooking) {
-        //     return back()->withErrors(['waktu' => 'Slot waktu tersebut sudah dibooking.']);
-        // }
-
-        // Check if user already has a pending booking on the same date
         $userPendingBooking = PodcastBooking::where('id_user', Auth::id())
             ->whereDate('tanggal', $validated['tanggal'])
             ->pending()
@@ -167,7 +141,6 @@ class PodcastController extends Controller
             return back()->withErrors(['tanggal' => 'Anda sudah memiliki pengajuan pending pada tanggal ini.'])->withInput();
         }
 
-        // Prevent new submissions if the date is already approved/booked by someone else
         $alreadyApproved = PodcastBooking::whereDate('tanggal', $validated['tanggal'])
             ->where('status_verifikasi', 'disetujui')
             ->exists();
@@ -180,7 +153,6 @@ class PodcastController extends Controller
             return back()->withErrors(['tanggal' => 'Tanggal ini sudah dibooking dan tidak dapat diajukan lagi.'])->withInput();
         }
 
-        // Create podcast booking — use user's `instansi` as OPD name
         $booking = PodcastBooking::create([
             'id_user' => Auth::id(),
             'tanggal' => $validated['tanggal'],
@@ -203,13 +175,11 @@ class PodcastController extends Controller
             abort(403);
         }
         
-        // Only allow deletion if still pending
         if ($booking->status_verifikasi !== 'pending') {
             return redirect()->route('podcast.index')
                 ->with('error', 'Hanya pengajuan pending yang bisa dihapus.');
         }
         
-        // Delete kalender entry
         if ($booking->kalender) {
             $booking->kalender->delete();
         }

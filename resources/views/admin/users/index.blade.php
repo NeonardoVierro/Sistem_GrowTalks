@@ -221,12 +221,10 @@
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 
 <script>
-// Auto submit filter when kategori changes
 document.getElementById('kategoriFilter').addEventListener('change', function() {
     document.getElementById('filterForm').submit();
 });
 
-// Per page selector
 document.getElementById('perPageSelect').addEventListener('change', function() {
     const perPage = this.value;
     const url = new URL(window.location.href);
@@ -234,7 +232,6 @@ document.getElementById('perPageSelect').addEventListener('change', function() {
     window.location.href = url.toString();
 });
 
-// Toggle Status Confirmation
 function toggleStatus(userId, currentStatus) {
     const action = currentStatus === 'aktif' ? 'nonaktifkan' : 'aktifkan';
     const statusText = currentStatus === 'aktif' ? 'Nonaktif' : 'Aktif';
@@ -256,7 +253,6 @@ function toggleStatus(userId, currentStatus) {
     });
 }
 
-// Delete Confirmation dengan form yang benar
 function confirmDelete(userId) {
     Swal.fire({
         title: 'Hapus User?',
@@ -270,12 +266,10 @@ function confirmDelete(userId) {
         reverseButtons: true
     }).then((result) => {
         if (result.isConfirmed) {
-            // Buat form delete
             const form = document.createElement('form');
             form.method = 'POST';
             form.action = `/admin/users/${userId}`;
             
-            // Tambahkan CSRF token
             const csrfToken = document.querySelector('meta[name="csrf-token"]').getAttribute('content');
             
             const methodInput = document.createElement('input');
@@ -296,7 +290,6 @@ function confirmDelete(userId) {
     });
 }
 
-// Success Message from Session
 @if(session('success'))
 Swal.fire({
     title: 'Berhasil!',

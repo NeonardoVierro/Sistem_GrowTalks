@@ -44,7 +44,6 @@ class PodcastBooking extends Model
         return $this->belongsTo(InternalUser::class, 'id_verifikator');
     }
 
-    // Scope helper for statuses
     public function scopePending($query)
     {
         return $query->where('status_verifikasi', 'pending');

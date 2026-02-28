@@ -296,11 +296,10 @@
                             <!-- AKSI -->
                             <td class="px-3 py-3 text-center whitespace-nowrap">
                                 @if($booking->status_verifikasi === 'pending')
-                                <form action="{{ route('podcast.destroy', $booking->id) }}" method="POST">
+                                <form action="{{ route('podcast.destroy', $booking->id) }}" method="POST" class="form-cancel">
                                     @csrf
                                     @method('DELETE')
-                                    <button onclick="return confirm('Batalkan pengajuan ini?')"
-                                        class="text-red-600 hover:text-red-800">
+                                    <button type="button" class="btn-cancel-podcast text-red-600 hover:text-red-800">
                                         <i class="fas fa-times-circle"></i>
                                     </button>
                                 </form>
@@ -729,6 +728,30 @@ function closeDetailModal() {
         confirmButtonText: 'OK'
     });
 @endif
+
+// Sweet Alert untuk batalkan pengajuan podcast
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-cancel-podcast').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.form-cancel');
+            Swal.fire({
+                title: 'Batalkan Pengajuan?',
+                text: 'Apakah Anda yakin ingin membatalkan pengajuan podcast ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Batalkan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
 </script>
 @endpush
 @endsection

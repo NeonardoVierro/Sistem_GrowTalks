@@ -36,10 +36,10 @@
                             <a href="{{ route('admin.staffs.edit', $s->id) }}" class="text-blue-600 mr-3 hover:text-blue-800" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus staff ini?');">
+                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block form-delete-staff">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-red-600 hover:text-red-800" title="Hapus">
+                                <button type="button" class="btn-delete-staff text-red-600 hover:text-red-800" title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -78,10 +78,10 @@
                             <a href="{{ route('admin.staffs.edit', $s->id) }}" class="text-blue-600 mr-3 hover:text-blue-800" title="Edit">
                                 <i class="fas fa-edit"></i>
                             </a>
-                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block" onsubmit="return confirm('Hapus staff ini?');">
+                            <form action="{{ route('admin.staffs.destroy', $s->id) }}" method="POST" class="inline-block form-delete-staff">
                                 @csrf
                                 @method('DELETE')
-                                <button class="text-red-600 hover:text-red-800" title="Hapus">
+                                <button type="button" class="btn-delete-staff text-red-600 hover:text-red-800" title="Hapus">
                                     <i class="fas fa-trash"></i>
                                 </button>
                             </form>
@@ -97,4 +97,31 @@
         </div>
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    document.querySelectorAll('.btn-delete-staff').forEach(button => {
+        button.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.form-delete-staff');
+            Swal.fire({
+                title: 'Hapus Staff?',
+                text: 'Apakah Anda yakin ingin menghapus staff ini?',
+                icon: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#dc2626',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Hapus',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    });
+});
+</script>
+@endpush
 @endsection

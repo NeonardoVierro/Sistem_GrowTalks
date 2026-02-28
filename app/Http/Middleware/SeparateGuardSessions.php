@@ -17,7 +17,6 @@ class SeparateGuardSessions
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
         if ($guard) {
-            // Map cookie names untuk setiap guard
             $cookieNames = [
                 'internal' => 'growtalks_internal_session',
                 'web' => 'growtalks_web_session',
@@ -26,10 +25,8 @@ class SeparateGuardSessions
             if (isset($cookieNames[$guard])) {
                 $cookieName = $cookieNames[$guard];
                 
-                // Ganti session cookie name
                 config(['session.cookie' => $cookieName]);
                 
-                // Rekonfigurasi session store dengan nama yang berbeda
                 $this->reconfigureSession($request, $cookieName);
             }
         }
@@ -44,10 +41,8 @@ class SeparateGuardSessions
     {
         $session = $request->getSession();
         
-        // Set session name
         $session->setName($cookieName);
         
-        // Jika session sudah ada, load dari cookie dengan nama baru
         if ($request->hasCookie($cookieName)) {
             $sessionId = $request->cookie($cookieName);
             $session->setId($sessionId);

@@ -10,7 +10,7 @@ class Staff extends Model
 
     protected $fillable = [
         'nama',
-        'role', // 'host' or 'coach'
+        'role', 
         'no_hp',
         'bidang',
     ];

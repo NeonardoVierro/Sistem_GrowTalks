@@ -195,7 +195,6 @@
 const instansiData = @json(app('App\Http\Controllers\AdminController')->getInstansiList());
 const currentInstansi = '{{ $user->instansi }}';
 
-// State untuk track apakah mode input atau select
 let isCustomInput = false;
 
 // Check jika instansi yang ada bukan dari list standar
@@ -235,13 +234,11 @@ document.getElementById('kategori_instansi').addEventListener('change', function
     const kategori = this.value;
     const instansiSelect = document.getElementById('instansiSelect');
     
-    // Clear existing options
     instansiSelect.innerHTML = '<option value="">Pilih Instansi</option>';
     
     if (kategori && instansiData[kategori]) {
         let instansis = instansiData[kategori];
         
-        // Handle nested array (untuk kelurahan)
         if (kategori === 'DAFTAR KELURAHAN') {
             instansis = Object.values(instansis).flat();
         }
@@ -254,13 +251,11 @@ document.getElementById('kategori_instansi').addEventListener('change', function
         });
     }
     
-    // Reset ke mode select
     if (!isCustomInput) {
         instansiSelect.classList.remove('hidden');
     }
 });
 
-// Handle toggle button untuk switch antara select dan input
 document.getElementById('toggleInstansiBtn').addEventListener('click', function(e) {
     e.preventDefault();
     const instansiSelect = document.getElementById('instansiSelect');
@@ -271,7 +266,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
     isCustomInput = !isCustomInput;
     
     if (isCustomInput) {
-        // Switch ke input mode
         instansiSelect.classList.add('hidden');
         instansiInput.classList.remove('hidden');
         toggleBtn.innerHTML = '<i class="fas fa-list"></i>';
@@ -279,7 +273,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
         helpText.textContent = 'Ketik nama instansi baru yang tidak ada di daftar';
         instansiInput.focus();
     } else {
-        // Switch ke select mode
         instansiSelect.classList.remove('hidden');
         instansiInput.classList.add('hidden');
         toggleBtn.innerHTML = '<i class="fas fa-edit"></i>';
@@ -288,7 +281,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
     }
 });
 
-// Sync value dari select/input ke hidden input
 document.getElementById('instansiSelect').addEventListener('change', function() {
     document.getElementById('instansiValue').value = this.value;
 });
@@ -297,7 +289,6 @@ document.getElementById('instansiInput').addEventListener('input', function() {
     document.getElementById('instansiValue').value = this.value;
 });
 
-// Initialize on page load
 initializeInstansiMode();
 
 // Form update confirmation
@@ -306,7 +297,6 @@ function confirmUpdate() {
     const emailValue = emailInput.value;
     const instansiValue = document.getElementById('instansiValue').value;
     
-    // Check if instansi is filled
     if (!instansiValue.trim()) {
         Swal.fire({
             title: 'Instansi Belum Dipilih',
@@ -317,7 +307,6 @@ function confirmUpdate() {
         return;
     }
     
-    // Check if email ends with @solo.go.id
     if (!emailValue.endsWith('@solo.go.id')) {
         Swal.fire({
             title: 'Format Email Tidak Valid',
@@ -355,7 +344,6 @@ function confirmUpdate() {
     });
 }
 
-// Error messages from validation
 @if($errors->any())
 Swal.fire({
     title: 'Perhatian!',

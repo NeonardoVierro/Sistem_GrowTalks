@@ -44,7 +44,6 @@
                         Instansi <span class="text-red-500">*</span>
                     </label>
                     
-                    <!-- Wrapper untuk toggle antara select dan input -->
                     <div id="instansiWrapper" class="flex gap-2">
                         <select name="instansi" id="instansiSelect" 
                                 class="flex-1 border border-gray-300 rounded-lg px-4 py-2 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent hidden">
@@ -185,24 +184,19 @@
 <!-- SweetAlert -->
 <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
 <script>
-// Data instansi berdasarkan kategori
 const instansiData = @json(app('App\Http\Controllers\AdminController')->getInstansiList());
 
-// State untuk track apakah mode input atau select
 let isCustomInput = false;
 
-// Update instansi dropdown berdasarkan kategori yang dipilih
 document.getElementById('kategori_instansi').addEventListener('change', function() {
     const kategori = this.value;
     const instansiSelect = document.getElementById('instansiSelect');
     
-    // Clear existing options
     instansiSelect.innerHTML = '<option value="">Pilih Instansi</option>';
     
     if (kategori && instansiData[kategori]) {
         let instansis = instansiData[kategori];
         
-        // Handle nested array (untuk kelurahan)
         if (kategori === 'DAFTAR KELURAHAN') {
             instansis = Object.values(instansis).flat();
         }
@@ -215,13 +209,11 @@ document.getElementById('kategori_instansi').addEventListener('change', function
         });
     }
     
-    // Reset ke mode select
     if (!isCustomInput) {
         instansiSelect.classList.remove('hidden');
     }
 });
 
-// Handle toggle button untuk switch antara select dan input
 document.getElementById('toggleInstansiBtn').addEventListener('click', function(e) {
     e.preventDefault();
     const instansiSelect = document.getElementById('instansiSelect');
@@ -232,7 +224,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
     isCustomInput = !isCustomInput;
     
     if (isCustomInput) {
-        // Switch ke input mode
         instansiSelect.classList.add('hidden');
         instansiInput.classList.remove('hidden');
         toggleBtn.innerHTML = '<i class="fas fa-list"></i>';
@@ -240,7 +231,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
         helpText.textContent = 'Ketik nama instansi baru yang tidak ada di daftar';
         instansiInput.focus();
     } else {
-        // Switch ke select mode
         instansiSelect.classList.remove('hidden');
         instansiInput.classList.add('hidden');
         toggleBtn.innerHTML = '<i class="fas fa-edit"></i>';
@@ -249,7 +239,6 @@ document.getElementById('toggleInstansiBtn').addEventListener('click', function(
     }
 });
 
-// Sync value dari select/input ke hidden input
 document.getElementById('instansiSelect').addEventListener('change', function() {
     document.getElementById('instansiValue').value = this.value;
 });
@@ -258,14 +247,11 @@ document.getElementById('instansiInput').addEventListener('input', function() {
     document.getElementById('instansiValue').value = this.value;
 });
 
-// Auto-suggest email based on instansi (optional, bisa diisi manual)
 document.getElementById('instansiSelect').addEventListener('change', function() {
     const instansi = this.value;
     const emailInput = document.getElementById('email');
     
-    // Only suggest if email field is empty
     if (!emailInput.value && instansi) {
-        // Simple suggestion (bisa diubah sesuai kebutuhan)
         const suggestedEmail = instansi.toLowerCase()
             .replace(/[^a-z0-9\s]/g, '')
             .replace(/\s+/g, '.')
@@ -279,14 +265,11 @@ document.getElementById('instansiSelect').addEventListener('change', function() 
     }
 });
 
-// Juga untuk input custom instansi
 document.getElementById('instansiInput').addEventListener('blur', function() {
     const instansi = this.value;
     const emailInput = document.getElementById('email');
     
-    // Only suggest if email field is empty
     if (!emailInput.value && instansi) {
-        // Simple suggestion
         const suggestedEmail = instansi.toLowerCase()
             .replace(/[^a-z0-9\s]/g, '')
             .replace(/\s+/g, '.')
@@ -300,13 +283,11 @@ document.getElementById('instansiInput').addEventListener('blur', function() {
     }
 });
 
-// Form submission confirmation
 function confirmSubmit() {
     const emailInput = document.getElementById('email');
     const emailValue = emailInput.value;
     const instansiValue = document.getElementById('instansiValue').value;
     
-    // Check if instansi is filled
     if (!instansiValue.trim()) {
         Swal.fire({
             title: 'Instansi Belum Dipilih',
@@ -317,7 +298,6 @@ function confirmSubmit() {
         return;
     }
     
-    // Check if email ends with @solo.go.id
     if (!emailValue.endsWith('@solo.go.id')) {
         Swal.fire({
             title: 'Format Email Tidak Valid',
@@ -339,7 +319,6 @@ function confirmSubmit() {
         return;
     }
     
-    // Check basic email format
     if (!emailValue.includes('@') || emailValue.split('@')[0].length < 2) {
         Swal.fire({
             title: 'Format Email Tidak Valid',
@@ -367,7 +346,6 @@ function confirmSubmit() {
     });
 }
 
-// Error messages from validation
 @if($errors->any())
 Swal.fire({
     title: 'Perhatian!',

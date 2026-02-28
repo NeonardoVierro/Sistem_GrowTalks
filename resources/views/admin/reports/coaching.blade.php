@@ -121,7 +121,7 @@
             </table>
         </div>
 
-        <!-- MOBILE PREMIUM CARD -->
+        <!-- MOBILE CARD -->
         <div class="md:hidden space-y-5">
             @forelse($coachings as $coaching)
 

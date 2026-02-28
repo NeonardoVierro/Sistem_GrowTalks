@@ -17,26 +17,21 @@ class ValidateGuardSession
         if ($guard) {
             $session = $request->getSession();
             
-            // Set session name berbeda untuk setiap guard
             $sessionNames = [
                 'internal' => 'growtalks_internal_session',
                 'web' => 'growtalks_web_session',
             ];
 
             if (isset($sessionNames[$guard])) {
-                // Jika session belum memiliki nama atau nama berbeda, set yang baru
                 if ($session->getName() !== $sessionNames[$guard]) {
                     $session->setName($sessionNames[$guard]);
                 }
                 
-                // Simpan guard saat ini di session
                 $session->put('_current_guard', $guard);
             }
 
-            // Validasi bahwa authenticated user sesuai dengan guard
             if (Auth::guard($guard)->check()) {
                 $user = Auth::guard($guard)->user();
-                // Pastikan session memiliki info tentang guard yang sedang aktif
                 if (!$session->has('_guard_user_' . $guard)) {
                     $session->put('_guard_user_' . $guard, $user->id);
                 }

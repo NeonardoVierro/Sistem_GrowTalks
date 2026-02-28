@@ -46,7 +46,6 @@ class CoachingBooking extends Model
         return $this->belongsTo(Kalender::class, 'id_kalender');
     }
 
-    // Scope untuk status (sama seperti di PodcastBooking)
     public function scopePending($query)
     {
         return $query->where('status_verifikasi', 'pending');
@@ -67,7 +66,6 @@ class CoachingBooking extends Model
         return $query->where('status_verifikasi', 'penjadwalan ulang');
     }
 
-    // Scope untuk user tertentu
     public function scopeForUser($query, $userId)
     {
         return $query->where('id_user', $userId);

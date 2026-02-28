@@ -36,7 +36,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('user.profile.update') }}" method="POST">
+            <form action="{{ route('user.profile.update') }}" method="POST" class="form-profile-submit">
                 @csrf
                 @method('PUT')
 
@@ -120,8 +120,8 @@
                         Batal
                     </a>
 
-                    <button type="submit"
-                            class="px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
+                    <button type="button"
+                            class="btn-profile-submit px-4 py-2 text-sm bg-blue-600 text-white rounded hover:bg-blue-700">
                         Simpan
                     </button>
                 </div>
@@ -130,4 +130,32 @@
 
     </div>
 </div>
+
+@push('scripts')
+<script>
+document.addEventListener('DOMContentLoaded', function() {
+    const submitBtn = document.querySelector('.btn-profile-submit');
+    if (submitBtn) {
+        submitBtn.addEventListener('click', function(e) {
+            e.preventDefault();
+            const form = this.closest('.form-profile-submit');
+            Swal.fire({
+                title: 'Simpan Perubahan?',
+                text: 'Apakah Anda yakin ingin menyimpan perubahan profil ini?',
+                icon: 'question',
+                showCancelButton: true,
+                confirmButtonColor: '#2563eb',
+                cancelButtonColor: '#6b7280',
+                confirmButtonText: 'Ya, Simpan',
+                cancelButtonText: 'Batal'
+            }).then((result) => {
+                if (result.isConfirmed) {
+                    form.submit();
+                }
+            });
+        });
+    }
+});
+</script>
+@endpush
 @endsection

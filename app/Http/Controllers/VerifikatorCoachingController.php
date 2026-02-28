@@ -22,14 +22,12 @@ class VerifikatorCoachingController extends Controller
             ->orderBy('created_at', 'desc')
             ->limit(10)
             ->get();
-        // Kalender params
         $month = $request->get('month', date('m'));
         $year  = $request->get('year', date('Y'));
 
         $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
         $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
 
-        // Ambil bookings di bulan tersebut
         $coachings = CoachingBooking::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
             ->orderBy('tanggal')
             ->get()
@@ -37,7 +35,6 @@ class VerifikatorCoachingController extends Controller
                 return Carbon::parse($item->tanggal)->format('Y-m-d');
             });
 
-        // Buat struktur kalender (awal minggu Senin - akhir Minggu)
         $calendar = [];
         $currentDate = $startOfMonth->copy()->startOfWeek(Carbon::MONDAY);
         $endOfCalendar = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
@@ -50,7 +47,6 @@ class VerifikatorCoachingController extends Controller
                     'date_string' => $currentDate->format('Y-m-d'),
                     'day' => $currentDate->day,
                     'is_current_month' => $currentDate->month == $month,
-                    // Available days for coaching (example: Rabu dan Jumat)
                     'is_available_day' => in_array($currentDate->dayOfWeek, [Carbon::WEDNESDAY, Carbon::FRIDAY]),
                 ];
                 $currentDate->addDay();
@@ -70,9 +66,6 @@ class VerifikatorCoachingController extends Controller
         ))->with('bookings', $coachings);
     }
 
-    /**
-     * AJAX: get bookings by date for modal
-     */
     public function getBookingsByDate(Request $request)
     {
         $date = $request->get('date');
@@ -110,7 +103,6 @@ class VerifikatorCoachingController extends Controller
         
         $query = CoachingBooking::with('user');
         
-        // Apply date range filter only if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
@@ -131,7 +123,6 @@ class VerifikatorCoachingController extends Controller
         $coachings = $query->orderBy('created_at', 'desc')
             ->paginate(15);
         
-        // Hitung jumlah untuk setiap tab
         $allCount = CoachingBooking::count();
         $pendingCount = CoachingBooking::where('status_verifikasi', 'pending')->count();
         $approvedCount = CoachingBooking::where('status_verifikasi', 'disetujui')->count();
@@ -157,7 +148,6 @@ class VerifikatorCoachingController extends Controller
     {
         $coaching = CoachingBooking::with('user')->findOrFail($id);
         
-        // Available time slots for coaching (contoh)
         $availableTimeSlots = [
             '09:00 - 10:00',
             '10:30 - 11:30',
@@ -169,7 +159,6 @@ class VerifikatorCoachingController extends Controller
         return view('verifikator-coaching.approval-form', compact('coaching', 'availableTimeSlots', 'coaches'));
     }
 
-    // Route compatibility: some routes call `showApprovalForm`
     public function showApprovalForm($id)
     {
         return $this->approvalForm($id);
@@ -187,7 +176,6 @@ class VerifikatorCoachingController extends Controller
         
         $coaching = CoachingBooking::findOrFail($id);
         
-        // Format waktu dari input time menjadi format "HH.MM - HH.MM"
         $waktu = null;
         if ($request->waktu_mulai && $request->waktu_selesai) {
             $jamMulai = str_replace(':', '.', $request->waktu_mulai);
@@ -195,14 +183,12 @@ class VerifikatorCoachingController extends Controller
             $waktu = "{$jamMulai} - {$jamSelesai}";
         }
         
-        // Jika disetujui, pastikan waktu dan coach diisi
         if ($validated['status_verifikasi'] == 'disetujui') {
             if (empty($waktu)) {
                 return back()->withErrors(['waktu_mulai' => 'Waktu harus diisi untuk coaching yang disetujui.'])->withInput();
             }
         }
         
-        // Update data coaching
         $coaching->update([
             'status_verifikasi' => $validated['status_verifikasi'],
             'coach' => $validated['coach'] ?? null,
@@ -212,7 +198,6 @@ class VerifikatorCoachingController extends Controller
             'verifikasi' => Carbon::now(),
         ]);
         
-        // Jika disetujui, buat entry di kalender
         if ($validated['status_verifikasi'] == 'disetujui') {
             $this->createCalendarEntry($coaching);
         }
@@ -223,15 +208,11 @@ class VerifikatorCoachingController extends Controller
     
     private function createCalendarEntry($coaching)
     {
-        // Pastikan belum ada entry kalender untuk coaching ini
         if (!$coaching->kalender) {
-            // Normalize waktu: kalender.waktu is a TIME column, accept single time like '07:00:00'
             $waktuValue = null;
             if (!empty($coaching->waktu)) {
-                // Try to extract the first time-like substring (e.g. '07.00' or '07:00')
                 if (preg_match('/(\d{1,2}[:.]\d{2})/', $coaching->waktu, $m)) {
                     $start = str_replace('.', ':', $m[1]);
-                    // Ensure seconds
                     if (preg_match('/^\d{1,2}:\d{2}$/', $start)) {
                         $waktuValue = $start . ':00';
                     }
@@ -258,12 +239,10 @@ class VerifikatorCoachingController extends Controller
         
         $query = CoachingBooking::with('user');
         
-        // Apply date range filter only if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -274,7 +253,6 @@ class VerifikatorCoachingController extends Controller
             });
         }
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status_verifikasi', $request->status);
         }
@@ -294,16 +272,13 @@ class VerifikatorCoachingController extends Controller
 
         $coaching = CoachingBooking::findOrFail($id);
 
-        // kalau sudah ada dokumentasi, hapus dulu (edit / replace)
         if ($coaching->dokumentasi_path) {
             Storage::disk('public')->delete($coaching->dokumentasi_path);
         }
 
-        // simpan file baru
         $path = $request->file('dokumentasi')
                         ->store('dokumentasi-coaching', 'public');
 
-        // update ke database
         $coaching->update([
             'dokumentasi_path' => $path,
         ]);

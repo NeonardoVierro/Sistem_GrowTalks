@@ -14,21 +14,9 @@ use Carbon\Carbon;
 
 class VerifikatorPodcastController extends Controller
 {
-    // public function __construct()
-    // {
-    //     // $this->middleware('auth:internal');
-    //     $this->middleware(function ($request, $next) {
-    //         if (!Auth::guard('internal')->user()->isVerifikatorPodcast()) {
-    //             abort(403, 'Unauthorized access.');
-    //         }
-    //         return $next($request);
-    //     });
-    // }
 
     public function dashboard(request $request)
     {
-        // dd( 'masuk');
-        // $user = Auth::guard('internal')->user();
         
         $totalPodcasts = PodcastBooking::count();
         $pendingPodcasts = PodcastBooking::where('status_verifikasi', 'pending')->count();
@@ -41,21 +29,18 @@ class VerifikatorPodcastController extends Controller
             ->limit(5)
             ->get();
 
-        // KALENDER
         $month = $request->get('month', date('m'));
         $year  = $request->get('year', date('Y'));
 
         $startOfMonth = Carbon::create($year, $month, 1)->startOfMonth();
         $endOfMonth   = Carbon::create($year, $month, 1)->endOfMonth();
 
-        // Ambil booking di bulan tersebut
         $podcasts = PodcastBooking::whereBetween('tanggal', [$startOfMonth, $endOfMonth])
             ->get()
             ->groupBy(function ($item) {
                 return Carbon::parse($item->tanggal)->format('Y-m-d');
             });
 
-        // Buat struktur kalender
         $calendar = [];
         $currentDate = $startOfMonth->copy()->startOfWeek(Carbon::MONDAY);
         $endOfCalendar = $endOfMonth->copy()->endOfWeek(Carbon::SUNDAY);
@@ -101,12 +86,10 @@ class VerifikatorPodcastController extends Controller
         
         $query = PodcastBooking::with(['user', 'verifikator']);
         
-        // Apply date range filter only if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -117,7 +100,6 @@ class VerifikatorPodcastController extends Controller
             });
         }
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status_verifikasi', $request->status);
         }
@@ -131,15 +113,13 @@ class VerifikatorPodcastController extends Controller
     {
         $podcast = PodcastBooking::with('user')->findOrFail($id);
         
-        // Get available time slots for this date (exclude already booked times)
         $bookedTimes = PodcastBooking::whereDate('tanggal', $podcast->tanggal)
             ->where('status_verifikasi', 'disetujui')
-            ->where('id', '!=', $id) // Exclude current booking
+            ->where('id', '!=', $id) 
             ->pluck('waktu')
-            ->filter() // Remove null values
+            ->filter() 
             ->toArray();
             
-        // Define all possible time slots
         $allTimeSlots = [
             '08:00-10:00',
             '10:00-12:00', 
@@ -167,7 +147,6 @@ class VerifikatorPodcastController extends Controller
         $podcast = PodcastBooking::findOrFail($id);
         $user = Auth::guard('internal')->user();
 
-        // Format waktu dari input time menjadi format "HH.MM - HH.MM"
         $waktu = null;
         if ($request->waktu_mulai && $request->waktu_selesai) {
             $jamMulai = str_replace(':', '.', $request->waktu_mulai);
@@ -175,13 +154,11 @@ class VerifikatorPodcastController extends Controller
             $waktu = "{$jamMulai} - {$jamSelesai}";
         }
 
-        // Jika status disetujui, wajib ada waktu dan host
         if ($request->status_verifikasi === 'disetujui') {
             if (!$waktu) {
                 return back()->withErrors(['waktu_mulai' => 'Waktu wajib diisi untuk status disetujui.'])->withInput();
             }
             
-            // Check if time slot is already taken
             $existingBooking = PodcastBooking::whereDate('tanggal', $podcast->tanggal)
                 ->where('waktu', $waktu)
                 ->where('status_verifikasi', 'disetujui')
@@ -200,7 +177,6 @@ class VerifikatorPodcastController extends Controller
             'catatan' => $request->catatan,
         ];
 
-        // Only update host, narasumber, and waktu if provided
         if ($request->host) {
             $updateData['host'] = $request->host;
         }
@@ -226,12 +202,10 @@ class VerifikatorPodcastController extends Controller
         
         $query = PodcastBooking::with(['user', 'verifikator']);
         
-        // Apply date range filter only if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -242,7 +216,6 @@ class VerifikatorPodcastController extends Controller
             });
         }
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status_verifikasi', $request->status);
         }
@@ -262,12 +235,10 @@ class VerifikatorPodcastController extends Controller
 
             $podcast = PodcastBooking::findOrFail($id);
 
-            // hapus cover lama (kalau ada)
             if ($podcast->cover_path) {
                 Storage::disk('public')->delete($podcast->cover_path);
             }
 
-            /// simpan ke storage/app/public/cover-podcast
             $path = $request->file('cover')
                             ->store('cover-podcast', 'public');
 
@@ -321,7 +292,6 @@ class VerifikatorPodcastController extends Controller
 
         $podcast->update($updateData);
 
-        // Create kalender entry if approved
         if ($request->status_verifikasi == 'disetujui') {
             $kalender = Kalender::updateOrCreate(
                 [

@@ -16,11 +16,9 @@ class DatabaseSeeder extends Seeder
 {
     public function run(): void
     {
-        // Call other seeders
         $this->call(HostSeeder::class);
         $this->call(CoachSeeder::class);
 
-        // Create roles (use firstOrCreate to avoid duplicate key errors)
         $roleUser = Role::firstOrCreate(
             ['kode_role' => 'user'],
             ['nama_role' => 'User']
@@ -38,7 +36,7 @@ class DatabaseSeeder extends Seeder
             ['nama_role' => 'Verifikator Coaching']
         );
 
-        // Akun admin user (use firstOrCreate to avoid duplicates)
+        // Akun admin user 
         InternalUser::firstOrCreate(
             ['email' => 'admin@growtalks.com'],
             [
@@ -202,11 +200,9 @@ class DatabaseSeeder extends Seeder
             ]
         ];
 
-        // Create users for all instansi
         $counter = 1;
         foreach ($instansiData as $kategori => $instansiList) {
             foreach ($instansiList as $instansi => $namaPIC) {
-                // Generate email from instansi name
                 $email = $this->generateEmail($instansi);
                 
                 User::firstOrCreate(
@@ -217,7 +213,7 @@ class DatabaseSeeder extends Seeder
                         'nama_pic' => $namaPIC,
                         'kontak_pic' => '0812' . str_pad($counter, 8, '0', STR_PAD_LEFT),
                         'password' => Hash::make('instansi99'),
-                        'status' => $counter % 10 == 0 ? 'nonaktif' : 'aktif', // Setiap user ke-10 nonaktif
+                        'status' => $counter % 10 == 0 ? 'nonaktif' : 'aktif', 
                     ]
                 );
                 
@@ -228,19 +224,16 @@ class DatabaseSeeder extends Seeder
 
     private function generateEmail($instansi)
     {
-        // Format: dinaskesehatan@solo.go.id
         $email = strtolower($instansi);
-        $email = preg_replace('/[^\w\s]/', '', $email); // Remove special chars
-        $email = preg_replace('/\s+/', '', $email); // Remove spaces
+        $email = preg_replace('/[^\w\s]/', '', $email); 
+        $email = preg_replace('/\s+/', '', $email); 
         $email = str_replace(['kecamatan', 'kelurahan', 'dinas', 'badan', 'bagian', 'rumahsakitumumdaerah'], '', $email);
         $email = $email . '@solo.go.id';
         
-        // Ensure uniqueness - insert counter before @solo.go.id
         $originalEmail = $email;
         $counter = 1;
         
         while (User::where('email', $email)->exists()) {
-            // Insert number before @solo.go.id instead of appending
             $email = str_replace('@solo.go.id', $counter . '@solo.go.id', $originalEmail);
             $counter++;
         }

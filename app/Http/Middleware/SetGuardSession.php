@@ -16,7 +16,6 @@ class SetGuardSession
     public function handle(Request $request, Closure $next, $guard = null): Response
     {
         if ($guard) {
-            // Map session names untuk setiap guard
             $sessionNames = [
                 'internal' => 'growtalks_internal_session',
                 'web' => 'growtalks_web_session',
@@ -24,10 +23,8 @@ class SetGuardSession
 
             if (isset($sessionNames[$guard])) {
                 $session = $request->getSession();
-                // Set session name sebelum session dimulai
                 $session->setName($sessionNames[$guard]);
                 
-                // Store guard info di session untuk referensi
                 $session->put('_guard', $guard);
             }
         }

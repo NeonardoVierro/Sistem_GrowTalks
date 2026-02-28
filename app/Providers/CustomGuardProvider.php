@@ -21,7 +21,6 @@ class CustomGuardProvider extends ServiceProvider
      */
     public function boot(): void
     {
-        // Customize session guard untuk menggunakan session names berbeda
         Auth::resolved(function ($auth) {
             $auth->extend('session', function ($app, $name, $config) {
                 $provider = Auth::createUserProvider($config['provider']);
@@ -33,16 +32,13 @@ class CustomGuardProvider extends ServiceProvider
                     $app['request']
                 );
 
-                // Set session name berdasarkan guard
                 $sessionNames = [
                     'internal' => 'growtalks_internal_session',
                     'web' => 'growtalks_web_session',
                 ];
 
                 if (isset($sessionNames[$name])) {
-                    // Modify the session handler untuk gunakan session name yang berbeda
                     $sessionStore = $app['session.store'];
-                    // Store original name
                     if (!isset($app['session.guard_names'])) {
                         $app['session.guard_names'] = [];
                     }

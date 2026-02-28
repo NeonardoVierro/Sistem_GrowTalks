@@ -12,11 +12,9 @@ class CoachingController extends Controller
 {
     public function index(Request $request)
     {
-        // Ambil parameter bulan dan tahun
         $month = $request->get('month', date('m'));
         $year = $request->get('year', date('Y'));
 
-        // Validasi bulan (1-12)
         if ($month < 1 || $month > 12) {
             $month = date('m');
         }
@@ -24,14 +22,12 @@ class CoachingController extends Controller
             $year = date('Y');
         }
 
-        // Get bookings for current user
         $bookings = CoachingBooking::where('id_user', Auth::id())
             ->orderBy('tanggal', 'desc')
             ->with('kalender')
             ->orderBy('created_at', 'desc')
             ->paginate(8);
             
-        // Get all approved coaching bookings for the selected month (untuk ditampilkan di kalender)
         $approvedBookings = CoachingBooking::whereYear('tanggal', $year)
             ->whereMonth('tanggal', $month)
             ->approved()
@@ -51,13 +47,11 @@ class CoachingController extends Controller
                 });
             });
 
-        // Get user's approved bookings for detail modal
         $userApprovedBookings = CoachingBooking::where('id_user', Auth::id())
             ->where('status_verifikasi', 'disetujui')
             ->get()
             ->keyBy('tanggal');    
         
-        // Generate calendar
         $calendar = $this->generateCalendar($month, $year);
         
         return view('coaching.index', compact('bookings', 'calendar', 'month', 'year', 'approvedBookings', 'userApprovedBookings'));
@@ -71,10 +65,8 @@ class CoachingController extends Controller
         $calendar = [];
         $currentWeek = [];
         
-        // Mulai dari Senin
         $startDay = $firstDay->copy()->startOfWeek(Carbon::MONDAY);
         
-        // Tambah hari-hari dari bulan sebelumnya
         while ($startDay->lt($firstDay)) {
             $currentWeek[] = [
                 'day' => $startDay->day,
@@ -86,7 +78,6 @@ class CoachingController extends Controller
             $startDay->addDay();
         }
         
-        // Tambah hari-hari dari bulan ini
         $currentDate = $firstDay->copy();
         while ($currentDate->lte($lastDay)) {
             if (count($currentWeek) === 7) {
@@ -106,7 +97,6 @@ class CoachingController extends Controller
             $currentDate->addDay();
         }
         
-        // Tambah hari-hari dari bulan berikutnya
         $endDay = $lastDay->copy()->endOfWeek(Carbon::SUNDAY);
         $currentDate = $lastDay->copy()->addDay();
         while ($currentDate->lte($endDay)) {
@@ -147,17 +137,14 @@ class CoachingController extends Controller
 
         $date = Carbon::parse($validated['tanggal']);
 
-        // Check if it's Wednesday or Friday
         if (!in_array($date->dayOfWeek, [Carbon::WEDNESDAY, Carbon::FRIDAY])) {
             return back()->withErrors(['tanggal' => 'Coaching clinic hanya bisa diajukan pada hari Rabu atau Jumat.'])->withInput();
         }
 
-        // Check if date is in the past
         if ($date->lt(Carbon::today())) {
             return back()->withErrors(['tanggal' => 'Tidak bisa membooking tanggal yang sudah lewat.'])->withInput();
         }
 
-        // Check if user already has a pending booking on the same date
         $userPendingBooking = CoachingBooking::where('id_user', Auth::id())
             ->whereDate('tanggal', $validated['tanggal'])
             ->pending()
@@ -167,16 +154,14 @@ class CoachingController extends Controller
             return back()->withErrors(['tanggal' => 'Anda sudah memiliki pengajuan pending pada tanggal ini.'])->withInput();
         }
 
-        // Check if date is already fully booked (optional: maksimal 3 booking per hari)
         $existingBookingsCount = CoachingBooking::whereDate('tanggal', $validated['tanggal'])
             ->approved()
             ->count();
             
-        if ($existingBookingsCount >= 3) { // Maksimal 3 coaching per hari
+        if ($existingBookingsCount >= 3) {
             return back()->withErrors(['tanggal' => 'Kuota coaching untuk tanggal ini sudah penuh.'])->withInput();
         }
 
-        // Create coaching booking
         $booking = CoachingBooking::create([
             'id_user' => Auth::id(),
             'tanggal' => $validated['tanggal'],
@@ -192,12 +177,10 @@ class CoachingController extends Controller
             ->with('success', 'Pengajuan coaching clinic berhasil dikirim! Verifikator akan meninjau pengajuan Anda.');
     }
 
-    // Return JSON details for a specific date (used by calendar detail modal)
     public function detail($date)
     {
         $dateObj = Carbon::parse($date);
 
-        // Gather bookings for the date (approved and pending for info)
         $bookings = CoachingBooking::whereDate('tanggal', $dateObj)
             ->orderBy('status_verifikasi', 'desc')
             ->get()
@@ -221,7 +204,6 @@ class CoachingController extends Controller
             ->where('status_verifikasi', 'disetujui')
             ->count();
 
-        // Determine if current user can still submit for this date
         $userPending = CoachingBooking::where('id_user', auth()->id())
             ->whereDate('tanggal', $dateObj)
             ->pending()
@@ -250,13 +232,11 @@ class CoachingController extends Controller
             abort(403);
         }
         
-        // Only allow deletion if still pending
         if ($booking->status_verifikasi !== 'pending') {
             return redirect()->route('coaching.index')
                 ->with('error', 'Hanya pengajuan pending yang bisa dihapus.');
         }
         
-        // Delete kalender entry
         if ($booking->kalender) {
             $booking->kalender->delete();
         }

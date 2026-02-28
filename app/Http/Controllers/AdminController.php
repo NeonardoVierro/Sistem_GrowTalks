@@ -14,11 +14,6 @@ use Illuminate\Support\Facades\Hash;
 
 class AdminController extends Controller
 {
-    // public function __construct()
-    // {
-    //     $this->middleware('auth:admin');
-    // }
-
     public function dashboard()
     {
         $stats = [
@@ -32,12 +27,10 @@ class AdminController extends Controller
             'coaching_approved' => CoachingBooking::where('status_verifikasi', 'disetujui')->count(),
             'coaching_rejected' => CoachingBooking::where('status_verifikasi', 'ditolak')->count(),
         ];
-
         $recentPodcasts = PodcastBooking::with('user')
             ->orderBy('created_at', 'desc')
             ->limit(5)
             ->get();
-
         $recentCoachings = CoachingBooking::with('user')
             ->orderBy('created_at', 'desc')
             ->limit(5)
@@ -48,10 +41,8 @@ class AdminController extends Controller
 
     public function users(Request $request)
     {
-        $perPage = $request->get('per_page', 10); // Default 10 per page
-        
+        $perPage = $request->get('per_page', 10);
         $users = User::query()
-
             ->when($request->filled('kategori'), function ($query) use ($request) {
                 $query->where('kategori_instansi', $request->kategori);
             })
@@ -67,13 +58,14 @@ class AdminController extends Controller
             ->paginate($perPage);
             
         $kategoriInstansi = $this->getKategoriInstansi();
+
         return view('admin.users.index', compact('users', 'kategoriInstansi'));
     }
 
     public function createUser()
     {
-        // Data kategori dan instansi untuk dropdown
         $kategoriInstansi = $this->getKategoriInstansi();
+
         return view('admin.users.create', compact('kategoriInstansi'));
     }
 
@@ -88,12 +80,9 @@ class AdminController extends Controller
             'password' => 'required|string|min:8|confirmed',
             'status' => 'required|in:aktif,nonaktif',
         ]);
-
-        // Validasi domain email harus @solo.go.id
         if (!str_ends_with($request->email, '@solo.go.id')) {
             return back()->withErrors(['email' => 'Email harus menggunakan domain @solo.go.id'])->withInput();
         }
-
         $user = User::create([
             'email' => $request->email,
             'kategori_instansi' => $request->kategori_instansi,
@@ -103,7 +92,6 @@ class AdminController extends Controller
             'password' => Hash::make($request->password),
             'status' => $request->status,
         ]);
-
         return redirect()->route('admin.users')
             ->with('success', 'User berhasil ditambahkan.');
     }
@@ -113,7 +101,7 @@ class AdminController extends Controller
         $user = User::findOrFail($id);
         $kategoriInstansi = $this->getKategoriInstansi();
         $instansiByKategori = $this->getInstansiByKategori($user->kategori_instansi);
-        
+
         return view('admin.users.edit', compact('user', 'kategoriInstansi', 'instansiByKategori'));
     }
 
@@ -128,8 +116,6 @@ class AdminController extends Controller
             'password' => 'nullable|string|min:6|confirmed',
             'status' => 'required|in:aktif,nonaktif',
         ]);
-
-        // Validasi domain email harus @solo.go.id
         if (!str_ends_with($request->email, '@solo.go.id')) {
             return back()->withErrors(['email' => 'Email harus menggunakan domain @solo.go.id'])->withInput();
         }
@@ -144,11 +130,9 @@ class AdminController extends Controller
             'email' => $request->email,
             'status' => $request->status,
         ];
-
         if ($request->filled('password')) {
             $updateData['password'] = Hash::make($request->password);
         }
-
         $user->update($updateData);
 
         return redirect()->route('admin.users')
@@ -178,8 +162,6 @@ class AdminController extends Controller
     public function getInstansiByKategori($kategori)
     {
         $list = $this->getInstansiList()[$kategori] ?? [];
-
-        // Flatten nested arrays (e.g. kelurahan grouped by kecamatan)
         $flat = [];
         array_walk_recursive($list, function ($value) use (&$flat) {
             $flat[] = $value;
@@ -190,7 +172,6 @@ class AdminController extends Controller
 
     private function generateEmail($instansi)
     {
-        // Format: dinaskesehatan@solo.go.id
         $instansiSlug = Str::slug($instansi, '');
         $instansiSlug = strtolower(preg_replace('/[^A-Za-z0-9]/', '', $instansiSlug));
         return $instansiSlug . '@solo.go.id';
@@ -387,7 +368,6 @@ class AdminController extends Controller
             'verifikasi' => auth()->guard('internal')->user()->nama_user,
         ]);
 
-        // If approved, ensure there's a kalender entry and mark it booked
         if ($status === 'disetujui') {
             $waktu = $request->waktu ?? $podcast->waktu;
 
@@ -409,7 +389,6 @@ class AdminController extends Controller
                 $podcast->update(['id_kalender' => $kal->id]);
             }
         } else {
-            // If not approved, free any associated kalender slot
             if ($podcast->kalender) {
                 $podcast->kalender->update([
                     'sudah_dibooking' => false,
@@ -446,12 +425,10 @@ class AdminController extends Controller
         
         $query = PodcastBooking::with('user');
         
-        // Apply date range filter only if both dates are provided
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -462,7 +439,6 @@ class AdminController extends Controller
             });
         }
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status_verifikasi', $request->status);
         }
@@ -477,13 +453,11 @@ class AdminController extends Controller
         $endDate = $request->get('end_date');
         
         $query = CoachingBooking::with('user');
-        
-        // Apply date range filter only if both dates are provided
+
         if ($startDate && $endDate) {
             $query->whereBetween('tanggal', [$startDate, $endDate]);
         }
 
-        // Filter pencarian
         if ($request->filled('search')) {
             $search = $request->search;
             $query->where(function ($q) use ($search) {
@@ -494,7 +468,6 @@ class AdminController extends Controller
             });
         }
 
-        // Filter status
         if ($request->filled('status')) {
             $query->where('status_verifikasi', $request->status);
         }

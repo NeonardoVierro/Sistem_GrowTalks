@@ -14,19 +14,24 @@
 
 
     <style>
+        * {
+            box-sizing: border-box;
+        }
+
         body {
             font-family: 'Poppins', sans-serif;
         }
 
-        /* SIDEBAR SAMA DENGAN USER */
+        /* SIDEBAR */
         .sidebar {
-            background-image:
+            background-image: 
                 linear-gradient(rgba(0,0,0,0.55), rgba(0,0,0,0.55)),
                 url("{{ asset('images/background.png') }}");
             background-size: cover;
             background-position: center;
             background-repeat: no-repeat;
             color: white;
+            transition: all 0.3s ease;
         }
 
         .sidebar a {
@@ -43,6 +48,69 @@
             color: #E8CA00;
             font-weight: 600;
         }
+
+        /* RESPONSIVE MOBILE */
+        @media (max-width: 768px) {
+            .sidebar {
+                left: -100% !important;
+                z-index: 100;
+            }
+            .sidebar.active-mobile {
+                left: 0 !important;
+            }
+            .main-content-area {
+                margin-left: 0 !important;
+            }
+        }
+
+        /* TABLE RESPONSIVE */
+        .responsive-table {
+            width: 100%;
+            border-collapse: collapse;
+            min-width: 100%;
+        }
+
+        .responsive-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch;
+        }
+
+        /* SCROLLBAR STYLING */
+        .responsive-wrapper::-webkit-scrollbar {
+            height: 6px;
+        }
+
+        .responsive-wrapper::-webkit-scrollbar-track {
+            background: #f1f5f9;
+        }
+
+        .responsive-wrapper::-webkit-scrollbar-thumb {
+            background: #cbd5e1;
+            border-radius: 3px;
+        }
+
+        .responsive-wrapper::-webkit-scrollbar-thumb:hover {
+            background: #94a3b8;
+        }
+
+        /* TABLE STYLES */
+        .responsive-table th {
+            background-color: #1e293b;
+            color: white;
+            font-weight: 600;
+            padding: 12px;
+            text-align: left;
+            white-space: nowrap;
+        }
+
+        .responsive-table td {
+            padding: 12px;
+            border-bottom: 1px solid #e2e8f0;
+        }
+
+        .responsive-table tbody tr:hover {
+            background-color: #f8fafc;
+        }
     </style>
 
     @stack('styles')
@@ -51,7 +119,7 @@
 <body class="bg-gray-50 min-h-screen">
 
     <!-- SIDEBAR -->
-    <div class="sidebar fixed left-0 top-16 bottom-0 w-64 shadow-lg z-40">
+    <div id="sidebarMenu" class="sidebar fixed left-0 top-16 bottom-0 w-64 shadow-lg z-50">
 
         <!-- LOGO -->
         <div class="p-6 border-b border-gray-700 text-center">
@@ -97,23 +165,31 @@
         </nav>
     </div>
 
+    <!-- overlay ketika sidebar terbuka di mobile -->
+    <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-25 z-40"></div>
+
     <!-- TOP NAVBAR -->
     <header
         class="fixed top-0 left-0 right-0 h-16
                bg-gradient-to-r from-gray-400 via-gray-100 to-white
                shadow border-b-4 border-gray-600 z-50
-               flex items-center justify-between px-6">
+               flex items-center justify-between px-6 py-4">
 
-        <span class="font-bold text-lg text-gray-800">
-            Podcast & Coaching Clinic
-        </span>
+        <div class="flex items-center gap-3">
+            <button onclick="toggleSidebar()" class="md:hidden text-gray-800 p-2">
+                <i class="fas fa-bars text-xl"></i>
+            </button>
+            <span class="font-bold text-base md:text-lg text-gray-800 truncate">
+                Podcast & Coaching Clinic
+            </span>
+        </div>
 
         <!-- ADMIN MENU -->
         <div class="relative">
-            <button onclick="toggleAdminMenu()"
-                class="flex items-center gap-2 text-gray-700 font-medium">
-
-                {{ auth()->guard('internal')->user()->email ?? 'Admin' }}
+            <button onclick="toggleUserMenu()"
+                class="flex items-center gap-2 text-gray-700 hover:text-gray-900 font-medium">
+                <span class="hidden sm:inline text-sm">{{ auth()->guard('internal')->user()->email ?? 'Admin' }}</span>
+                <i class="fas fa-user-circle md:hidden text-xl"></i>
                 <i class="fas fa-chevron-down text-xs"></i>
             </button>
 
@@ -133,18 +209,45 @@
     </header>
 
     <!-- CONTENT -->
-   <main class="ml-64 pt-24 min-h-screen px-8">
+   <main class="main-content-area md:ml-64 pt-20 min-h-screen px-4 md:px-8 py-6">
         @yield('content')
     </main>
 
     <script>
-        function toggleAdminMenu() {
+        function toggleUserMenu() {
             document.getElementById('adminDropdown').classList.toggle('hidden');
         }
 
+        function toggleSidebar() {
+            const sb = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isOpen = sb.classList.toggle('active-mobile');
+            if (isOpen) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
+        }
+
         document.addEventListener('click', function(e) {
+            const menu = document.getElementById('adminDropdown');
+            const sidebar = document.getElementById('sidebarMenu');
+            
+            // Close user dropdown if click outside
             if (!e.target.closest('.relative')) {
-                document.getElementById('adminDropdown')?.classList.add('hidden');
+                menu?.classList.add('hidden');
+            }
+
+            // Close sidebar on mobile if click outside
+            if (window.innerWidth < 768 && !sidebar.contains(e.target) && !e.target.closest('button')) {
+                sidebar.classList.remove('active-mobile');
+                document.getElementById('sidebarOverlay').classList.add('hidden');
+            }
+
+            // Close sidebar if click overlay
+            if (e.target.id === 'sidebarOverlay') {
+                sidebar.classList.remove('active-mobile');
+                e.target.classList.add('hidden');
             }
         });
     </script>

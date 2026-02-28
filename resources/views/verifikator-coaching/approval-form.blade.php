@@ -3,7 +3,7 @@
 @section('title', 'Form Approval Coaching Clinic')
 
 @section('content')
-<div class="p-8">
+<div class="p-4 md:p-8">
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Form Approval Coaching Clinic</h1>
@@ -16,8 +16,8 @@
             <h2 class="text-lg font-bold text-gray-800">Antrian Pengajuan Coaching Clinic</h2>
         </div>
 
-        <div class="p-6">
-            <div class="grid grid-cols-2 gap-6">
+            <div class="p-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Left Column -->
                 <div>
                     <!-- Kode Booking -->
@@ -102,7 +102,7 @@
                 @csrf
                 @method('PUT')
                 
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <!-- Status Verifikasi -->
                         <div class="mb-4">
@@ -133,19 +133,19 @@
                         <!-- Waktu -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Waktu Coaching</label>
-                            <div class="flex items-center gap-3">
+                            <div class="flex flex-col sm:flex-row items-center gap-3">
                                 @php
                                     $times = $coaching->waktu ? explode(' - ', $coaching->waktu) : ['', ''];
                                     $jamMulai = $times[0] ? str_replace('.', ':', $times[0]) : '';
                                     $jamSelesai = isset($times[1]) ? str_replace('.', ':', $times[1]) : '';
                                 @endphp
-                                <div class="flex-1">
+                                <div class="w-full sm:flex-1">
                                     <input type="time" name="waktu_mulai" 
                                            value="{{ $jamMulai }}"
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
                                 </div>
                                 <span class="text-gray-500 font-medium">-</span>
-                                <div class="flex-1">
+                                <div class="w-full sm:flex-1">
                                     <input type="time" name="waktu_selesai" 
                                            value="{{ $jamSelesai }}"
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-green-500 focus:ring-1 focus:ring-green-500">
@@ -166,13 +166,13 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-8 flex justify-end space-x-3">
+                <div class="mt-8 flex flex-col sm:flex-row sm:justify-end sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
                     <a href="{{ route('verifikator-coaching.approval') }}" 
-                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center">
                         Tutup
                     </a>
                     <button type="submit" 
-                            class="px-6 py-3 bg-green-600 text-white rounded-lg hover:bg-green-700">
+                            class="px-6 py-3 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
                         Proses
                     </button>
                 </div>
@@ -183,23 +183,26 @@
 
 @push('scripts')
 <script>
-document.getElementById('statusSelect').addEventListener('change', function() {
-    const waktuInput = document.querySelector('input[name="waktu"]');
-    const coachInput = document.querySelector('input[name="coach"]');
-    const selectedStatus = this.value;
-    
-    if (selectedStatus === 'disetujui') {
-        // Waktu dan coach menjadi lebih penting jika disetujui
-        waktuInput.parentElement.querySelector('label').innerHTML = 'Waktu Coaching *';
-        coachInput.parentElement.querySelector('label').innerHTML = 'Coach Penanggung Jawab *';
-    } else {
-        waktuInput.parentElement.querySelector('label').innerHTML = 'Waktu Coaching';
-        coachInput.parentElement.querySelector('label').innerHTML = 'Coach Penanggung Jawab';
+const statusEl = document.getElementById('statusSelect');
+if (statusEl) {
+    function updateLabels() {
+        const waktuEl = document.querySelector('input[name="waktu_mulai"]');
+        const coachEl = document.querySelector('select[name="coach"]');
+        const waktuLabel = waktuEl ? waktuEl.closest('.mb-4')?.querySelector('label') : null;
+        const coachLabel = coachEl ? coachEl.closest('.mb-4')?.querySelector('label') : null;
+        if (statusEl.value === 'disetujui') {
+            if (waktuLabel) waktuLabel.innerHTML = 'Waktu Coaching *';
+            if (coachLabel) coachLabel.innerHTML = 'Coach Penanggung Jawab *';
+        } else {
+            if (waktuLabel) waktuLabel.innerHTML = 'Waktu Coaching';
+            if (coachLabel) coachLabel.innerHTML = 'Coach Penanggung Jawab';
+        }
     }
-});
 
-// Trigger change on page load
-document.getElementById('statusSelect').dispatchEvent(new Event('change'));
+    statusEl.addEventListener('change', updateLabels);
+    // initial
+    updateLabels();
+}
 </script>
 @endpush
 @endsection

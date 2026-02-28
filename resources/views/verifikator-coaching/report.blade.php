@@ -56,112 +56,126 @@
 
         <!-- Table -->
         <div class="p-4">
-            <div class="{{ $coachings->count() > 10 ? 'max-h-96 overflow-y-auto' : '' }}">
-                <table class="w-full table-fixed">
-                <thead class="sticky top-0 z-10">
-                    <thead class="bg-blue-900 text-white sticky top-0 z-10">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kategori</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Agenda</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Coach</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Dokumentasi</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($coachings as $coaching)
-                    <tr class="table-row">
-                        <td class="py-3 px-4">
-                            @php
-                                $status = strtolower($coaching->status_verifikasi);
-                                switch($status) {
-                                    case 'disetujui':
-                                        $bg = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'pending':
-                                        $bg = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    case 'ditolak':
-                                        $bg = 'bg-red-100 text-red-800';
-                                        break;
-                                    case 'penjadwalan ulang':
-                                        $bg = 'bg-purple-100 text-purple-800';
-                                        break;
-                                    default:
-                                        $bg = 'bg-gray-100 text-gray-800';
-                                }
-                            @endphp
-                            <span class="inline-flex items-center justify-center w-fit mx-auto
-                                        text-[10px] px-2 py-0.5 rounded-full font-medium
-                                        whitespace-normal break-words text-center {{ $bg }}">
-                                {{ ucfirst($coaching->status_verifikasi) }}
-                            </span>
-                        </td>
-                        <td class="py-3 px-4 font-mono text-sm">
-                             CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
-                        </td>
-                        <td class="py-3 px-4 text-sm">
-                            {{ $coaching->tanggal->format('d/m/Y') }}
-                        </td>
-                        <td class="py-3 px-4 text-sm">{{ $coaching->nama_opd }}</td>
-                        <td class="py-3 px-4 text-sm">{{ $coaching->layanan }}</td>
-                        <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan) }}</td>
-                        <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
-                        <td class="py-3 px-4">
-                        @if($coaching->dokumentasi_path)
-                            <div class="flex items-center gap-6">
-                                {{-- LIHAT --}}
-                                <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
-                                target="_blank"
-                                class="text-green-600 hover:text-green-800 text-sm">
-                                    <i class="fas fa-image mr-1"></i>
-                                </a>
+            <div class="overflow-x-auto {{ $coachings->count() > 10 ? 'max-h-96 overflow-y-auto' : '' }} responsive-wrapper">
+                <table class="responsive-table w-full">
 
-                                {{-- HAPUS --}}
-                                <form action="{{ route('verifikator-coaching.delete-documentation', $coaching->id) }}"
-                                    method="POST"
-                                    style="display:inline;"
-                                    class="swal-delete">
-                                    @csrf
-                                    @method('DELETE')
-                                    <button type="submit"
-                                        class="text-red-600 hover:text-red-800 text-sm">
-                                        <i class="fas fa-trash mr-1"></i>
-                                    </button>
-                                </form>
-                            </div>
-                        @else
-                            {{-- UNGGAH --}}
-                            <form action="{{ route('verifikator-coaching.upload', $coaching->id) }}"
-                                method="POST"
-                                enctype="multipart/form-data">
-                                @csrf
-                                <label class="cursor-pointer text-green-600 hover:text-green-800 text-sm">
-                                    <i class="fas fa-upload mr-1"></i>
-                                    <input type="file"
-                                        name="dokumentasi"
-                                        accept="image/*"
-                                        class="hidden"
-                                        onchange="this.form.submit()">
-                                </label>
-                            </form>
-                        @endif
-                    </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="py-16 text-center">
-                            <div class="flex flex-col items-center justify-center text-gray-400">
-                                <i class="fas fa-database text-4xl mb-3"></i>
-                                <p class="text-lg text-gray-500">Belum Ada Data</p>
-                            </div>
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                    <thead class="bg-blue-900 text-white sticky top-0 z-10">
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Status</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Kode Booking</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Tanggal</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Instansi</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Kategori</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Agenda</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Coach</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Dokumentasi</th>
+                        </tr>
+                    </thead>
+
+                    <tbody class="divide-y divide-gray-200">
+                        @forelse($coachings as $coaching)
+                        <tr>
+
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                @php
+                                    $status = strtolower($coaching->status_verifikasi);
+                                    switch($status) {
+                                        case 'disetujui':
+                                            $bg = 'bg-green-100 text-green-800';
+                                            break;
+                                        case 'pending':
+                                            $bg = 'bg-yellow-100 text-yellow-800';
+                                            break;
+                                        case 'ditolak':
+                                            $bg = 'bg-red-100 text-red-800';
+                                            break;
+                                        case 'penjadwalan ulang':
+                                            $bg = 'bg-purple-100 text-purple-800';
+                                            break;
+                                        default:
+                                            $bg = 'bg-gray-100 text-gray-800';
+                                    }
+                                @endphp
+
+                                <span class="inline-flex items-center text-[10px] px-2 py-0.5 rounded-full font-medium {{ $bg }}">
+                                    {{ ucfirst($coaching->status_verifikasi) }}
+                                </span>
+                            </td>
+
+                            <td class="py-3 px-4 font-mono text-sm whitespace-nowrap">
+                                CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $coaching->tanggal->format('d/m/Y') }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $coaching->nama_opd }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $coaching->layanan }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm max-w-[220px] break-words">
+                                {{ Str::limit($coaching->keterangan, 50) }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $coaching->coach ?? '-' }}
+                            </td>
+
+                            <td class="py-3 px-4 whitespace-nowrap">
+                                @if($coaching->dokumentasi_path)
+                                    <div class="flex items-center gap-4">
+
+                                        <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
+                                        target="_blank"
+                                        class="text-green-600 hover:text-green-800 text-sm">
+                                            <i class="fas fa-image"></i>
+                                        </a>
+
+                                        <form action="{{ route('verifikator-coaching.delete-documentation', $coaching->id) }}"
+                                            method="POST"
+                                            class="swal-delete">
+                                            @csrf
+                                            @method('DELETE')
+                                            <button type="submit"
+                                                    class="text-red-600 hover:text-red-800 text-sm">
+                                                <i class="fas fa-trash"></i>
+                                            </button>
+                                        </form>
+
+                                    </div>
+                                @else
+                                    <form action="{{ route('verifikator-coaching.upload', $coaching->id) }}"
+                                        method="POST"
+                                        enctype="multipart/form-data">
+                                        @csrf
+                                        <label class="cursor-pointer text-green-600 hover:text-green-800 text-sm">
+                                            <i class="fas fa-upload"></i>
+                                            <input type="file"
+                                                name="dokumentasi"
+                                                accept="image/*"
+                                                class="hidden"
+                                                onchange="this.form.submit()">
+                                        </label>
+                                    </form>
+                                @endif
+                            </td>
+
+                        </tr>
+                        @empty
+                        <tr>
+                            <td colspan="8" class="py-16 text-center text-gray-400">
+                                Belum Ada Data
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+
+                </table>
             </div>
         </div>
     </div>

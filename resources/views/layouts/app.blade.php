@@ -94,15 +94,27 @@
         /* LOGIKA RESPONSIVE BARU */
         @media (max-width: 768px) {
             .sidebar {
-                left: -100%; /* Sembunyi di HP */
-                z-index: 100;
+                /* override Tailwind's left-0 on mobile */
+                left: -100% !important; /* sembunyi di HP */
+                z-index: 100; /* pastikan di atas konten */
             }
             .sidebar.active-mobile {
-                left: 0; /* Muncul saat diklik */
+                left: 0 !important; /* muncul saat diklik */
             }
             .main-content-area {
                 margin-left: 0 !important;
             }
+        }
+
+        /* tabel responsif: cukup scroll horizontal */
+        .responsive-table {
+            width: 100%;
+            border-collapse: collapse;
+        }
+
+        .responsive-wrapper {
+            overflow-x: auto;
+            -webkit-overflow-scrolling: touch; /* smooth scroll di iOS */
         }
     </style>
     @stack('styles')
@@ -134,6 +146,9 @@
             </nav>
         </div>
     @endauth
+
+    <!-- overlay ketika sidebar terbuka di mobile -->
+    <div id="sidebarOverlay" class="hidden fixed inset-0 bg-black bg-opacity-25 z-40"></div>
 
     @auth
     <header
@@ -190,7 +205,15 @@
 
         // Fungsi baru untuk buka/tutup sidebar di HP
         function toggleSidebar() {
-            document.getElementById('sidebarMenu').classList.toggle('active-mobile');
+            const sb = document.getElementById('sidebarMenu');
+            const overlay = document.getElementById('sidebarOverlay');
+            const isOpen = sb.classList.toggle('active-mobile');
+            // tampilkan/selubungi overlay saat terbuka
+            if (isOpen) {
+                overlay.classList.remove('hidden');
+            } else {
+                overlay.classList.add('hidden');
+            }
         }
 
         document.addEventListener('click', function(e) {
@@ -202,9 +225,16 @@
                 menu?.classList.add('hidden');
             }
 
-            // Klik di luar sidebar (saat di HP) untuk menutup otomatis
+            // Klik di luar sidebar (saat di HP) atau pada overlay untuk menutup otomatis
             if (window.innerWidth < 768 && !sidebar.contains(e.target) && !e.target.closest('button')) {
                 sidebar.classList.remove('active-mobile');
+                document.getElementById('sidebarOverlay').classList.add('hidden');
+            }
+
+            // jika klik overlay sendiri, tutup
+            if (e.target.id === 'sidebarOverlay') {
+                sidebar.classList.remove('active-mobile');
+                e.target.classList.add('hidden');
             }
         });
     </script>

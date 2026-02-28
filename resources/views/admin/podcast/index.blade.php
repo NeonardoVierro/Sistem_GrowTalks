@@ -22,9 +22,9 @@
             </h2>
         </div>
 
-        <div class="overflow-x-auto">
+        <div class="overflow-x-auto responsive-wrapper">
 
-            <table class="w-full">
+            <table class="responsive-table w-full">
 
                 <!-- HEADER -->
                 <thead class="bg-blue-900 text-white">

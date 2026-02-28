@@ -65,8 +65,8 @@
         </p>
     </div>
     <div class="bg-white rounded-2xl shadow-sm border border-gray-200 mt-4 overflow-hidden">
-        <div class="overflow-x-auto">
-            <table class="w-full border border-gray-300 border-collapse">
+        <div class="overflow-x-auto responsive-wrapper">
+            <table class="responsive-table w-full border border-gray-300 border-collapse">
                 <thead>
                     <tr class="bg-blue-900 text-white">
                         <th class="px-6 py-3 text-left font-semibold w-[20%]">Tanggal</th>

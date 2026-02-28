@@ -7,7 +7,7 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Approval Podcast</h1>
-        <p class="text-gray-600 italic">Verifikasi pengajuan podcast dari user</p>
+        <p class="text-gray-600 italic">Verifikasi pengajuan podcast</p>
     </div>
 
     <!-- Tabel Antrian Verifikasi Podcast -->
@@ -50,9 +50,9 @@
             </form>
         </div>
 
-        <div class="{{ $podcasts->count() > 10 ? 'overflow-y-auto max-h-96' : '' }}">
+        <div class="{{ $podcasts->count() > 10 ? 'overflow-y-auto max-h-96' : '' }} responsive-wrapper">
 
-            <table class="w-full">
+            <table class="responsive-table w-full">
 
                 <!-- HEADER -->
                 <thead class="bg-blue-900 text-white text-left sticky top-0 z-10">
@@ -75,7 +75,7 @@
                     <tr class="hover:bg-gray-50 transition">
 
                         {{-- AKSI --}}
-                        <td class="py-3 px-4 flex justify-center items-center">
+                                <td class="py-3 px-4 flex justify-center items-center">
                             <a href="{{ route('verifikator-podcast.approval-form', $podcast->id) }}" 
                                class="text-blue-700 hover:text-blue-800" title="Verifikasi">
                                 <i class="fas fa-edit"></i>
@@ -83,7 +83,7 @@
                         </td>
 
                         {{-- STATUS --}}
-                        <td class="py-3 px-4 text-center w-[110px]">
+                            <td class="py-3 px-4 text-center w-[110px]">
                             @php
                                 $status = strtolower($podcast->status_verifikasi);
                                 switch($status) {
@@ -111,12 +111,12 @@
                         </td>
 
                         {{-- KODE --}}
-                        <td class="py-3 px-4 font-mono text-sm">
+                                <td class="py-3 px-4 font-mono text-sm">
                             POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                         </td>
 
                         {{-- TANGGAL --}}
-                        <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                <td class="py-3 px-4 text-sm whitespace-nowrap">
                             {{ \Carbon\Carbon::parse($podcast->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
 
                             @if($podcast->waktu)
@@ -127,22 +127,22 @@
                         </td>
 
                         {{-- JUDUL --}}
-                        <td class="py-3 px-4 text-sm max-w-[260px] break-words whitespace-normal">
+                                <td class="py-3 px-4 text-sm max-w-[260px] break-words whitespace-normal">
                             {{ $podcast->keterangan }}
                         </td>
 
                         {{-- NARASUMBER --}}
-                        <td class="py-3 px-4 text-sm">
+                                <td class="py-3 px-4 text-sm">
                             {{ $podcast->narasumber }}
                         </td>
 
                         {{-- HOST --}}
-                        <td class="py-3 px-4 text-sm">
+                                <td class="py-3 px-4 text-sm">
                             {{ $podcast->host ?? '-' }}
                         </td>
                     
                         {{-- KETERANGAN --}}
-                        <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
+                                <td class="py-3 px-4 text-xs text-gray-600 max-w-[160px] break-words whitespace-normal">
                             {{ $podcast->catatan ?? '-' }}
                         </td>
                     </tr>

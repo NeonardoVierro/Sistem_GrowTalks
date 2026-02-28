@@ -61,90 +61,164 @@
             </form>
         </div>
 
-        <div class="p-4">
-            <div class="{{ $coachings->count() > 10 ? 'max-h-96 overflow-y-auto' : '' }}">
-            <table class="w-full table-fixed">
-
-                <thead class="bg-blue-900 text-white sticky top-0 z-10">
+        <!-- DESKTOP TABLE -->
+        <div class="hidden md:block overflow-x-auto">
+            <table class="w-full">
+                <thead class="bg-blue-900 text-white">
                     <tr>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode Booking</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Tanggal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kategori</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Agenda</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Coach</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Dokumentasi</th>
+                        <th class="py-3 px-4 text-left text-sm">Status</th>
+                        <th class="py-3 px-4 text-left text-sm">Kode Booking</th>
+                        <th class="py-3 px-4 text-left text-sm">Tanggal</th>
+                        <th class="py-3 px-4 text-left text-sm">Instansi</th>
+                        <th class="py-3 px-4 text-left text-sm">Kategori</th>
+                        <th class="py-3 px-4 text-left text-sm">Agenda</th>
+                        <th class="py-3 px-4 text-left text-sm">Coach</th>
+                        <th class="py-3 px-4 text-left text-sm">Dokumentasi</th>
                     </tr>
                 </thead>
 
-
                 <tbody class="divide-y divide-gray-200">
-                    @forelse($coachings as $coaching)
-                    <tr class="table-row">
+                    @foreach($coachings as $coaching)
+                    <tr>
                         <td class="py-3 px-4">
                             @php
                                 $status = strtolower($coaching->status_verifikasi);
-                                switch($status) {
-                                    case 'disetujui':
-                                        $bg = 'bg-green-100 text-green-800';
-                                        break;
-                                    case 'pending':
-                                        $bg = 'bg-yellow-100 text-yellow-800';
-                                        break;
-                                    case 'ditolak':
-                                        $bg = 'bg-red-100 text-red-800';
-                                        break;
-                                    case 'penjadwalan ulang':
-                                        $bg = 'bg-purple-100 text-purple-800';
-                                        break;
-                                    default:
-                                        $bg = 'bg-gray-100 text-gray-800';
-                                }
+                                $color = match($status) {
+                                    'disetujui' => 'bg-green-100 text-green-700',
+                                    'pending' => 'bg-yellow-100 text-yellow-700',
+                                    'ditolak' => 'bg-red-100 text-red-700',
+                                    'penjadwalan ulang' => 'bg-purple-100 text-purple-700',
+                                    default => 'bg-gray-100 text-gray-700',
+                                };
                             @endphp
-                            <span class="inline-flex items-center justify-center w-fit mx-auto
-                                        text-[10px] px-2 py-0.5 rounded-full font-medium
-                                        whitespace-normal break-words text-center {{ $bg }}">
+                            <span class="px-2 py-1 text-xs rounded-full {{ $color }}">
                                 {{ ucfirst($coaching->status_verifikasi) }}
                             </span>
                         </td>
                         <td class="py-3 px-4 font-mono text-sm">
-                             CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
+                            CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
                         </td>
-                        <td class="py-3 px-4 text-sm">
-                            {{ $coaching->tanggal->format('d/m/Y') }}
-                        </td>
+                        <td class="py-3 px-4 text-sm">{{ $coaching->tanggal->format('d/m/Y') }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->nama_opd }}</td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->layanan }}</td>
-                        <td class="py-3 px-4 text-sm">{{ Str::limit($coaching->keterangan) }}</td>
+                        <td class="py-3 px-4 text-sm max-w-[220px] break-words">
+                            {{ Str::limit($coaching->keterangan, 50) }}
+                        </td>
                         <td class="py-3 px-4 text-sm">{{ $coaching->coach ?? '-' }}</td>
                         <td class="py-3 px-4 text-center">
-                                @if($coaching->dokumentasi_path)
-                                        <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}" 
-                                        target="_blank"
-                                        class="inline-flex items-center justify-center text-green-600 hover:text-green-800">
-                                            <i class="fas fa-image text-lg"></i>
-                                        </a>
-                                @else
-                                    <span class="text-gray-500 text-sm">-</span>
-                                @endif
-                            </td>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="8" class="py-16 text-center">
-                            <div class="flex flex-col items-center justify-center text-gray-400">
-                                <i class="fas fa-database text-4xl mb-3"></i>
-                                <p class="text-lg text-gray-500">Belum Ada Data</p>
-                            </div>
+                            @if($coaching->dokumentasi_path)
+                                <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}" target="_blank"
+                                class="text-green-600 hover:text-green-800">
+                                <i class="fas fa-image text-lg"></i>
+                                </a>
+                            @else
+                                -
+                            @endif
                         </td>
                     </tr>
-                    @endforelse
-
+                    @endforeach
                 </tbody>
-
             </table>
+        </div>
 
+        <!-- MOBILE PREMIUM CARD -->
+        <div class="md:hidden space-y-5">
+            @forelse($coachings as $coaching)
+
+            @php
+                $status = strtolower($coaching->status_verifikasi);
+                $color = match($status) {
+                    'disetujui' => 'bg-green-100 text-green-700',
+                    'pending' => 'bg-yellow-100 text-yellow-700',
+                    'ditolak' => 'bg-red-100 text-red-700',
+                    'penjadwalan ulang' => 'bg-purple-100 text-purple-700',
+                    default => 'bg-gray-100 text-gray-700',
+                };
+            @endphp
+
+            <div class="bg-white rounded-2xl shadow-md border border-gray-100 p-5 space-y-4">
+
+                <!-- Header -->
+                <div class="flex justify-between items-start">
+
+                    <div>
+                        <p class="text-xs text-gray-400 uppercase tracking-wide">
+                            Kode Booking
+                        </p>
+                        <p class="font-mono text-sm text-gray-700">
+                            CCA-{{ date('Ymd', strtotime($coaching->tanggal)) }}{{ $coaching->id }}
+                        </p>
+                    </div>
+
+                    <span class="px-3 py-1 text-xs rounded-full font-medium {{ $color }}">
+                        {{ ucfirst($coaching->status_verifikasi) }}
+                    </span>
+                </div>
+
+                <!-- Agenda -->
+                <div>
+                    <p class="text-xs text-gray-400 uppercase tracking-wide mb-1">
+                        Agenda Coaching
+                    </p>
+                    <h3 class="font-semibold text-gray-800 text-sm leading-snug">
+                        {{ $coaching->keterangan }}
+                    </h3>
+                </div>
+
+                <div class="border-t border-gray-100"></div>
+
+                <!-- Detail Grid -->
+                <div class="grid grid-cols-2 gap-4 text-sm">
+
+                    <div>
+                        <p class="text-gray-400 text-xs">Tanggal</p>
+                        <p class="font-medium text-gray-700">
+                            {{ $coaching->tanggal->format('d/m/Y') }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-400 text-xs">Instansi</p>
+                        <p class="font-medium text-gray-700 truncate">
+                            {{ $coaching->nama_opd }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-400 text-xs">Kategori</p>
+                        <p class="font-medium text-gray-700">
+                            {{ $coaching->layanan }}
+                        </p>
+                    </div>
+
+                    <div>
+                        <p class="text-gray-400 text-xs">Coach</p>
+                        <p class="font-medium text-gray-700">
+                            {{ $coaching->coach ?? '-' }}
+                        </p>
+                    </div>
+
+                </div>
+
+                @if($coaching->dokumentasi_path)
+                <div class="pt-3">
+                    <a href="{{ asset('storage/'.$coaching->dokumentasi_path) }}"
+                    target="_blank"
+                    class="flex items-center justify-center w-full py-2 rounded-lg
+                            bg-gray-50 hover:bg-gray-100 text-gray-700 text-sm font-medium transition">
+                        <i class="fas fa-image mr-2"></i> Lihat Dokumentasi
+                    </a>
+                </div>
+                @endif
+
+            </div>
+
+            @empty
+            <div class="text-center text-gray-400 py-12">
+                <i class="fas fa-database text-3xl mb-3"></i>
+                <p>Belum ada data</p>
+            </div>
+            @endforelse
         </div>
     </div>
 

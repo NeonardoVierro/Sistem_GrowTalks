@@ -73,7 +73,7 @@
         <div class="px-6 py-12 border-b border-gray-200 flex items-center justify-between">
             <h2 class="text-lg font-bold text-gray-800">
                 <i class="fas fa-calendar-alt mr-2 text-blue-600"></i>
-                Kalender Jadwal Podcast {{ \Carbon\Carbon::create($year, $month, 1)->locale('id')->isoFormat('MMMM YYYY') }}
+                 {{ \Carbon\Carbon::create($year, $month, 1)->locale('id')->isoFormat('MMMM YYYY') }}
             </h2>
             <div class="flex space-x-2">
                 <a href="{{ route('verifikator-podcast.dashboard', ['month' => $month - 1 <= 0 ? 12 : $month - 1, 'year' => $month - 1 <= 0 ? $year - 1 : $year]) }}" 
@@ -169,7 +169,8 @@
                             }
                         @endphp
 
-                        <div class="relative h-28 p-2 border rounded-lg {{ $bgClass }} {{ $hasBookings ? 'cursor-pointer' : '' }}"
+                        <div class="min-h-[70px] sm:h-28 p-1 sm:p-2 border rounded-lg text-xs sm:text-sm
+                            {{ $bgClass }} {{ $hasBookings ? 'cursor-pointer' : '' }}"
                              @if($hasBookings)
                              onclick="showBookingsDetail('{{ $dateString }}', '{{ \Carbon\Carbon::parse($date)->locale('id')->isoFormat('D MMMM YYYY') }}', {{ json_encode($bookings[$dateString] ?? []) }})"
                              @endif>
@@ -187,7 +188,7 @@
                             </div>
                             
                             @if($hasBookings)
-                                <div class="mt-2 space-y-1">
+                                <div class="sm:block hidden mt-2 space-y-1">
                                     @foreach($bookings[$dateString]->take(2) as $booking)
                                         <div class="text-xs truncate {{ $booking->status_verifikasi == 'disetujui' ? 'text-green-700' : ($booking->status_verifikasi == 'pending' ? 'text-yellow-700' : 'text-gray-600') }}">
                                             <i class="fas fa-circle text-[8px] mr-1 
@@ -207,7 +208,8 @@
                     
                             @elseif($isFriday && $isCurrentMonth && !$isPast)
                                 <div class="mt-2 text-xs text-green-600">
-                                    <i class="fas fa-calendar-plus"></i> Tersedia
+                                    <i class="fas fa-calendar-plus"></i>
+                                    <span class="hidden sm:inline">Tersedia</span>
                                 </div>
                             @endif
                         </div>
@@ -232,40 +234,54 @@
     </div>
 
     <!-- Recent Podcasts -->
-       <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
+    <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
         <div class="px-6 py-4 border-b border-gray-200">
             <h2 class="text-lg font-bold text-gray-800">Podcast Terbaru</h2>
         </div>
+
         <div class="p-4">
-            <div class="{{ $recentPodcasts->count() > 7 ? 'max-h-72 overflow-y-auto' : '' }}">
-                <table class="w-full table-fixed">
-                <thead>
-                    <thead class="bg-blue-900 text-white">
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Kode</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Jadwal</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Instansi</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Judul</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Narasumber</th>
-                        <th class="py-3 px-4 text-left text-sm font-medium text-white-700">Status</th>
-                    </tr>
-                </thead>
-                <tbody class="divide-y divide-gray-200">
-                    @forelse($recentPodcasts as $podcast)
-                    <tr class="table-row">
+            <div class="overflow-x-auto">
+                <div class="max-h-[320px] overflow-y-auto">
+                    <table class="w-full min-w-[900px]">
+                    <!-- HEADER -->
+                    <thead class="bg-blue-900 text-white sticky top-0 z-10">
+                        <tr>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Kode</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Jadwal</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Instansi</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Judul</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Narasumber</th>
+                            <th class="py-3 px-4 text-left text-sm font-medium">Status</th>
+                        </tr>
+                    </thead>
+
+                    <!-- BODY -->
+                    <tbody class="divide-y divide-gray-200 bg-white">
+                        @forelse($recentPodcasts as $podcast)
                         <tr class="hover:bg-gray-50 cursor-pointer"
                             onclick="window.location='{{ route('verifikator-podcast.approval-form', $podcast->id) }}'">
-                            <td class="py-3 px-4 font-mono text-sm">
+
+                            <td class="py-3 px-4 font-mono text-sm whitespace-nowrap">
                                 POD-{{ date('Ymd', strtotime($podcast->tanggal)) }}{{ $podcast->id }}
                             </td>
-                            <td class="py-3 px-4 text-sm">
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
                                 {{ $podcast->tanggal->format('d/m/Y') }}
                             </td>
-                            <td class="py-3 px-4 text-sm">{{ $podcast->nama_opd }}</td>
-                            <td class="py-3 px-4">
-                                <div class="font-medium text-gray-800 text-sm">{{ Str::limit($podcast->keterangan) }}</div>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $podcast->nama_opd }}
                             </td>
-                            <td class="py-3 px-4 text-sm">{{ $podcast->narasumber }}</td>
-                            <td class="py-3 px-4">
+
+                            <td class="py-3 px-4 text-sm max-w-[250px] break-words whitespace-normal">
+                                {{ Str::limit($podcast->keterangan, 35) }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
+                                {{ $podcast->narasumber }}
+                            </td>
+
+                            <td class="py-3 px-4 text-sm whitespace-nowrap">
                                 @php
                                     $status = strtolower($podcast->status_verifikasi);
                                     switch($status) {
@@ -285,22 +301,22 @@
                                             $bg = 'bg-gray-100 text-gray-800';
                                     }
                                 @endphp    
-                                <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
-                                            rounded-full font-medium leading-tight text-center whitespace-normal break-words {{ $bg }}">
-                                        {{ ucfirst($podcast->status_verifikasi) }}
+
+                                <span class="px-2 py-1 rounded-full text-xs font-medium {{ $bg }}">
+                                    {{ ucfirst($podcast->status_verifikasi) }}
                                 </span>
                             </td>
+
                         </tr>
-                    </tr>
-                    @empty
-                    <tr>
-                        <td colspan="6" class="py-8 text-center text-gray-500">
-                            Belum ada data podcast
-                        </td>
-                    </tr>
-                    @endforelse
-                </tbody>
-            </table>
+                        @empty
+                        <tr>
+                            <td colspan="6" class="py-8 text-center text-gray-500">
+                                Belum ada data podcast
+                            </td>
+                        </tr>
+                        @endforelse
+                    </tbody>
+                </table>
             </div>
         </div>
     </div>

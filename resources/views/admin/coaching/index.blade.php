@@ -22,8 +22,8 @@
             </h2>
         </div>
 
-        <div class="overflow-x-auto">
-            <table class="w-full">
+        <div class="overflow-x-auto responsive-wrapper">
+            <table class="responsive-table w-full">
 
                 {{-- HEADER --}}
                 <thead class="bg-blue-900 text-white">

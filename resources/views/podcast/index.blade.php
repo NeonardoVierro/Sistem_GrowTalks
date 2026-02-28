@@ -169,28 +169,39 @@
                                 </div>
                                 
                                 @if($hasMyApprovedBooking)
-                                    <div class="text-xs text-green-700 font-medium mt-1">
-                                        <i class="fas fa-check-circle"></i> Disetujui
+                                    <div class="text-xs text-green-700 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-check-circle"></i>
+                                        <span class="hidden sm:inline">Disetujui</span>
                                     </div>
+
                                 @elseif($hasMyPendingBooking)
-                                    <div class="text-xs text-yellow-700 font-medium mt-1">
-                                        <i class="fas fa-clock"></i> Pending
+                                    <div class="text-xs text-yellow-700 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-clock"></i>
+                                        <span class="hidden sm:inline">Pending</span>
                                     </div>
+
                                 @elseif($hasMyRejectedBooking)
-                                    <div class="text-xs text-red-700 font-medium mt-1">
-                                        <i class="fas fa-times-circle"></i> Ditolak
+                                    <div class="text-xs text-red-700 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-times-circle"></i>
+                                        <span class="hidden sm:inline">Ditolak</span>
                                     </div>
+
                                 @elseif($hasMyRescheduledBooking)
-                                    <div class="text-xs text-purple-700 font-medium mt-1">
-                                        <i class="fas fa-redo"></i> Penjadwalan Ulang
+                                    <div class="text-xs text-purple-700 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-redo"></i>
+                                        <span class="hidden sm:inline">Penjadwalan Ulang</span>
                                     </div>
+
                                 @elseif(isset($hasBookings) && $hasBookings && $type != 'available')
-                                    <div class="text-xs text-blue-700 font-medium mt-1">
-                                        <i class="fas fa-users"></i> Terisi
+                                    <div class="text-xs text-blue-700 font-medium mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-users"></i>
+                                        <span class="hidden sm:inline">Terisi</span>
                                     </div>
+
                                 @elseif($type == 'available')
-                                    <div class="text-xs text-green-600 mt-1">
-                                        <i class="fas fa-calendar-plus"></i> Tersedia
+                                    <div class="text-xs text-green-600 mt-1 flex items-center justify-center sm:justify-start gap-1">
+                                        <i class="fas fa-calendar-plus"></i>
+                                        <span class="hidden sm:inline">Tersedia</span>
                                     </div>
                                 @endif
                                 @if($isFriday && $isCurrentMonth)
@@ -242,29 +253,48 @@
             </span>
         </div>
 
-        <!-- Tabel Antrian Verifikasi Podcast -->
         <div class="bg-white rounded-2xl shadow-sm border border-gray-200 overflow-hidden">
             <div class="overflow-x-auto max-h-96 overflow-y-auto">
-                <table class="w-full text-sm border-collapse" style="table-layout: fixed;">
+                <table class="w-full text-xs md:text-sm border-collapse min-w-[900px]">
+                    <!-- HEADER -->
                     <thead class="bg-blue-900 text-white">
                         <tr>
-                            <th class="px-4 py-3 text-center" style="width: 5%;">Aksi</th>
-                            <th class="px-4 py-3 text-left" style="width: 10%;">Status</th>
-                            <th class="px-4 py-3 text-left" style="width: 12%;">Kode Booking</th>
-                            <th class="px-4 py-3 text-left" style="width: 15%;">Tanggal</th>
-                            <th class="px-4 py-3 text-left" style="width: 20%;">Judul</th>
-                            <th class="px-4 py-3 text-left" style="width: 13%;">Narasumber</th>
-                            <th class="px-4 py-3 text-left" style="width: 10%;">Host</th>
-                            <th class="px-4 py-3 text-left" style="width: 15%;">Keterangan</th>
+                            <th class="px-3 py-3 text-center whitespace-nowrap">Aksi</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Status</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Kode Booking</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Tanggal</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Judul</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Narasumber</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Host</th>
+                            <th class="px-3 py-3 whitespace-nowrap">Keterangan</th>
                         </tr>
                     </thead>
-
-                    <tbody>
+                    <tbody class="divide-y divide-gray-200">
                         @forelse($bookings as $booking)
-                        <tr class="border-t hover:bg-gray-100 transition">
+                        @php
+                            $status = strtolower($booking->status_verifikasi);
+                            switch($status) {
+                                case 'disetujui':
+                                    $bg = 'bg-green-100 text-green-800';
+                                    break;
+                                case 'pending':
+                                    $bg = 'bg-yellow-100 text-yellow-800';
+                                    break;
+                                case 'ditolak':
+                                    $bg = 'bg-red-100 text-red-800';
+                                    break;
+                                case 'penjadwalan ulang':
+                                    $bg = 'bg-purple-100 text-purple-800';
+                                    break;
+                                default:
+                                    $bg = 'bg-gray-100 text-gray-800';
+                            }
+                        @endphp
 
-                            {{-- AKSI --}}
-                            <td class="px-4 py-3 text-center">
+                        <tr class="hover:bg-gray-50 transition">
+
+                            <!-- AKSI -->
+                            <td class="px-3 py-3 text-center whitespace-nowrap">
                                 @if($booking->status_verifikasi === 'pending')
                                 <form action="{{ route('podcast.destroy', $booking->id) }}" method="POST">
                                     @csrf
@@ -275,47 +305,23 @@
                                     </button>
                                 </form>
                                 @else
-                                <span class="text-gray-400 cursor-not-allowed">
+                                <span class="text-gray-400">
                                     <i class="fas fa-times-circle"></i>
                                 </span>
                                 @endif
                             </td>
-
-                            {{-- STATUS --}}
-                            <td class="px-4 py-3 w-[90px]">
-                                @php
-                                    $status = strtolower($booking->status_verifikasi);
-                                    switch($status) {
-                                        case 'disetujui':
-                                            $bg = 'bg-green-100 text-green-800';
-                                            break;
-                                        case 'pending':
-                                            $bg = 'bg-yellow-100 text-yellow-800';
-                                            break;
-                                        case 'ditolak':
-                                            $bg = 'bg-red-100 text-red-800';
-                                            break;
-                                        case 'penjadwalan ulang':
-                                            $bg = 'bg-purple-100 text-purple-800';
-                                            break;
-                                        default:
-                                            $bg = 'bg-gray-100 text-gray-800';
-                                    }
-                                @endphp
-                                <span class="inline-flex items-center justify-center text-[10px] px-2 py-0.5
-                                            rounded-full font-medium leading-tight text-center
-                                            whitespace-normal break-words {{ $bg }}">
+                            <!-- STATUS -->
+                            <td class="px-3 py-3 whitespace-nowrap">
+                                <span class="text-[10px] px-2 py-1 rounded-full font-medium {{ $bg }}">
                                     {{ ucfirst($booking->status_verifikasi) }}
                                 </span>
                             </td>
-
-                            {{-- KODE --}}
-                            <td class="px-4 py-3 font-mono break-words">
+                            <!-- KODE -->
+                            <td class="px-3 py-3 font-mono whitespace-nowrap">
                                 POD-{{ date('Ymd', strtotime($booking->tanggal)) }}{{ $booking->id }}
                             </td>
-
                             <!-- TANGGAL -->
-                            <td class="py-3 px-4 text-sm border-b break-words">
+                            <td class="px-3 py-3 whitespace-nowrap">
                                 <div>
                                     {{ \Carbon\Carbon::parse($booking->tanggal)->locale('id')->isoFormat('D MMMM YYYY') }}
                                 </div>
@@ -325,22 +331,20 @@
                                 </div>
                                 @endif
                             </td>
-                            {{-- JUDUL --}}
-                            <td class="py-3 px-4 text-sm border-b break-words">
+                            <!-- JUDUL -->
+                            <td class="px-3 py-3 max-w-[200px] break-words">
                                 {{ $booking->keterangan }}
                             </td>
-                            {{-- NARASUMBER --}}
-                            <td class="px-4 py-3 border-b break-words">
+                            <!-- NARASUMBER -->
+                            <td class="px-3 py-3 break-words">
                                 {{ $booking->narasumber }}
                             </td>
-
-                            {{-- HOST --}}
-                            <td class="px-4 py-3 text-sm border-b break-words">
+                            <!-- HOST -->
+                            <td class="px-3 py-3 break-words">
                                 {{ $booking->host ?? '-' }}
                             </td>
-
                             <!-- KETERANGAN -->
-                            <td class="px-4 py-3 text-xs text-gray-600 border-b break-words">
+                            <td class="px-3 py-3 text-xs text-gray-600 max-w-[250px] break-words">
                                 {{ $booking->catatan ?? '-' }}
                             </td>
                         </tr>
@@ -354,9 +358,13 @@
                     </tbody>
                 </table>
             </div>
+            <!-- Pagination -->
+        @if($bookings->hasPages())
+        <div class="px-4 py-3 border-t border-gray-200 bg-white">
+            {{ $bookings->links() }}
         </div>
-    </div>
-</div>    
+        @endif
+        </div>
 
 <!-- Booking Modal -->
 <div id="bookingModal" class="fixed inset-0 bg-black bg-opacity-50 hidden items-center justify-center z-50 p-4">

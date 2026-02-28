@@ -7,15 +7,11 @@
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Approval Coaching Clinic</h1>
-        <p class="text-gray-600 italic">Verifikasi pengajuan coaching clinic dari user</p>
+        <p class="text-gray-600 italic">Verifikasi pengajuan coaching clinic</p>
     </div>
 
     <!-- Antrian Pengajuan Coaching -->
     <div class="bg-white rounded-xl shadow-lg overflow-hidden mb-8">
-        <div class="px-6 py-4 border-b border-gray-200">
-            <h2 class="text-lg font-bold text-gray-800">Antrian Pengajuan Coaching Clinic</h2>
-        </div>
-        
         <!-- Filter -->
         <div class="p-6 border-b border-gray-200">
             <form method="GET" action="{{ route('verifikator-coaching.approval') }}" class="flex flex-wrap gap-4">
@@ -55,8 +51,8 @@
         </div>
 
         <!-- Table -->
-        <div class="{{ $coachings->count() > 10 ? 'overflow-y-auto max-h-96' : '' }}">
-            <table class="w-full">
+        <div class="{{ $coachings->count() > 10 ? 'overflow-y-auto max-h-96' : '' }} responsive-wrapper">
+            <table class="responsive-table w-full">
                 <thead class="sticky top-0 z-10">
                     <tr class="bg-blue-900 text-white">
                         <th class="py-3 px-4 text-left text-sm font-medium">Aksi</th>

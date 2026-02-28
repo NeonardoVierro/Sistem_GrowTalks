@@ -3,7 +3,7 @@
 @section('title', 'Form Approval Podcast')
 
 @section('content')
-<div class="p-8">
+<div class="p-4 md:p-8">
     <!-- Page Header -->
     <div class="mb-6">
         <h1 class="text-2xl font-bold text-gray-800">Form Approval Podcast</h1>
@@ -17,7 +17,7 @@
         </div>
 
         <div class="p-6">
-            <div class="grid grid-cols-2 gap-6">
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                 <!-- Left Column -->
                 <div>
                     <!-- Kode Booking -->
@@ -79,7 +79,7 @@
                 @csrf
                 @method('PUT')
                 
-                <div class="grid grid-cols-2 gap-6">
+                <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
                     <div>
                         <!-- Status Verifikasi -->
                         <div class="mb-4">
@@ -121,19 +121,19 @@
                         <!-- Waktu -->
                         <div class="mb-4">
                             <label class="block text-sm font-medium text-gray-700 mb-2">Waktu Podcast</label>
-                            <div class="flex items-center gap-3">
+                            <div class="flex flex-col sm:flex-row items-center gap-3">
                                 @php
                                     $times = $podcast->waktu ? explode(' - ', $podcast->waktu) : ['', ''];
                                     $jamMulai = $times[0] ? str_replace('.', ':', $times[0]) : '';
                                     $jamSelesai = isset($times[1]) ? str_replace('.', ':', $times[1]) : '';
                                 @endphp
-                                <div class="flex-1">
+                                <div class="w-full sm:flex-1">
                                     <input type="time" name="waktu_mulai" 
                                            value="{{ $jamMulai }}"
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
                                 </div>
                                 <span class="text-gray-500 font-medium">-</span>
-                                <div class="flex-1">
+                                <div class="w-full sm:flex-1">
                                     <input type="time" name="waktu_selesai" 
                                            value="{{ $jamSelesai }}"
                                            class="w-full px-4 py-2 border border-gray-300 rounded-lg focus:border-blue-500 focus:ring-1 focus:ring-blue-500">
@@ -154,9 +154,9 @@
                 </div>
 
                 <!-- Action Buttons -->
-                <div class="mt-8 flex justify-end space-x-3">
+                <div class="mt-8 flex flex-col sm:flex-row sm:justify-end sm:items-center space-y-3 sm:space-y-0 sm:space-x-3">
                     <a href="{{ route('verifikator-podcast.approval') }}" 
-                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50">
+                       class="px-6 py-3 border border-gray-300 text-gray-700 rounded-lg hover:bg-gray-50 text-center">
                         Tutup
                     </a>
                     <button type="submit" 

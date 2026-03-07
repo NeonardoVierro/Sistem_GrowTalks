@@ -94,7 +94,7 @@
         <div class="p-6">
             <!-- Days Header -->
             <div class="grid grid-cols-7 gap-2 mb-2">
-                @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $day)
+                @foreach(['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $day)
                     <div class="text-center font-medium text-gray-700 py-2 {{ in_array($day, ['Rabu', 'Jumat']) ? 'text-green-600 font-bold' : '' }}">
                         {{ $day }}
                     </div>

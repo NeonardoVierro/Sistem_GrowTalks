@@ -148,10 +148,16 @@ class VerifikatorPodcastController extends Controller
         $user = Auth::guard('internal')->user();
 
         $waktu = null;
+        $kalenderWaktu = null; // value to store in `kalenders.waktu` (TIME)
         if ($request->waktu_mulai && $request->waktu_selesai) {
-            $jamMulai = str_replace(':', '.', $request->waktu_mulai);
-            $jamSelesai = str_replace(':', '.', $request->waktu_selesai);
+            $jamMulai = $request->waktu_mulai;
+            $jamSelesai = $request->waktu_selesai;
+            // human-friendly format for PodcastBooking.waktu (e.g. "13:00 - 16:00")
             $waktu = "{$jamMulai} - {$jamSelesai}";
+            // kalender.waktu stores a single TIME value; use start time with seconds
+            if (preg_match('/^\d{2}:\d{2}$/', $jamMulai)) {
+                $kalenderWaktu = $jamMulai . ':00';
+            }
         }
 
         if ($request->status_verifikasi === 'disetujui') {
@@ -172,7 +178,7 @@ class VerifikatorPodcastController extends Controller
 
         $updateData = [
             'status_verifikasi' => $request->status_verifikasi,
-            'id_verifikator' => $user->id_internal_user,
+            'id_verifikator' => $user->id,
             'verifikasi' => $user->nama_user,
             'catatan' => $request->catatan,
         ];
@@ -190,6 +196,22 @@ class VerifikatorPodcastController extends Controller
         }
 
         $podcast->update($updateData);
+
+        if ($request->status_verifikasi == 'disetujui') {
+            $kalender = Kalender::updateOrCreate(
+                [
+                    'tanggal_kalender' => $podcast->tanggal,
+                    'jenis_agenda' => 'podcast',
+                    'id_agenda' => $podcast->id,
+                ],
+                [
+                    'waktu' => $kalenderWaktu ?? ($request->waktu ? preg_replace('/\s+/', '', explode('-', $request->waktu)[0]) . ':00' : '13:00:00'),
+                    'sudah_dibooking' => true,
+                ]
+            );
+
+            $podcast->update(['id_kalender' => $kalender->id]);
+        }
 
         return redirect()->route('verifikator-podcast.approval')
             ->with('success', 'Status podcast berhasil diperbarui.');
@@ -305,7 +327,7 @@ class VerifikatorPodcastController extends Controller
                 ]
             );
             
-            $podcast->update(['id_kalender' => $kalender->id_kalender]);
+            $podcast->update(['id_kalender' => $kalender->id]);
         }
 
         return back()->with('success', 'Status podcast berhasil diperbarui.');

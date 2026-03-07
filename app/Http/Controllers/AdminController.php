@@ -371,9 +371,22 @@ class AdminController extends Controller
         if ($status === 'disetujui') {
             $waktu = $request->waktu ?? $podcast->waktu;
 
+            $kalenderWaktu = null;
+            if (is_string($waktu)) {
+                if (strpos($waktu, '-') !== false) {
+                    $parts = explode('-', $waktu);
+                    $start = trim($parts[0]);
+                    if (preg_match('/^\d{1,2}:\d{2}$/', $start)) {
+                        $kalenderWaktu = str_pad($start, 5, '0', STR_PAD_LEFT) . ':00';
+                    }
+                } elseif (preg_match('/^\d{1,2}:\d{2}$/', $waktu)) {
+                    $kalenderWaktu = $waktu . ':00';
+                }
+            }
+
             if ($podcast->kalender) {
                 $podcast->kalender->update([
-                    'waktu' => $waktu,
+                    'waktu' => $kalenderWaktu,
                     'sudah_dibooking' => true,
                     'jenis_agenda' => 'podcast',
                     'id_agenda' => $podcast->id,
@@ -381,7 +394,7 @@ class AdminController extends Controller
             } else {
                 $kal = Kalender::create([
                     'tanggal_kalender' => $podcast->tanggal,
-                    'waktu' => $waktu,
+                    'waktu' => $kalenderWaktu,
                     'sudah_dibooking' => true,
                     'jenis_agenda' => 'podcast',
                     'id_agenda' => $podcast->id,

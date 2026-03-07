@@ -52,7 +52,7 @@
             <!-- Days Header -->
         <div class="bg-white rounded-lg shadow-sm border border-gray-200 mb-8">
             <div class="p-4 border-b border-gray-200 grid grid-cols-7 gap-1">
-                @foreach(['Senin','Selasa','Rabu','Kamis','Jumat','Sabtu','Minggu'] as $day)
+                @foreach(['Sen','Sel','Rab','Kam','Jum','Sab','Min'] as $day)
                     <div class="text-center font-medium text-gray-700 py-2 {{ $day == 'Jumat' ? 'text-green-600 font-bold' : '' }}">
                         {{ $day }}
                     </div>
